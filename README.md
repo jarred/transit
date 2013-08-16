@@ -1,4 +1,4 @@
-# Travelog tumblr theme
+# Transit tumblr theme
 
 A tumblr theme designed specifically for travellers.
 
