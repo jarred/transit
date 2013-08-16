@@ -1,0 +1,60 @@
+@import "helpers/_misc";
+@import "normalize/_normalize";
+
+$sans: "Helvetica Neue", Sans-Serif;
+
+html{
+	background-color: #FDFDFD;
+}
+
+#app{
+	position: absolute;
+	left: 50%;
+	top: 0px;
+	bottom: 0px;
+	width: 320px;
+	background-color: #FFF;
+	margin-left: -160px;
+	.intro{
+		.use-location,
+		.or{
+			display: none;
+			html.geolocation &{
+				display: block;
+			}
+		}
+	}
+}
+
+.btn{
+	@include inline-block;
+	height: 60px;
+	font: 600 18px/60px $sans;
+	background-color: blue;
+	width: 240px;
+	@include center-block;
+	color: #FFF;
+	text-decoration: none;
+	text-align: center;
+}
+
+.result{
+	.map{
+		background-color: #EEE;
+		height: 160px;
+		background-repeat: no-repeat;
+		background-position: center center;
+		border-bottom: 1px solid #CCC;
+	}
+	input{
+		@include inline-block;
+		@include center-block;
+		@include box-sizing(border-box);
+		width: 240px;
+	}
+}
+
+.hide{
+	display: none;
+}
+

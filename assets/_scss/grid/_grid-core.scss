@@ -1,0 +1,1039 @@
+// Setting empty array for storing settings and breakpoints
+$grid-settings-store: ();
+
+// Degredation selector: sets the selector for browsers not supporting
+// media queries. I.e. IE8 and down
+$degredation-selector: '.no_media_queries' !default;
+
+// IE7 selector: fixes sub-pixel rounding issue in IE7
+$ie7-selector: '.ie7' !default;
+
+// IE6 selector: fixes double margin issue and sub-pixel rounding issue in IE6
+$ie6-selector: '.ie6' !default;
+
+// if set to true, all columns will have their :before pseudo element
+// set with content describing the number of columns the current column is spanning
+$grid-debug: false !default;
+$grid-debug-css-comment: "Debug style only - this rule will not be present for production";
+
+
+// ------------------------------------------------------------- *
+// Function to return a percentage rounded down to 2 deimals
+// ---------------------------------------------------------
+//
+//      @function percentage-round
+//
+//          Example use:
+//          -------------------
+//          .selector{
+//              width: percentage-round( 2/3 ); // returns 66.66%
+//          }
+//
+// ------------------------------------------------------------- *
+
+@function percentage-round( $value ){
+    @return floor( percentage( $value ) * 100 ) / 100;
+}
+
+
+// ------------------------------------------------------------- *
+// Mixin to extend a selector by multiple selectors
+// ------------------------------------------------
+//
+//      @mixin extend-by-array
+//
+//          Example use:
+//          -------------------
+//          .selector{
+//              @include extend-by-array( '.second_selector' '.third_selector' );
+//          }
+//
+// ------------------------------------------------------------- *
+
+
+@mixin extend-by-array( $selector-array ){
+    @each $selector in $selector-array {
+        @extend #{ $selector };
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// Function to retrieve grid settings
+// ----------------------------------
+//
+//      @function return-grid-settings
+//
+//          Available settings:
+//          -------------------
+//          - grid name
+//          - wether or not the grid is fluid
+//          - column width
+//          - gutter width
+//          - gutter property
+//          - number of columns
+//          - row padding left
+//          - row padding right
+//          - breakpoints (array)
+//          - row width (including padding)
+//          - row width inner
+//          - container placeholder selector
+//          - row placeholder selector
+//          - column placeholder selector
+//
+//          Example use:
+//          -------------------
+//          .selector{
+//              width: return-grid-settings( 'my-grid', 'row-width' );
+//          }
+//
+// * ------------------------------------------------------------- *
+
+
+@function return-grid-settings( $grid-name, $parameter-name: false ){
+
+    $grid-settings: false; // Setting variable
+
+    // Setting a reference to setting parameter names
+    // This is for using the function
+    $parameter-names:
+    'grid-name'
+    'is-fluid'
+    'column-width'
+    'gutter-width'
+    'gutter-property'
+    'num-columns'
+    'padding-left'
+    'padding-right'
+    'breakpoints'
+    'row-width'
+    'row-width-inner'
+    'container-placeholder-selector'
+    'row-placeholder-selector'
+    'column-placeholder-selector'
+    'breakout-placeholder-selector';
+
+    // Checking for stored grid settings
+    @each $grid in $grid-settings-store {
+        @if ( nth( $grid, 1 ) == $grid-name ){
+            $grid-settings: $grid;
+        }
+    } // end each
+
+    @if $grid-settings != false {
+
+        // If a parameter name has been supplied, look for that
+        // parameter in the settings array
+        @if $parameter-name != false {
+
+            $parameter: false;
+
+            @for $i from 1 through length( $grid-settings ) {
+                @if ( nth( $parameter-names, $i ) == $parameter-name ){
+                    @return nth( $grid-settings, $i );
+                }
+            } // end for
+
+            @if $parameter == false {
+                // returning empty array if no settings were found
+                @return ();
+            }
+
+        } @else {
+            // Returning full settings array if
+            // no parameter name was given
+            @return $grid-settings;
+        }
+
+    } @else {
+
+        // returning empty array if no settings were found
+        @return ();
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// Function to convert any measurement (px, em, %) to a
+// percentage of the inner row width (used for breakout columns)
+// -------------------------------------------------------------
+//
+//      @function breakout-margin
+//
+//          Example use:
+//          -------------------
+//          .breakout{
+//              margin-left: breakout-margin( 'my-grid', 20px );
+//              margin-right: breakout-margin( 'my-grid', 20px );
+//          }
+//
+// ------------------------------------------------------------- *
+
+@function convert-row-padding($grid-name, $padding){
+    $row-width: return-grid-settings($grid-name, 'row-width');
+    $row-width-inner: return-grid-settings($grid-name, 'row-width-inner');
+
+    @if(unit($padding) == '%'){
+        $padding-clean: $padding / 1%; // removing % unit from padding
+        $padding-px: ($padding-clean / 100 * $row-width); // padding as a px value in relation to a grid row at full size
+        $padding: percentage( $padding-px / $row-width-inner );; // padding as a percentage of inner row width. Not using percentage-round as it's not going to break layout if it's too big
+        @return -#{$padding};
+    } @else {
+        @return -#{$padding};
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 9: Printing column styles for breakpoints
+// ----------------------------------------------
+//
+//      @mixin output-break-column-styles
+//          - the required settings for the current grid are retrieved with the return-grid-settings function
+//          - iterating through breakpoints
+//          - printing current column width (by extending placeholder styles created in STEP 5)
+//
+// ------------------------------------------------------------- *
+
+
+@mixin output-break-column-styles( $break-column-array, $grid-name ){
+
+    $column-placeholder-selector: return-grid-settings( $grid-name, 'column-placeholder-selector' );
+
+    $current-array: ();
+
+    @if nth( nth( $break-column-array, 1 ), 1 ) == 'breakpoint' {
+        // If only one break column is set, the array will collapse and we have to do this:
+        $current-array: append( $current-array, $break-column-array );
+    } @else {
+        $current-array: $break-column-array;
+    }
+
+    @each $column in $current-array {
+        $query-number: false;
+        $selector: false;
+        $columns: false;
+
+
+        @each $value in $column {
+            @if nth( $value, 1 ) == 'breakpoint' {
+                $query-number: nth( $value, 2 );
+            }
+            @if nth( $value, 1 ) == 'selector' {
+                $selector: nth( $value, 2 );
+            }
+            @if nth( $value, 1 ) == 'columns' {
+                $columns: nth( $value, 2 );
+            }
+        }
+
+        @if $query-number != false and $selector != false and $columns != false {
+            $current-placeholder-selector: $column-placeholder-selector + '-breakpoint-' + $query-number + '-' + $columns;
+
+            #{ $selector } {
+                @extend #{ $current-placeholder-selector };
+            }
+        }
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 8: Printing column styles
+// ------------------------------
+//
+//      @mixin output-column-styles
+//          - the required settings for the current grid are retrieved with the return-grid-settings function
+//          - an array of the columns needed is created
+//          - iterating through that array
+//          - printing shared column paddings (by extending placeholder styles created in STEP 2)
+//          - printing current column width (by extending placeholder styles created in STEP 3)
+//          - extending columns styles (if applicable)
+//
+// ------------------------------------------------------------- *
+
+
+@mixin output-column-styles( $grid-name, $column-selector-prefix, $extend-selectors, $output-column-styles-for ){
+    $column-placeholder-selector: return-grid-settings( $grid-name, 'column-placeholder-selector' );
+    $num-columns: return-grid-settings( $grid-name, 'num-columns' );
+    $row-width-inner: return-grid-settings( $grid-name, 'row-width-inner' );
+    $gutter-width: return-grid-settings( $grid-name, 'gutter-width' );
+    $column-width: return-grid-settings( $grid-name, 'column-width' );
+
+    // Array for storing the column widths needed for the current grid
+    $column-array: ();
+
+    @if $output-column-styles-for == 'all' {
+        // to output styles for all column widths,
+        // we create a new array with numbers 1 to [num-cols]
+        @for $i from 1 through $num-columns {
+            $column-array: append( $column-array, $i, space);
+        }
+    } @else {
+        // setting the column array to the one defined in the apply-grid mixin
+        $column-array: $output-column-styles-for;
+    }
+
+    @if $column-array != false and $column-array != none and length($column-array) > 0 {
+        // creating styles for all the columns required
+        @each $i in $column-array {
+
+            $current-column-width: $i * $column-width + $gutter-width * ($i - 1);
+
+            #{ $column-selector-prefix }#{ $i } {
+
+
+                // Setting paddings (shared with all columns in the grid)
+                @extend #{ $column-placeholder-selector };
+
+                // Setting width
+                @extend #{ $column-placeholder-selector }-#{ $i };
+
+                @if $extend-selectors != false {
+                    @include extend-by-array( $extend-selectors )
+                }
+            }
+        }
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 6: Printing breakpoint styles for columns
+// ----------------------------------------------
+//
+//      @mixin output-break-column-placeholder-styles
+//          - creating placeholder selector from the query number to have a reference
+//          - printing column placeholder styles (for the current breakpoint)
+//
+// ------------------------------------------------------------- *
+
+
+@mixin output-break-column-placeholder-styles( $grid-name, $query-number ){
+
+    $column-placeholder-selector: return-grid-settings( $grid-name, 'column-placeholder-selector' );
+    $current-placeholder-selector: $column-placeholder-selector + '-breakpoint-' + $query-number;
+
+    @include output-column-placeholder-styles( $grid-name, $current-placeholder-selector );
+
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 5: Printing styles for individual breakpoints
+// --------------------------------------------------
+//
+//      @mixin output-breakpoint
+//          - the required settings for the current grid are retrieved with the return-grid-settings function
+//          - putting settings from the current breakpoint into variables
+//          - general placeholder selector styles are printed for container and rows
+//          - placeholder selector styles are printed for columns
+//          - fallback styles for browsers without media query support are printed
+//
+// ------------------------------------------------------------- *
+
+
+@mixin output-breakpoint( $grid-name, $breakpoint, $query-number ){
+    $is-fluid: return-grid-settings( $grid-name, 'is-fluid' );
+    $container-placeholder-selector: return-grid-settings( $grid-name, 'container-placeholder-selector' );
+    $row-placeholder-selector: return-grid-settings( $grid-name, 'row-placeholder-selector' );
+    $breakout-placeholder-selector: return-grid-settings( $grid-name, 'breakout-placeholder-selector' );
+
+    $query: false;
+    $max-width: false;
+    $min-width: false;
+    $padding-left: false;
+    $padding-right: false;
+    $old-browser-support: false;
+
+    @if length( $breakpoint ) == 2 and nth( $breakpoint, 1 ) == 'query' {
+        // If breakpoint is the only value set, the array will collapse and we have to do this:
+
+        $query: nth( $breakpoint, 2 );
+
+    } @else {
+
+        @each $value in $breakpoint {
+            @if nth( $value, 1 ) == 'query' {
+                $query: nth( $value, 2 );
+            }
+            @if nth( $value, 1 ) == 'max-width' or nth( $value, 1 ) == 'width' { // supporting 'width' for backwards compability
+                $max-width: nth( $value, 2 );
+            }
+            @if nth( $value, 1 ) == 'min-width' {
+                $min-width: nth( $value, 2 );
+            }
+            @if nth( $value, 1 ) == 'padding-right' {
+                $padding-right: nth( $value, 2 );
+            }
+            @if nth( $value, 1 ) == 'padding-left' {
+                $padding-left: nth( $value, 2 );
+            }
+            @if nth( $value, 1 ) == 'apply-to-browsers-w/o-media-queries' or nth( $value, 1 ) == 'degredation-browser-default' {
+                $old-browser-support: nth( $value, 2 );
+            }
+        }
+    }
+
+    @if $query != false {
+
+        // Printing media query
+        @media #{ $query } {
+
+
+            #{ $container-placeholder-selector } {
+
+                // Outputting max-width for container
+                @if $max-width != false {
+                    @if $is-fluid == true {
+                        max-width: $max-width;
+                    } @else {
+                        width: $max-width;
+                    }
+                }
+
+                // Outputting min-width for container
+                @if $min-width != false {
+                    min-width: $min-width;
+                }
+            }
+
+            // Outputting padding for rows
+            @if $padding-left != false or $padding-right != false {
+                #{ $row-placeholder-selector } {
+                    @if $padding-left != false {
+                        padding-left: $padding-left;
+                    }
+                    @if $padding-right != false {
+                        padding-right: $padding-right;
+                    }
+                }
+            }
+
+            // Outputting styles for columns
+            @include output-break-column-placeholder-styles( $grid-name, $query-number );
+
+            // Outputting margin for breakout selector
+            @if $padding-left != false or $padding-right != false {
+                #{ $row-placeholder-selector } #{ $breakout-placeholder-selector } {
+                    @if $padding-left != false {
+                        margin-left: convert-row-padding($grid-name, $padding-left);
+                    }
+                    @if $padding-right != false {
+                        margin-right: convert-row-padding($grid-name, $padding-right);
+                    }
+                }
+            }
+
+        }
+
+        @if $old-browser-support == true {
+            #{ $degredation-selector } {
+                // Outputting max-width for container
+                #{ $container-placeholder-selector } {
+                    // If there is no min-width set for the container,
+                    // we need to output the max-width as a width for legacy browsers
+                    // in order to control the layout.
+                    @if $max-width != false and $min-width == false {
+                        width: $max-width;
+                    } @else if $max-width != false {
+                        max-width: $max-width;
+                    }
+                    // Outputting min-width for container
+                    @if $min-width != false {
+                        min-width: $min-width;
+                    }
+                }
+
+                // Outputting padding for rows
+                @if $padding-left != false or $padding-right != false {
+                    #{ $row-placeholder-selector } {
+                        @if $padding-left != false {
+                            padding-left: $padding-left;
+                        }
+                        @if $padding-right != false {
+                            padding-right: $padding-right;
+                        }
+                    }
+                }
+
+                // Outputting styles for columns
+                @include output-break-column-placeholder-styles( $grid-name, $query-number );
+                // There seems to be a bug in SASS, meaning that the extension of
+                // The $degredation-selector is output twice, but one time not the right way.
+                // Example:
+                //  .no_media_queries .grid_row_12 .grid_col_3, .grid_row_12 .no_media_queries .grid_col_3 {
+                //      width: 29.76%;
+                //  }
+
+                // Outputting margin for breakout selector
+                @if $padding-left != false or $padding-right != false {
+                    #{ $row-placeholder-selector } #{ $breakout-placeholder-selector } {
+                        @if $padding-left != false {
+                            margin-left: convert-row-padding($grid-name, $padding-left);
+                        }
+                        @if $padding-right != false {
+                            margin-right: convert-row-padding($grid-name, $padding-right);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 4: Defining breakpoint styles
+// ----------------------------------
+//
+//      @mixin output-all-breakpoint-styles
+//          - retrieving the array of breakpoints for the current grid with the return-grid-settings function
+//          - deciding wether there is one or multiple breakpoints
+//          - iterating through each breakpoint in the array and outputting styles for it with the output-breakpoint mixin
+//
+// ------------------------------------------------------------- *
+
+
+@mixin output-all-breakpoint-styles( $grid-name ){
+    $breakpoint-array: return-grid-settings( $grid-name, 'breakpoints' );
+
+    @if length( $breakpoint-array ) > 0 {
+
+        // Checking if there's only one query
+        // If there is only one query the array will collapse and we'll have to do this:
+        @if ( nth( nth( $breakpoint-array, 1 ), 1 ) == 'query' and length( $breakpoint-array ) == 2 )
+        or  ( nth( nth( $breakpoint-array, 1 ), 1 ) == 'query' and nth( nth( $breakpoint-array, 3 ), 1 ) != 'query' ) {
+
+            $query-number: 1;
+
+            @include output-breakpoint( $grid-name, $breakpoint-array, $query-number );
+
+        }
+        // Multiple queries
+        @else {
+            $query-number: 0;
+
+            @each $breakpoint in $breakpoint-array {
+                // Declaring variables
+                $query-number: $query-number + 1;
+
+                @include output-breakpoint( $grid-name, $breakpoint, $query-number );
+            }
+        }
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 3: Printing column placeholder styles
+// ------------------------------------------
+//
+//      @mixin output-column-placeholder-styles
+//          - the required settings for the current grid are retrieved with the return-grid-settings function
+//          - iterating through the number of columns in the grid to output the right styles
+//          - printing column width in a placeholder selector
+//
+// ------------------------------------------------------------- *
+
+
+@mixin output-column-placeholder-styles( $grid-name, $column-selector-prefix ){
+    $column-placeholder-selector: return-grid-settings( $grid-name, 'column-placeholder-selector' );
+    $num-columns: return-grid-settings( $grid-name, 'num-columns' );
+    $row-width-inner: return-grid-settings( $grid-name, 'row-width-inner' );
+    $gutter-width: return-grid-settings( $grid-name, 'gutter-width' );
+    $column-width: return-grid-settings( $grid-name, 'column-width' );
+
+    // creating styles for all columns
+    @for $i from 1 through $num-columns {
+
+        $current-column-width: $i * $column-width + $gutter-width * ($i - 1);
+
+        #{ $column-selector-prefix }-#{ $i } {
+
+            width: percentage-round( $current-column-width / $row-width-inner );
+            @if $grid-debug == true {
+                &:before{
+                    /* #{ $grid-debug-css-comment } */
+                    content: "#{ $i } columns";
+                }
+            }
+        }
+    }
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 2: Printing placeholder styles, general
+// --------------------------------------------
+//
+//      @mixin output-placeholder-selector-styles
+//          - the required settings for the current grid are retrieved with the return-grid-settings function
+//          - general placeholder selector styles are printed for container, rows and columns
+//          - individual column (width) styles are printed
+//          - breakpoint styles are printed
+//
+// ------------------------------------------------------------- *
+
+@mixin output-placeholder-selector-styles( $grid-name ){
+    $is-fluid: return-grid-settings( $grid-name, 'is-fluid' );;
+    $container-placeholder-selector: return-grid-settings( $grid-name, 'container-placeholder-selector' );
+    $row-placeholder-selector: return-grid-settings( $grid-name, 'row-placeholder-selector' );
+    $column-placeholder-selector: return-grid-settings( $grid-name, 'column-placeholder-selector' );
+    $breakout-placeholder-selector: return-grid-settings( $grid-name, 'breakout-placeholder-selector' );
+    $row-width: return-grid-settings( $grid-name, 'row-width' );
+    $row-width-inner: return-grid-settings( $grid-name, 'row-width-inner' );
+    $gutter-width: return-grid-settings( $grid-name, 'gutter-width' );
+    $gutter-property: return-grid-settings( $grid-name, 'gutter-property' );
+    $padding-left: return-grid-settings( $grid-name, 'padding-left' );
+    $padding-right: return-grid-settings( $grid-name, 'padding-right' );
+    $row-padding-left: percentage-round( ( $padding-left - $gutter-width / 2 ) / $row-width );
+    $row-padding-right: percentage-round( ( $padding-right - $gutter-width / 2 ) / $row-width );
+
+    // Printing styles for container
+    #{ $container-placeholder-selector } {
+        @if $is-fluid == true {
+            max-width: #{ $row-width }px;
+            @if $ie7-selector or $ie6-selector {
+                $sub-px-fix-selector: "";
+                @if $ie7-selector { $sub-px-fix-selector: $ie7-selector + " &"; }
+                @if $ie6-selector { $sub-px-fix-selector: $ie6-selector + " &"; }
+                @if $ie7-selector and $ie6-selector { $sub-px-fix-selector: $ie7-selector + " &, " + $ie6-selector + " &"; }
+                #{ $sub-px-fix-selector }{
+                    /* Locking IE6 and IE7 due to sub-pixel rounding issue */
+                    width: #{ $row-width }px;
+                }
+            }
+        } @else {
+            width: #{ $row-width }px;
+        }
+    }
+
+    // Printing styles for rows
+    #{ $row-placeholder-selector } {
+        padding:{
+            left: $row-padding-left;
+            right: $row-padding-right;
+        }
+    }
+
+    // Printing styles for columns
+    // Only printing the shared styles here, i.e. the column padding that all columns share
+    #{ $column-placeholder-selector } {
+        #{ $gutter-property }: {
+            left: percentage-round( ( $gutter-width / 2 ) / $row-width-inner );
+            right: percentage-round( ( $gutter-width / 2 ) / $row-width-inner );
+        }
+        @if $grid-debug == true {
+            &:before{
+                /* #{ $grid-debug-css-comment } */
+                display: block;
+                top: 0;
+                left: 0;
+                font-size: 12px;
+                background-color: rgba(0, 0, 0, .4);
+                line-height: 12px;
+                padding: 1px 2px;
+                color: #fff;
+                font-weight: bold;
+            }
+        }
+    }
+
+    // Printing styles for breakout selector
+    #{ $row-placeholder-selector } #{ $breakout-placeholder-selector } {
+        @if $padding-left != false {
+            margin-left: convert-row-padding($grid-name, $row-padding-left);
+        }
+        @if $padding-right != false {
+            margin-right: convert-row-padding($grid-name, $row-padding-right);
+        }
+
+    }
+
+    // Outputting width for columns.
+    // All columns have different widths, so they need to be output individually
+    @include output-column-placeholder-styles( $grid-name, $column-placeholder-selector );
+
+    // Outputting media query styles for container, rows and columns
+    @include output-all-breakpoint-styles( $grid-name );
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 1: Defining the grid
+// -------------------------
+//
+//      @mixin define-grid-settings
+//          - row padding and width (inner and outer) are calculated
+//          - placeholder selectors are defined for container, row and column styles
+//          - all settings for the grid are stored in the $grid-settings-store array
+//          - all placeholder styles are printed, giving access to any applicable styles for container, rows and columns
+//
+// ------------------------------------------------------------- *
+
+
+@mixin define-grid-settings(
+    $grid-name,                         // [REQUIRED]   For reference in the settings-store and for use in grid-related mixins and functions
+    $column-width,                      // [REQUIRED]   Column base width (px value) e.g. $column-width: 95
+    $gutter-width,                      // [REQUIRED]   Width of gutter between columns
+    $num-columns,                       // [REQUIRED]   Number of columns to support in the grid
+    $gutter-property: 'padding',        // [OPTIONAL*]  The property to use for gutters on columns. Use 'padding' or 'margin'. * Defaults to 'padding'
+    $is-fluid: true,                    // [OPTIONAL]   Wether or not the grid should be fluid or fixed. All sizes will be output in % either way. Defaults to true
+    $padding-left: 0,                   // [OPTIONAL*]  Padding to add on rows. * Defaults to 1/2 gutter width as a minimum
+    $padding-right: 0,                  // [OPTIONAL*]  Padding to add on rows * Defaults to 1/2 gutter width as a minimum
+    $breakpoints: false                 // [OPTIONAL]   Changing row padding and container max-width on different breakpoints. Format: $padding-breakpoints: ( ( query 'screen and (max-width: 1140px)', width 1016px, padding-left 26px, padding-right 26px, support-no-media-query-browsers true ), (...next...) )
+    ){
+
+    // Setting row padding to 1/2 of the gutter width if too small
+    @if $padding-left < $gutter-width / 2 { $padding-left: $gutter-width / 2 }
+    @if $padding-right < $gutter-width / 2 { $padding-right: $gutter-width / 2 }
+
+    // Setting row width variables
+    $row-width-base: $column-width * $num-columns + $gutter-width * ($num-columns - 1);
+    $row-width: $row-width-base + $padding-left + $padding-right; // full row with including row paddings
+    $row-width-inner: $row-width-base + $gutter-width; // row with without padding: inner width
+
+    // Defining placeholder selectors for container, rows and columns
+    $container-placeholder-selector: '%' + $grid-name + '-container';
+    $row-placeholder-selector: '%' + $grid-name + '-row';
+    $column-placeholder-selector: '%' + $grid-name + '-column';
+    $breakout-placeholder-selector: '%' + $grid-name + '-breakout';
+
+    // Storing grid settings for later use
+    $grid-settings-store: append(   $grid-settings-store,
+                                    (
+                                        $grid-name
+                                        $is-fluid
+                                        $column-width
+                                        $gutter-width
+                                        $gutter-property
+                                        $num-columns
+                                        $padding-left
+                                        $padding-right
+                                        $breakpoints
+                                        $row-width
+                                        $row-width-inner
+                                        $container-placeholder-selector
+                                        $row-placeholder-selector
+                                        $column-placeholder-selector
+                                        $breakout-placeholder-selector
+                                    ), comma);
+/* -----------------------------
+   Sassy Grid mixin
+   @author: Frej Raahede Nielsen
+   @documentation: http://springload.github.com/sassy-grid/
+   ----------------------------- */
+
+    // Outputting the placeholder selector styles
+    // Styles for container, rows and columns
+    // NOTE: these styles will not be printed to the style sheet before they are extended/used
+    @include output-placeholder-selector-styles( $grid-name );
+
+    @if $ie6-selector {
+        /* IE6 fix: fixes double margin on floated elements */
+        #{ $ie6-selector } #{ $column-placeholder-selector } {
+            display: inline;
+        }
+    }
+
+}
+
+
+// ------------------------------------------------------------- *
+// STEP 7: Applying the grid!
+// --------------------------
+//
+//      @mixin apply-grid
+//          - creating row selector
+//          - printing container styles by extending placeholder selector
+//          - extending row styles (if applicable)
+//          - printing row styles by extending placeholder selector
+//          - printing column styles
+//          - printing break column styles
+//
+// ------------------------------------------------------------- *
+
+
+@mixin apply-grid(
+    $use-grid,                              // [REQUIRED]   Name of the grid to use
+    $container-selector: false,             // [OPTIONAL]   The element to apply max-width to
+    $row-selector: false,                   // [REQUIRED*]  Selector for grid rows. * Defaults to .grid_row_[x] where x is number of columns in the grid
+    $row-extend-selectors: false,           // [OPTIONAL]   Selectors that the rows extend. Can be multiple selectors, e.g.: $row-extend-selectors: '%grid_row' '.custom_grid_row' '#my_row',
+    $column-selector-prefix: '.grid_col_',  // [REQUIRED*]  Prefix to the column selector. The number of columns for the current column will be output with the selector. E.g. .grid_col_[x] where x is number of columns the current column spans. * Defaults to '.grid_col_'
+    $column-extend-selectors: false,        // [OPTIONAL]   Selectors that the columns extend. Can be multiple selectors, e.g.: $row-column-selectors: '%grid_column' '.custom_grid_column' '#my_column',
+    $output-column-styles-for: 'all',       // [REQUIRED*]  Array of columns that the grid should support. E.g.: $output-column-styles-for: 2 3 6, <-- this will only output styles for columns 2, 3 and 6. Set to none or false to not output any default styles. * Defaults to 'all'
+    $break-columns: false                   // [OPTIONAL]   Setting column span on selectors within a breakpoint
+    ) {
+
+    $grid-name: $use-grid;
+
+    @if $row-selector == false {
+        $row-selector: '.grid_row_' + return-grid-settings( $grid-name, 'num-columns' )
+    }
+
+    // Outputting styles for the container
+    @if $container-selector != false {
+        #{ $container-selector } {
+            @extend #{ return-grid-settings( $grid-name, 'container-placeholder-selector' ) }
+        }
+    }
+
+    // Outputting styles for rows and columns
+    #{ $row-selector }{
+
+        // Extending row styles
+        @if $row-extend-selectors != false {
+            @include extend-by-array( $row-extend-selectors )
+        }
+
+        // Outputting row styles
+        @extend #{ return-grid-settings( $grid-name, 'row-placeholder-selector' ) };
+
+        // Outputting column styles
+        @include output-column-styles( $grid-name, $column-selector-prefix, $column-extend-selectors, $output-column-styles-for );
+
+        @if $break-columns != false {
+            @include output-break-column-styles( $break-columns, $grid-name );
+        }
+    }
+
+
+}
+
+
+
+// ------------------------------------------------------------- *
+// Mixin for adding column styles to any selector
+// ------------------------------------------------
+//
+//      @mixin span-columns
+//
+//          Example use:
+//          -------------------
+//          .selector{
+//              @include span-columns( $columns: 6, $grid-name: 'grid-12' );
+//          }
+//
+// ------------------------------------------------------------- *
+
+@mixin span-columns( $columns, $grid-name ){
+    $column-placeholder-selector: return-grid-settings( $grid-name, 'column-placeholder-selector' );
+
+    // Setting paddings (shared with all columns in the grid)
+    @extend #{ $column-placeholder-selector };
+
+    // Setting width
+    @extend #{ $column-placeholder-selector }-#{ $columns };
+}
+
+
+// ------------------------------------------------------------- *
+// Mixin for adding break-column styles to any selector
+// ------------------------------------------------
+//
+//      @mixin span-breakpoint-columns
+//
+//          Example use:
+//          -------------------
+         // .selector{
+         //     @include span-breakpoint-columns( $columns: 6, $grid-name: 'grid-12', $breakpoint: 1 );
+         // }
+//
+// ------------------------------------------------------------- *
+
+@mixin span-breakpoint-columns( $columns, $grid-name, $breakpoint ){
+    $column-placeholder-selector: return-grid-settings( $grid-name, 'column-placeholder-selector' );
+    $current-placeholder-selector: $column-placeholder-selector + '-breakpoint-' + $breakpoint + '-' + $columns;
+
+    // Setting paddings (shared with all columns in the grid)
+    @extend #{ $column-placeholder-selector };
+
+    // Setting width
+    @extend #{ $current-placeholder-selector };
+}
+
+
+// ------------------------------------------------------------- *
+// Function to return the media query of a certain breakpoint
+// -----------------------------------------------------------
+//
+//      @function return-grid-media-query
+//
+//          Example use:
+//          -------------------
+//          $query: return-grid-media-query('grid-12', 2);
+//
+//
+// ------------------------------------------------------------- *
+
+@function return-grid-media-query(
+    $grid-name,
+    $breakpoint
+    ){
+    // Variables to retrieve the media query from the breakpoint store of the current grid
+    $breakpoint-array: return-grid-settings( $grid-name, 'breakpoints' );
+    $breakpoint: nth( $breakpoint-array, $breakpoint );
+    $query: false;
+
+    // Some logic copied from the output-breakpoint mixin
+    @if length( $breakpoint ) == 2 and nth( $breakpoint, 1 ) == 'query' {
+        // If breakpoint is the only value set, the array will collapse and we have to do this:
+        $query: nth( $breakpoint, 2 );
+
+    } @else {
+        @each $value in $breakpoint {
+            @if nth( $value, 1 ) == 'query' {
+                $query: nth( $value, 2 );
+            }
+        }
+    }
+
+    @return $query;
+}
+
+// ------------------------------------------------------------- *
+// Mixin for using a media query based on a grid breakpoint
+// -----------------------------------------------------------
+//
+//      @mixin grid-media
+//
+//          Example use:
+//          -------------------
+         // .selector{
+         //     @include grid-media( 'grid-12', 2 ){
+         //         padding-left: 2em;
+         //         color: blue;
+         //     }
+         // }
+//
+//
+// ------------------------------------------------------------- *
+
+@mixin grid-media(
+    $grid-name,
+    $breakpoint
+    ){
+
+    $query: return-grid-media-query($grid-name, $breakpoint);
+
+    @if $query != false {
+        // Printing media query
+        @media #{ $query } {
+            @content;
+        }
+    }
+}
+
+// ------------------------------------------------------------- *
+// Mixin for adding offset to a selector based on grid columns
+// -----------------------------------------------------------
+//
+//      @mixin column-offset
+//
+//          Example use:
+//          -------------------
+         // .selector{
+         //     @include column-offset(
+         //         $grid-name: 'grid-12',
+         //         $num-columns: 3,
+         //         $direction: 'left'
+         //     );
+         // }
+//
+//
+// ------------------------------------------------------------- *
+
+@mixin column-offset(
+    $grid-name,
+    $num-columns,
+    $direction
+    ){
+
+    $column-width: return-grid-settings( $grid-name, 'column-width' );
+    $gutter-width: return-grid-settings( $grid-name, 'gutter-width' );
+    $row-width: return-grid-settings( $grid-name, 'row-width-inner' );
+    $gutter-property: return-grid-settings( $grid-name, 'gutter-property' );
+
+    $existing-gutter: 0;
+    @if $gutter-property == 'margin' {
+        $existing-gutter: $gutter-width / 2;
+    }
+
+    $current-column-width: $num-columns * $column-width + ($gutter-width * $num-columns) + $existing-gutter;
+    $offset: percentage-round( $current-column-width / $row-width );
+
+    margin-#{$direction}: #{$offset};
+}
+
+
+// ------------------------------------------------------------- *
+// Mixin for removing offset from a selector based on grid columns
+// -----------------------------------------------------------
+//
+//      @mixin remove-column-offset
+//
+//          Example use:
+//          -------------------
+//          .selector{
+//              @include remove-column-offset(
+//                  $grid-name: 'grid-12',
+//                  $breakpoint: 1,
+//                  $direction: 'left'
+//              );
+//          }
+//
+//
+// ------------------------------------------------------------- *
+
+@mixin remove-column-offset(
+    $grid-name,
+    $breakpoint,
+    $direction
+    ){
+
+    $gutter-property: return-grid-settings( $grid-name, 'gutter-property' );
+    $gutter: 0; // If the gutter property is set with padding, we just need to set the margin to 0
+
+    @if $gutter-property == 'margin' {
+        // Calculating cutter as a percentage
+        $row-width: return-grid-settings( $grid-name, 'row-width-inner' );
+        $gutter-width: return-grid-settings( $grid-name, 'gutter-width' );
+        $gutter: percentage-round( $gutter-width / $row-width );
+    }
+
+    $query: return-grid-media-query($grid-name, $breakpoint);
+
+    @if $query != false {
+        // Printing media query
+        @media #{ $query } {
+            margin-#{$direction}: #{ $gutter/2 };
+        }
+    }
+}
+
+// ------------------------------------------------------------- *
+// Mixin for adding breakout styles to a selector, meaning that
+// the element will be pulled out to the edge of the grid
+// row/container with a negative margin
+// -----------------------------------------------------------
+//
+//      @mixin grid-breakout
+//
+//          Example use:
+//          -------------------
+//          .selector{
+//              @include grid-breakout( $grid-name: 'grid-12' );
+//          }
+//
+//
+// ------------------------------------------------------------- *
+
+@mixin grid-breakout( $grid-name ){
+    $breakout-placeholder-selector: return-grid-settings( $grid-name, 'breakout-placeholder-selector' );
+    @extend #{ $breakout-placeholder-selector };
+}
+
+
+
+

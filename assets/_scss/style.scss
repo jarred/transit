@@ -1,0 +1,19 @@
+@import "helpers/_variables";
+@import "helpers/_misc";
+@import "helpers/_shapes";
+@import "type/_typography";
+@import "normalize/_normalize";
+@import "grid/_layout";
+@import "ui/_post";
+@import "ui/_date";
+@import "posts/_photoset";
+@import "posts/_photo";
+
+.map{
+	width: 200px;
+	height: 200px;
+	@include border-radius(100px);
+	background-repeat: no-repeat;
+	background-position: center center;
+	background-color: #EEE;
+}
