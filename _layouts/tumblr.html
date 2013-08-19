@@ -30,148 +30,185 @@
       {/block:HasPages}
     </div>
 
-    {block:Posts}
-      <div class="post {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even} grid_container" id="post-{PostID}">
-        {block:Date}
-          <div class="date">
-            <span class="day_of_week">{DayOfWeek}</span>
-            <div class="calendar">
-              <span class="short_month">{ShortMonth}</span>
-              <span class="day_of_month_with_zero">{DayOfMonthWithZero}</span>
-              <span class="year">{Year}</span>
-            </div>
-            <div class="clock">
-              <span class="hours">{12HourWithZero}</span>
-              <span class="divider">:</span>
-              <span class="minutes">{Minutes}</span>
-              <span class="am-pm">{AmPm}</span>
-            </div>
-          </div>
-        {/block:Date}
+    <div class="page" data-page="{CurrentPage}" data-total="{TotalPages}" {block:NextPage}data-next="{NextPage}"{/block:NextPage}>
+      {block:Posts}
+        <div class="post {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even} grid_container" id="post-{PostID}">
 
-        {block:Title}
-        <div class="grid_row_6">
-          <div class="grid_col_3">
-            <h1>
-              {block:IndexPage}<a href="{Permalink}">{/block:IndexPage}
-              {Title}
-              {block:IndexPage}</a>{/block:IndexPage}
-            </h1>
-          </div>
-        </div>
-        {/block:Title}
-
-        {block:Text}
-        <div class="grid_row_6">
-          <div class="grid_col_1">&nbsp;</div>
-          <div class="grid_col_4">
-            {Body}
-          </div>
-        </div>
-        {/block:Text}
-
-        {block:Photo}
-        <div class="image_hold">
-          <div class="grid_row_6">
-            <div class="grid_col_6">
-              {LinkOpenTag}
-                <img src="{PhotoURL-400}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
-              {LinkCloseTag}
-            </div>
-          </div>
-        </div>        
-        <div class="grid_row_6">
-          <div class="grid_col_1">&nbsp;</div>
-          <div class="grid_col_2">
-            {block:Caption}
-            <div class="caption">{Caption}</div>
-            {/block:Caption}
-            <div class="map"></div>
-          </div>
-          <div class="grid_col_2">
-            {block:HasTags}
-            <div class="tags">
-              <h5>Tagged:</h5>
-              <ul>
-                {block:Tags}
-                <li><a href="{TagURL}">{Tag}</a></li>
-                {/block:Tags}
-              </ul>
-            </div>
-            {/block:HasTags}
-            {block:Exif}
-            <div class="exif">
-              <dl>
-              {block:Camera}
-                <dt>Camera</dt>
-                <dd>{Camera}</dd>
-              {/block:Camera}
-              {block:Aperture}
-                <dt>Aperture</dt>
-                <dd>{Aperture}</dd>
-              {/block:Aperture}
-              {block:Exposure}
-                <dt>Exposure</dt>
-                <dd>{Exposure}</dd>
-              {/block:Exposure}
-              {block:FocalLength}
-                <dt>Focal Length</dt>
-                <dd>{FocalLength}</dd>
-              {/block:FocalLength}
-              </dl>
-            </div>  
-            {/block:Exif}
-          </div>
-        </div>
-        {/block:Photo}
-
-        {block:Photoset}
-        <div class="grid_row_6">
-          <div class="grid_col_1">
-            {block:Caption}
-            <div class="caption">{Caption}</div>
-            {/block:Caption}
-            <div class="map"></div>
-            {block:HasTags}
-            <div class="tags">
-              <h5>Tagged:</h5>
-              <ul>
-                {block:Tags}
-                <li><a href="{TagURL}">{Tag}</a></li>
-                {/block:Tags}
-              </ul>
-            </div>
-            {/block:HasTags}
-          </div>
-          <div class="grid_col_4">
-            {block:Photos}
-            <div class="image">
-              <img src="{PhotoURL-500}" />
-              {block:Caption}
-              <div class="caption">
-                <p>{Caption}</p>
+          {block:Date}
+            <div class="date">
+              <span class="day_of_week">{DayOfWeek}</span>
+              <div class="calendar">
+                <span class="short_month">{ShortMonth}</span>
+                <span class="day_of_month_with_zero">{DayOfMonthWithZero}</span>
+                <span class="year">{Year}</span>
               </div>
-              {/block:Caption}              
+              <div class="clock">
+                <span class="hours">{12HourWithZero}</span>
+                <span class="divider">:</span>
+                <span class="minutes">{Minutes}</span>
+                <span class="am-pm">{AmPm}</span>
+              </div>
             </div>
-            {block:Photos}
-            <script type="application/json">
-            {
-              "photos": [{block:Photos}{ 
-                "src": "{PhotoURL-500}",
-                "caption": "{block:Caption}{Caption}{/block:Caption}",
-                {block:HighRes}
-                "high-res": "{PhotoURL-HighRes}",
-                {/block:HighRes}
-                "link": "{LinkURL}"
-              },{/block:Photos}{}],
-              "layout": {JSPhotosetLayout}
-            }
-            </script>
+          {/block:Date}
+
+          {block:Title}
+          <div class="grid_row_6">
+            <div class="grid_col_3">
+              <h1>
+                {block:IndexPage}<a href="{Permalink}">{/block:IndexPage}
+                {Title}
+                {block:IndexPage}</a>{/block:IndexPage}
+              </h1>
+            </div>
           </div>
+          {/block:Title}
+
+          {block:Text}
+          <div class="grid_row_6">
+            <div class="grid_col_1">&nbsp;</div>
+            <div class="grid_col_4">
+              {Body}
+            </div>
+          </div>
+          {/block:Text}
+
+          {block:Photo}
+          <div class="image_hold">
+            <div class="grid_row_6">
+              <div class="grid_col_6">
+                {LinkOpenTag}
+                  <img src="{PhotoURL-400}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
+                {LinkCloseTag}
+              </div>
+            </div>
+          </div>        
+          <div class="grid_row_6">
+            <div class="grid_col_1">&nbsp;</div>
+            <div class="grid_col_2">
+              {block:Caption}
+              <div class="caption">{Caption}</div>
+              {/block:Caption}
+              <div class="map"></div>
+            </div>
+            <div class="grid_col_2">
+              {block:HasTags}
+              <div class="tags">
+                <h5>Tagged:</h5>
+                <ul>
+                  {block:Tags}
+                  <li><a href="{TagURL}">{Tag}</a></li>
+                  {/block:Tags}
+                </ul>
+              </div>
+              {/block:HasTags}
+              {block:Exif}
+              <div class="exif">
+                <dl>
+                {block:Camera}
+                  <dt>Camera</dt>
+                  <dd>{Camera}</dd>
+                {/block:Camera}
+                {block:Aperture}
+                  <dt>Aperture</dt>
+                  <dd>{Aperture}</dd>
+                {/block:Aperture}
+                {block:Exposure}
+                  <dt>Exposure</dt>
+                  <dd>{Exposure}</dd>
+                {/block:Exposure}
+                {block:FocalLength}
+                  <dt>Focal Length</dt>
+                  <dd>{FocalLength}</dd>
+                {/block:FocalLength}
+                </dl>
+              </div>  
+              {/block:Exif}
+            </div>
+          </div>
+          {/block:Photo}
+
+          {block:Panorama}
+          <div class="grid_row_12 panorama">
+            <div class="image grid_col_12">
+              {block:Photo}
+              <img src="{PhotoURL-500}" />
+              {/block:Photo}
+            </div>
+            <pre type="application/json" class="json meta">
+            {
+              "panorama": {
+                "url": "{PhotoURL-Panorama}",
+                "width": {PhotoWidth-Panorama,
+                "height": {PhotoHeight-Panorama}
+              }  
+            }
+            </pre>
+          </div>
+          {/block:Panorama}
+
+          {block:Photoset}
+          <div class="grid_row_6">
+            <div class="grid_col_1">
+              {block:Caption}
+              <div class="caption">{Caption}</div>
+              {/block:Caption}
+              <div class="map"></div>
+              {block:HasTags}
+              <div class="tags">
+                <h5>Tagged:</h5>
+                <ul>
+                  {block:Tags}
+                  <li><a href="{TagURL}">{Tag}</a></li>
+                  {/block:Tags}
+                </ul>
+              </div>
+              {/block:HasTags}
+            </div>
+            <div class="grid_col_4">
+              {block:Photos}
+              <div class="image">
+                <img src="{PhotoURL-500}" />
+                {block:Caption}
+                <div class="caption">
+                  <p>{Caption}</p>
+                </div>
+                {/block:Caption}              
+              </div>
+              {block:Photos}
+
+              <pre type="application/json" class="json">
+              {
+                "photos": [{block:Photos}{ 
+                  "src": "{PhotoURL-500}",
+                  "caption": "{block:Caption}{Caption}{/block:Caption}",
+                  {block:HighRes}
+                  "high-res": "{PhotoURL-HighRes}",
+                  {/block:HighRes}
+                  "link": "{LinkURL}"
+                },{/block:Photos}{}],
+                "layout": {JSPhotosetLayout}
+              }
+              </pre>
+
+            </div>
+          </div>
+          {/block:Photoset}
+
+          <pre type="application/json" class="json meta">
+          {
+            "meta": {
+              {block:HasTags}
+              "tags": [{block:Tags}{
+                "name": "{Tag}",
+                "url": "{TagURL}"
+              },{/block:Tags}{}]
+              {/block:HasTags}
+            }  
+          }
+          </pre>
         </div>
-        {/block:Photoset}
-      </div>
-    {/block:Posts}
+      {/block:Posts}
+    </div>
     
   </body>
 </html>
