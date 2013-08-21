@@ -4,6 +4,10 @@
 
   TagApp = window.TagApp || (window.TagApp = {});
 
+  TagApp.Data = {
+    gMapsAPIKey: "AIzaSyBcdQ0fjR_fbOMEirWzvwMyY2SMVByKHlo"
+  };
+
   TagApp.Main = {
     init: function() {
       _.bindAll(this);
@@ -14,29 +18,51 @@
       return navigator.geolocation.getCurrentPosition(this.haveLocation);
     },
     haveLocation: function(position) {
-      var image, tag;
-
-      this.showResult(position);
-      return;
-      tag = "#geo:lat/long:" + position.coords.latitude + "/" + position.coords.longitude;
-      console.log(tag);
-      image = "http://maps.googleapis.com/maps/api/staticmap?center=" + position.coords.latitude + "," + position.coords.longitude + "&zoom=12&size=400x400&sensor=false&&maptype=roadmap&visual_refresh=true&style=feature:road|visibility:simplified&style=feature:landscape|visibility:on&style=feature:poi|visibility:off";
-      return $("body").append("<img src=\"" + image + "\" />");
+      return this.showResult(position);
     },
     resultView: Backbone.View.extend({
       className: 'result',
+      events: {
+        'change input.zoom': 'updateZoom'
+      },
       initialize: function() {
-        console.log(this.model.toJSON());
+        _.bindAll(this);
         return this.render();
       },
-      template: _.template("<div class=\"map\" style=\"background-image: url('http://maps.googleapis.com/maps/api/staticmap?center=<%= coords.latitude %>,<%= coords.longitude %>&zoom=12&size=400x400&sensor=false&&maptype=roadmap&visual_refresh=true&style=feature:road|visibility:simplified&style=feature:landscape|visibility:on&style=feature:poi|visibility:off');\">\n</div>\n<input type=\"text\" class=\"js-tag\" value=\"#lat/long/zoom:<%= coords.latitude %>/<%= coords.longitude %>\"></input>"),
+      template: _.template("<div class=\"map\">\n	<img src=\"<%= image_src %>\" />\n</div>\n<div class=\"zoom\">\n	<h4>Zoom</h4>\n	<span class=\"label\">City</span>\n	<input type=\"range\" name=\"points\" class=\"zoom\" min=\"8\" value=\"14\" max=\"16\">\n	<span class=\"label\">Street</span>\n</div>\n<div class=\"tag\">\n	<h4>Tag:</h4>\n	<input type=\"text\" class=\"js-tag\" value=\"#lat/long/zoom:<%= coords.latitude %>/<%= coords.longitude %>\"></input>\n	<p>Paste this into the tags for your tumblr post.</p>\n</div>"),
+      makeImage: function() {
+        var data, src;
+
+        data = {
+          center: this.model.get('coords').latitude + "," + this.model.get('coords').longitude,
+          zoom: this.model.get('zoom'),
+          size: "320x160",
+          sensor: false,
+          maptype: 'roadmap',
+          visual_refresh: true,
+          key: TagApp.Data.gMapsAPIKey
+        };
+        src = "http://maps.googleapis.com/maps/api/staticmap?" + ($.param(data));
+        return src;
+      },
       render: function() {
         var _this = this;
 
+        this.model.set("zoom", 14);
+        this.model.set("image_src", this.makeImage());
         this.$el.html(this.template(this.model.toJSON()));
         return _.defer(function() {
           return _this.$('.js-tag').focus();
         });
+      },
+      updateZoom: function(e) {
+        var val;
+
+        val = $(e.target).val();
+        this.model.set('zoom', val);
+        console.log(this.model.toJSON());
+        console.log("url('" + (this.makeImage()) + "');");
+        return this.$('.map').html("<img src=\"" + (this.makeImage()) + "\" />");
       }
     }),
     showResult: function(position) {
