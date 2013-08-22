@@ -23,6 +23,8 @@
   }
 }
 
+/*
+
 $degredation-selector: '.no_media_queries';
 $ie6-selector: '.ie6';
 $grid-debug: false;
@@ -83,4 +85,17 @@ $grid-debug: false;
 	margin-left: auto;
 	margin-right: auto;
 	background-color: #FFF;
+}
+
+*/
+
+#left{
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: 60%;
+	overflow: scroll;
+	background-color: #F9F9F9;
+// 	color: #FFF;
 }

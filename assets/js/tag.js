@@ -16,6 +16,7 @@
       $('.js-get-location').on('click', this.getLocation);
       this.geocoder = new google.maps.Geocoder();
       return $(".js-search-for-address").autocomplete({
+        appendTo: '.js-address',
         source: function(request, response) {
           return _this.geocoder.geocode({
             address: request.term
@@ -64,7 +65,7 @@
       updateTag: function() {
         var tag;
 
-        tag = "#lat/long/zoom:" + (this.model.get('coords').latitude) + "," + (this.model.get('coords').longitude) + "," + (this.model.get('zoom'));
+        tag = "#lat/long/zoom:" + (this.model.get('coords').latitude) + "/" + (this.model.get('coords').longitude) + "/" + (this.model.get('zoom'));
         this.model.set('tag', tag);
         return this.$('.js-tag').val(this.model.get('tag'));
       },

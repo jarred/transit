@@ -4,7 +4,7 @@
 $sans: "Helvetica Neue", Sans-Serif;
 
 html{
-	background-color: #FDFDFD;
+	background-color: #FFF;
 }
 
 #app{
@@ -24,6 +24,32 @@ html{
 			}
 		}
 	}
+	.or{
+		text-align: center;
+		text-transform: uppercase;
+	}
+	.address{
+		margin: 20px 40px;
+		text-align: center;
+		.ui-helper-hidden-accessible{
+			display: none;
+		}
+		input{
+			@include box-sizing(border-box);
+			display: block;
+			width: 100%;
+			border: 1px solid #CCC;
+			font: 400 14px/60px $sans;
+			text-align: center;
+		}
+		.ui-autocomplete{
+			text-align: left;
+			li{
+				border-bottom: 1px solid #EEE;
+				padding: 4px;
+			}
+		}
+	}
 }
 
 .btn{
@@ -36,6 +62,15 @@ html{
 	color: #FFF;
 	text-decoration: none;
 	text-align: center;
+}
+
+.ui-autocomplete{
+	margin: 0px;
+	padding: 0px;
+	li{
+		list-style-type: none;
+
+	}
 }
 
 .result{

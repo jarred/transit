@@ -1,0 +1,57 @@
+#map{
+	position: absolute;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	left: 60%;
+	background-color: #42B2CC;
+	z-index: 1;
+	.leaflet-tile-pane{
+		@include opacity(.2);
+	}
+}
+
+.map-edge{
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+	right: 40%;
+	width: 2px;
+	z-index: 10;
+	margin-right: -2px;
+	html.rgba &{
+		background-color: rgba(#000, .2);
+	}
+}
+
+.marker{
+	width: 60px;
+	height: 60px;
+	margin-left: -30px;
+	margin-top: -30px;
+	background-color: #000;
+	border-radius: 50%;
+	z-index: 401;
+	html.rgba &{
+		background-color: rgba(#000, .2);
+	}
+	.photo{
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		background-size: cover;
+		background-position: center center;
+		margin: 2px;
+	}
+	&:hover{
+		z-index: 999;
+	}
+}
+
+.leaflet-control-attribution{
+	background-color: #000 !important;
+	color: #FFF !important;
+	a{
+		color: #FFF !important;
+	}
+}

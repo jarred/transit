@@ -446,7 +446,7 @@ table {
 
 /* line 6, ../_scss/tag.scss */
 html {
-  background-color: #FDFDFD;
+  background-color: #FFF;
 }
 
 /* line 10, ../_scss/tag.scss */
@@ -469,8 +469,42 @@ html.geolocation #app .intro .use-location, html.geolocation
 #app .intro .or {
   display: block;
 }
+/* line 27, ../_scss/tag.scss */
+#app .or {
+  text-align: center;
+  text-transform: uppercase;
+}
+/* line 31, ../_scss/tag.scss */
+#app .address {
+  margin: 20px 40px;
+  text-align: center;
+}
+/* line 34, ../_scss/tag.scss */
+#app .address .ui-helper-hidden-accessible {
+  display: none;
+}
+/* line 37, ../_scss/tag.scss */
+#app .address input {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border: 1px solid #CCC;
+  font: 400 14px/60px "Helvetica Neue", Sans-Serif;
+  text-align: center;
+}
+/* line 45, ../_scss/tag.scss */
+#app .address .ui-autocomplete {
+  text-align: left;
+}
+/* line 47, ../_scss/tag.scss */
+#app .address .ui-autocomplete li {
+  border-bottom: 1px solid #EEE;
+  padding: 4px;
+}
 
-/* line 29, ../_scss/tag.scss */
+/* line 55, ../_scss/tag.scss */
 .btn {
   display: -moz-inline-stack;
   display: inline-block;
@@ -489,7 +523,17 @@ html.geolocation #app .intro .use-location, html.geolocation
   text-align: center;
 }
 
-/* line 42, ../_scss/tag.scss */
+/* line 67, ../_scss/tag.scss */
+.ui-autocomplete {
+  margin: 0px;
+  padding: 0px;
+}
+/* line 70, ../_scss/tag.scss */
+.ui-autocomplete li {
+  list-style-type: none;
+}
+
+/* line 77, ../_scss/tag.scss */
 .result .map {
   background-color: #EEE;
   height: 160px;
@@ -497,7 +541,7 @@ html.geolocation #app .intro .use-location, html.geolocation
   background-position: center center;
   border-bottom: 1px solid #CCC;
 }
-/* line 49, ../_scss/tag.scss */
+/* line 84, ../_scss/tag.scss */
 .result input {
   display: -moz-inline-stack;
   display: inline-block;
@@ -513,7 +557,7 @@ html.geolocation #app .intro .use-location, html.geolocation
   width: 240px;
 }
 
-/* line 57, ../_scss/tag.scss */
+/* line 92, ../_scss/tag.scss */
 .hide {
   display: none;
 }

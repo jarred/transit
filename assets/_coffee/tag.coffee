@@ -10,6 +10,7 @@ TagApp.Main =
 		# $('.js-search-for-address').on 'keyup', @lookForLocation
 		@geocoder = new google.maps.Geocoder()
 		$(".js-search-for-address").autocomplete
+			appendTo: '.js-address'
 			source: (request, response) =>
 				@geocoder.geocode
 					address: request.term
@@ -65,7 +66,7 @@ TagApp.Main =
 		"""
 
 		updateTag: ->
-			tag = "#lat/long/zoom:#{@model.get('coords').latitude},#{@model.get('coords').longitude},#{@model.get('zoom')}"
+			tag = "#lat/long/zoom:#{@model.get('coords').latitude}/#{@model.get('coords').longitude}/#{@model.get('zoom')}"
 			@model.set 'tag', tag
 			@$('.js-tag').val @model.get('tag')
 
