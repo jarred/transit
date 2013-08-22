@@ -10,8 +10,38 @@
 
   TagApp.Main = {
     init: function() {
+      var _this = this;
+
       _.bindAll(this);
-      return $('.js-get-location').on('click', this.getLocation);
+      $('.js-get-location').on('click', this.getLocation);
+      this.geocoder = new google.maps.Geocoder();
+      return $(".js-search-for-address").autocomplete({
+        source: function(request, response) {
+          return _this.geocoder.geocode({
+            address: request.term
+          }, function(results, status) {
+            return response($.map(results, function(item) {
+              return {
+                label: item.formatted_address,
+                value: item.formatted_address,
+                latitude: item.geometry.location.lat(),
+                longitude: item.geometry.location.lng()
+              };
+            }));
+          });
+        },
+        select: function(event, ui) {
+          var position;
+
+          position = {
+            coords: {
+              latitude: ui.item.latitude,
+              longitude: ui.item.longitude
+            }
+          };
+          return _this.showResult(position);
+        }
+      });
     },
     getLocation: function(e) {
       e.preventDefault();
@@ -27,9 +57,17 @@
       },
       initialize: function() {
         _.bindAll(this);
+        this.model.on('change', this.updateTag);
         return this.render();
       },
-      template: _.template("<div class=\"map\">\n	<img src=\"<%= image_src %>\" />\n</div>\n<div class=\"zoom\">\n	<h4>Zoom</h4>\n	<span class=\"label\">City</span>\n	<input type=\"range\" name=\"points\" class=\"zoom\" min=\"8\" value=\"14\" max=\"16\">\n	<span class=\"label\">Street</span>\n</div>\n<div class=\"tag\">\n	<h4>Tag:</h4>\n	<input type=\"text\" class=\"js-tag\" value=\"#lat/long/zoom:<%= coords.latitude %>/<%= coords.longitude %>\"></input>\n	<p>Paste this into the tags for your tumblr post.</p>\n</div>"),
+      template: _.template("<div class=\"map\">\n	<img src=\"<%= image_src %>\" />\n</div>\n<div class=\"zoom\">\n	<h4>Zoom</h4>\n	<span class=\"label\">City</span>\n	<input type=\"range\" name=\"points\" class=\"zoom\" min=\"8\" value=\"14\" max=\"16\">\n	<span class=\"label\">Street</span>\n</div>\n<div class=\"tag\">\n	<h4>Tag:</h4>\n	<input type=\"text\" class=\"js-tag\" value=\"<%= tag %>\"></input>\n	<p>Paste this into the tags for your tumblr post.</p>\n</div>"),
+      updateTag: function() {
+        var tag;
+
+        tag = "#lat/long/zoom:" + (this.model.get('coords').latitude) + "," + (this.model.get('coords').longitude) + "," + (this.model.get('zoom'));
+        this.model.set('tag', tag);
+        return this.$('.js-tag').val(this.model.get('tag'));
+      },
       makeImage: function() {
         var data, src;
 
@@ -56,13 +94,15 @@
         });
       },
       updateZoom: function(e) {
-        var val;
+        var val,
+          _this = this;
 
         val = $(e.target).val();
         this.model.set('zoom', val);
-        console.log(this.model.toJSON());
-        console.log("url('" + (this.makeImage()) + "');");
-        return this.$('.map').html("<img src=\"" + (this.makeImage()) + "\" />");
+        this.$('.map').html("<img src=\"" + (this.makeImage()) + "\" />");
+        return _.defer(function() {
+          return _this.$('.js-tag').focus();
+        });
       }
     }),
     showResult: function(position) {
