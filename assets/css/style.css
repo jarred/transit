@@ -2290,30 +2290,68 @@ $grid-debug: false;
 /* line 92, ../_scss/grid/_layout.scss */
 #left {
   position: absolute;
-  left: 0px;
+  left: 80px;
   top: 0px;
   bottom: 0px;
-  width: 60%;
+  right: 40%;
   overflow: scroll;
-  background-color: #F9F9F9;
+  background-color: #FFF;
+}
+/* line 100, ../_scss/grid/_layout.scss */
+#left .buffer {
+  height: 1000px;
 }
 
 /* line 1, ../_scss/ui/_post.scss */
 .post {
-  margin-bottom: 100px;
+  margin: 40px;
 }
 
 /* line 5, ../_scss/ui/_post.scss */
+.divider {
+  border-bottom: 1px dotted #eee;
+  height: 50px;
+  margin-bottom: 49px;
+}
+
+/* line 11, ../_scss/ui/_post.scss */
 pre.json {
   display: none;
 }
 
+/* line 1, ../_scss/ui/_nav.scss */
+#nav {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 80px;
+  background-color: #F5F5F5;
+}
+/* line 8, ../_scss/ui/_nav.scss */
+#nav .contents {
+  display: none;
+}
+/* line 11, ../_scss/ui/_nav.scss */
+#nav .avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin: 10px;
+  background-size: cover;
+  background-position: center center;
+}
+/* line 19, ../_scss/ui/_nav.scss */
+#nav:hover {
+  background-color: #222;
+}
+
 /* line 2, ../_scss/ui/_date.scss */
-.date .day_of_week {
+.old_date .day_of_week {
   font: 600 30px/40px "Helvetica Neue", "Helvetica", Sans-Serif;
 }
 /* line 5, ../_scss/ui/_date.scss */
-.date .calendar {
+.old_date .calendar {
   display: -moz-inline-stack;
   display: inline-block;
   vertical-align: top;
@@ -2330,35 +2368,35 @@ pre.json {
   top: -10px;
 }
 /* line 15, ../_scss/ui/_date.scss */
-.date .calendar .short_month,
-.date .calendar .year,
-.date .calendar .day_of_month_with_zero {
+.old_date .calendar .short_month,
+.old_date .calendar .year,
+.old_date .calendar .day_of_month_with_zero {
   display: block;
   color: #FFF;
   text-align: center;
   padding: 4px;
 }
 /* line 21, ../_scss/ui/_date.scss */
-.date .calendar .short_month {
+.old_date .calendar .short_month {
   text-transform: uppercase;
   text-transform: uppercase;
   font-size: 14px;
   letter-spacing: 1px;
 }
 /* line 27, ../_scss/ui/_date.scss */
-.date .calendar .day_of_month_with_zero {
+.old_date .calendar .day_of_month_with_zero {
   display: block;
   font: 700 26px/26px "PT Mono", Monaco, monospace;
   text-transform: uppercase;
   background-color: #333;
 }
 /* line 33, ../_scss/ui/_date.scss */
-.date .calendar .year {
+.old_date .calendar .year {
   font-size: 11px;
   letter-spacing: 1px;
 }
 /* line 38, ../_scss/ui/_date.scss */
-.date .clock {
+.old_date .clock {
   margin-left: 4px;
   display: -moz-inline-stack;
   display: inline-block;
@@ -2370,7 +2408,7 @@ pre.json {
   font-family: "PT Mono", Monaco, monospace;
 }
 /* line 44, ../_scss/ui/_date.scss */
-.date .clock span {
+.old_date .clock span {
   display: -moz-inline-stack;
   display: inline-block;
   vertical-align: top;
@@ -2386,7 +2424,7 @@ pre.json {
   margin: 0px -4px;
 }
 /* line 52, ../_scss/ui/_date.scss */
-.date .clock .am-pm {
+.old_date .clock .am-pm {
   text-transform: uppercase;
   font-size: 10px;
   letter-spacing: 1px;
@@ -2402,16 +2440,21 @@ pre.json {
   right: 0px;
   bottom: 0px;
   left: 60%;
-  background-color: #42B2CC;
+  background-color: #000;
   z-index: 1;
 }
 /* line 9, ../_scss/ui/_map.scss */
 #map .leaflet-tile-pane {
-  opacity: 0.2;
-  filter: alpha(opacity=20);
+  opacity: 0.24;
+  filter: alpha(opacity=24);
+}
+/* line 13, ../_scss/ui/_map.scss */
+#map:hover .leaflet-tile-pane {
+  opacity: 0.6;
+  filter: alpha(opacity=60);
 }
 
-/* line 14, ../_scss/ui/_map.scss */
+/* line 19, ../_scss/ui/_map.scss */
 .map-edge {
   position: absolute;
   top: 0px;
@@ -2421,12 +2464,12 @@ pre.json {
   z-index: 10;
   margin-right: -2px;
 }
-/* line 22, ../_scss/ui/_map.scss */
+/* line 27, ../_scss/ui/_map.scss */
 html.rgba .map-edge {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* line 27, ../_scss/ui/_map.scss */
+/* line 32, ../_scss/ui/_map.scss */
 .marker {
   width: 60px;
   height: 60px;
@@ -2436,11 +2479,11 @@ html.rgba .map-edge {
   border-radius: 50%;
   z-index: 401;
 }
-/* line 35, ../_scss/ui/_map.scss */
+/* line 40, ../_scss/ui/_map.scss */
 html.rgba .marker {
-  background-color: rgba(0, 0, 0, 0.2);
+  background-color: rgba(0, 0, 0, 0.32);
 }
-/* line 38, ../_scss/ui/_map.scss */
+/* line 43, ../_scss/ui/_map.scss */
 .marker .photo {
   width: 56px;
   height: 56px;
@@ -2449,19 +2492,50 @@ html.rgba .marker {
   background-position: center center;
   margin: 2px;
 }
-/* line 46, ../_scss/ui/_map.scss */
+/* line 51, ../_scss/ui/_map.scss */
+.marker .icon-shell {
+  margin: 2px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #FFF;
+  color: #CCC;
+  font: 400 30px/56px 'Helvetica Neue';
+  text-align: center;
+}
+/* line 61, ../_scss/ui/_map.scss */
+.marker .count {
+  display: block;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  width: 18px;
+  height: 18px;
+  color: #000;
+  background-color: #FFF;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  background-clip: padding-box;
+  /* stops bg color from leaking outside the border: */
+  text-align: center;
+  font: 400 11px/18px 'Helvetica Neue';
+}
+/* line 74, ../_scss/ui/_map.scss */
 .marker:hover {
   z-index: 999;
 }
 
-/* line 51, ../_scss/ui/_map.scss */
+/* line 79, ../_scss/ui/_map.scss */
 .leaflet-control-attribution {
   background-color: #000 !important;
-  color: #FFF !important;
+  color: #AAA !important;
+  box-shadow: none !important;
+  padding: 2px 6px !important;
 }
-/* line 54, ../_scss/ui/_map.scss */
+/* line 84, ../_scss/ui/_map.scss */
 .leaflet-control-attribution a {
   color: #FFF !important;
+  text-decoration: none !important;
 }
 
 /* line 3, ../_scss/posts/_photoset.scss */
@@ -2481,7 +2555,7 @@ html.rgba .marker {
   width: 100%;
 }
 
-/* line 14, ../_scss/style.scss */
+/* line 15, ../_scss/style.scss */
 .map {
   width: 200px;
   height: 200px;

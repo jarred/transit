@@ -44,8 +44,13 @@
       console.log(this.toJSON());
       switch (this.get('type')) {
         case "photo":
-        case "photoset":
           html = "<div class=\"photo\" style=\"background-image: url('" + (this.get('photos')[0].src) + "');\"></div>";
+          break;
+        case "photoset":
+          html = "<div class=\"photo\" style=\"background-image: url('" + (this.get('photos')[0].src) + "');\"></div><span class=\"count\">" + (this.get('photos').length) + "</span>";
+          break;
+        case "text":
+          html = "<div class=\"icon-shell\"><i class=\"icon-flight icon\"></i></div>";
       }
       return html;
     }
@@ -53,16 +58,21 @@
 
   Transit.Views.MapView = Backbone.View.extend({
     className: 'map',
+    currentPost: 0,
     initialize: function() {
+      _.bindAll(this);
       this.posts = new Backbone.Collection();
       this.map = new L.Map("map", {
-        center: new L.LatLng(45.5192092, -122.63661690000004),
+        center: new L.LatLng(0, 0),
         zoom: 16
       });
-      return this.map.addLayer(new L.StamenTileLayer("toner"));
+      this.map.addLayer(new L.StamenTileLayer("toner"));
+      $('#left').on('scroll', this.checkPosition);
+      return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
     },
     addMarker: function(postModel) {
-      var icon, marker, options;
+      var icon, marker, options,
+        _this = this;
 
       this.posts.add(postModel);
       icon = new L.divIcon({
@@ -74,13 +84,67 @@
         icon: icon
       };
       marker = L.marker([postModel.get('position').latitude, postModel.get('position').longitude], options);
-      return marker.addTo(this.map);
+      marker.addTo(this.map);
+      postModel.on('rendered', this.updatePostHeights());
+      if (this.posts.length === 1) {
+        return _.defer(function() {
+          var position, post;
+
+          _this.updatePostHeights();
+          post = _this.posts.at(0);
+          position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
+          _this.map.panTo(position);
+          return _this.map.setZoom(post.get('position').zoom);
+        });
+      }
     },
     showPost: function(index) {
-      var post;
+      var position, post,
+        _this = this;
 
-      post = this.posts.get(index);
-      return this.map.setView(new L.LatLng(post.get('position').latitude, post.get('position').longitude), post.get('position').zoom);
+      this.currentPost = index;
+      post = this.posts.at(index);
+      position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
+      this.map.setZoom(12);
+      if (this.zoomTimeout != null) {
+        clearTimeout(this.zoomTimeout);
+      }
+      if (this.panTimeout) {
+        clearTimeout(this.panTimeout);
+      }
+      this.zoomTimeout = setTimeout(function() {
+        return _this.map.panTo(position);
+      }, 500);
+      return this.panTimeout = setTimeout(function() {
+        return _this.map.setZoom(post.get('position').zoom);
+      }, 1000);
+    },
+    updatePostHeights: function() {
+      var y,
+        _this = this;
+
+      this.postHeights = [];
+      y = 0;
+      return _.each($('.post'), function(el) {
+        var $el;
+
+        $el = $(el);
+        _this.postHeights.push($el.height() + y + 140);
+        return y += $el.height() + 140;
+      });
+    },
+    checkPosition: function(e) {
+      var index, y,
+        _this = this;
+
+      y = $('#left').scrollTop() + 300;
+      index = _.find(this.postHeights, function(value) {
+        return y <= value;
+      });
+      index = this.postHeights.indexOf(index);
+      if (this.currentPost !== index) {
+        return this.showPost(index);
+      }
     }
   });
 
@@ -105,11 +169,14 @@
       }
       switch (this.model.get('type')) {
         case 'photoset':
-          return this.photosetView = new Transit.Views.PhotosetView({
+          this.photosetView = new Transit.Views.PhotosetView({
             el: this.$('.photoset'),
             model: this.model
           });
       }
+      return _.defer(function() {
+        return _this.model.trigger('rendered');
+      });
     },
     addMarker: function(tag) {
       var position;

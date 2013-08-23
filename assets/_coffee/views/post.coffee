@@ -18,6 +18,9 @@ Transit.Views.PostView = Backbone.View.extend
 					el: @$('.photoset')
 					model: @model
 
+		_.defer () =>
+			@model.trigger 'rendered'
+
 	addMarker: (tag) ->
 		tag = tag.name.split(":")
 		tag = tag[1].split("/")

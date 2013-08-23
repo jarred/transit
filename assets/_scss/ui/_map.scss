@@ -4,10 +4,15 @@
 	right: 0px;
 	bottom: 0px;
 	left: 60%;
-	background-color: #42B2CC;
+	background-color: #000;
 	z-index: 1;
 	.leaflet-tile-pane{
-		@include opacity(.2);
+		@include opacity(.24);
+	}
+	&:hover{
+		.leaflet-tile-pane{
+			@include opacity(.6);
+		}
 	}
 }
 
@@ -33,7 +38,7 @@
 	border-radius: 50%;
 	z-index: 401;
 	html.rgba &{
-		background-color: rgba(#000, .2);
+		background-color: rgba(#000, .32);
 	}
 	.photo{
 		width: 56px;
@@ -43,6 +48,29 @@
 		background-position: center center;
 		margin: 2px;
 	}
+	.icon-shell{
+		margin: 2px;
+		width: 56px;
+		height: 56px;
+		border-radius: 50%;
+		background-color: #FFF;
+		color: #CCC;
+		font: 400 30px/56px 'Helvetica Neue';		
+		text-align: center;
+	}
+	.count{
+		display: block;
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		width: 18px;
+		height: 18px;
+		color: #000;
+		background-color: #FFF;
+		@include border-radius(50%);
+		text-align: center;
+		font: 400 11px/18px 'Helvetica Neue';
+	}
 	&:hover{
 		z-index: 999;
 	}
@@ -50,8 +78,11 @@
 
 .leaflet-control-attribution{
 	background-color: #000 !important;
-	color: #FFF !important;
+	color: #AAA !important;
+	box-shadow: none !important;
+	padding: 2px 6px !important;
 	a{
 		color: #FFF !important;
+		text-decoration: none !important;
 	}
 }

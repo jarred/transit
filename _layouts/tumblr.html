@@ -9,6 +9,7 @@
     <title>{Title}{block:PostTitle} - {PostTitle}{/block:PostTitle}</title>
     <link rel="stylesheet" href="{{ page.server }}/assets/css/style.css">
     <script type="text/javascript" src="{{ page.server }}/assets/js/modernizr.js"></script>
+    <link rel="stylesheet" href="{{ page.server }}/assets/fontello/css/fontello.css">
     <meta name="description" content="{MetaDescription}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="alternate" type="application/rss+xml" title="(RSS 2.0)" href="{RSS}" />
@@ -23,39 +24,25 @@
     <div id="map"></div>
     <div class="map-edge"></div>
 
-    <div id="left">
-      <div id="header">
-        <img src="{PortraitURL-128}" />
+    <div id="nav">
+      <div class="avatar" style="background-image: url('{PortraitURL-128}');">
+        
       </div>
-
-      <div id="nav">
+      <div class="contents">
         {block:HasPages}
         <ul>
           {block:Pages}<li><a href="{URL}">{Label}</a></li>{/block:Pages}
         </ul> 
         {/block:HasPages}
       </div>
+    </div>
 
+    <div id="left">
       <div class="page" data-page="{CurrentPage}" data-total="{TotalPages}" {block:NextPage}data-next="{NextPage}"{/block:NextPage}>
         {block:Posts}
           <div class="post js-extend-view {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even} grid_container" id="post-{PostID}" data-view="PostView" data-type="{PostType}" data-permalink="{Permalink}">
 
-            {block:Date}
-              <div class="date">
-                <span class="day_of_week">{DayOfWeek}</span>
-                <div class="calendar">
-                  <span class="short_month">{ShortMonth}</span>
-                  <span class="day_of_month_with_zero">{DayOfMonthWithZero}</span>
-                  <span class="year">{Year}</span>
-                </div>
-                <div class="clock">
-                  <span class="hours">{12HourWithZero}</span>
-                  <span class="divider">:</span>
-                  <span class="minutes">{Minutes}</span>
-                  <span class="am-pm">{AmPm}</span>
-                </div>
-              </div>
-            {/block:Date}
+            {% include date.html %}
 
             {block:Title}
             <div class="grid_row_6">
@@ -210,8 +197,10 @@
             }
             </pre>
           </div>
+          <div class="divider"></div>
         {/block:Posts}
       </div>
+      <div class="buffer"></div>
     </div>
     <script type="text/javascript" src="{{ page.server }}/assets/js/libs.js"></script>
     <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.3"></script>

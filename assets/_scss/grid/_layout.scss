@@ -91,11 +91,13 @@ $grid-debug: false;
 
 #left{
 	position: absolute;
-	left: 0px;
+	left: 80px;
 	top: 0px;
 	bottom: 0px;
-	width: 60%;
+	right: 40%;
 	overflow: scroll;
-	background-color: #F9F9F9;
-// 	color: #FFF;
+	background-color: #FFF;
+	.buffer{
+		height: 1000px;
+	}
 }
