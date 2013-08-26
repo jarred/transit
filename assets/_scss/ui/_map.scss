@@ -7,12 +7,7 @@
 	background-color: #000;
 	z-index: 1;
 	.leaflet-tile-pane{
-		@include opacity(.24);
-	}
-	&:hover{
-		.leaflet-tile-pane{
-			@include opacity(.6);
-		}
+		@include opacity(.44);
 	}
 }
 

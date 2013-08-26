@@ -5,17 +5,23 @@ Transit.Views.PostView = Backbone.View.extend
 		@model = new Transit.Models.PostModel @$el.data()
 		_.each @$('pre.json'), (dataEl) =>
 			@model.set JSON.parse $(dataEl).html()
+		@model.cleanUp()
 
 		# check for geotags
 		mapTag = _.find @model.get('meta').tags, (tag) ->
 			return tag.name.indexOf("lat/long/zoom") == 0
-		@addMarker(mapTag) if mapTag?
+		@addMarker mapTag if mapTag?
+		@options.mapView.addPost @model
 
 		# initiate the different post types
 		switch @model.get('type')
 			when 'photoset'
 				@photosetView = new Transit.Views.PhotosetView
 					el: @$('.photoset')
+					model: @model
+			when 'text'
+				@textView = new Transit.Views.TextView
+					el: @$el
 					model: @model
 
 		_.defer () =>
@@ -29,4 +35,3 @@ Transit.Views.PostView = Backbone.View.extend
 			longitude: tag[1]
 			zoom: tag[2]
 		@model.set 'position', position
-		@options.mapView.addMarker @model

@@ -1,8 +1,18 @@
 Transit.Models.PostModel = Backbone.Model.extend
 
+	initialize: ->
+		_.bindAll @
+
+	cleanUp: ->
+		tags = _.compact @get('meta').tags
+		@get('meta').tags = tags
+		
+		if @get('type') == 'photoset'
+			photos = _.compact @get('photos')
+			@set 'photos', photos
+
 	markerHTML: ->
 		html = ""
-		console.log @toJSON()
 		switch @get('type')
 			when "photo"
 				html = "<div class=\"photo\" style=\"background-image: url('#{@get('photos')[0].src}');\"></div>"

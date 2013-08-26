@@ -1,0 +1,33 @@
+.text{
+	&.flight{
+		h1{
+			font: 600 50px/50px $sans;
+			text-align: center;
+		}
+		.airport-code{
+			@include inline-block;
+			.letter{
+				@include inline-block;
+				background-color: $black;
+				color: #FFF;
+				margin-right: 2px;
+				padding: 4px 4px;
+				width: 1em;
+				text-align: center;
+				position: relative;
+				.shadow{
+					position: absolute;
+					left: 0px;
+					top: 0px;
+					bottom: 50%;
+					right: 0px;
+					display: none;
+					html.rgba &{
+						display: block;
+						background-color: rgba(#FFF, .3);
+					}
+				}
+			}
+		}
+	}
+}

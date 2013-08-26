@@ -37,11 +37,23 @@
   };
 
   Transit.Models.PostModel = Backbone.Model.extend({
+    initialize: function() {
+      return _.bindAll(this);
+    },
+    cleanUp: function() {
+      var photos, tags;
+
+      tags = _.compact(this.get('meta').tags);
+      this.get('meta').tags = tags;
+      if (this.get('type') === 'photoset') {
+        photos = _.compact(this.get('photos'));
+        return this.set('photos', photos);
+      }
+    },
     markerHTML: function() {
       var html;
 
       html = "";
-      console.log(this.toJSON());
       switch (this.get('type')) {
         case "photo":
           html = "<div class=\"photo\" style=\"background-image: url('" + (this.get('photos')[0].src) + "');\"></div>";
@@ -61,20 +73,28 @@
     currentPost: 0,
     initialize: function() {
       _.bindAll(this);
+      this.paginationModel = new Backbone.Model($('.page').data());
+      console.log(this.paginationModel.toJSON());
       this.posts = new Backbone.Collection();
       this.map = new L.Map("map", {
         center: new L.LatLng(0, 0),
         zoom: 16
       });
       this.map.addLayer(new L.StamenTileLayer("toner"));
+      $(window).on('resize', this.resize);
+      this.resize();
       $('#left').on('scroll', this.checkPosition);
       return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
     },
-    addMarker: function(postModel) {
+    addPost: function(postModel) {
       var icon, marker, options,
         _this = this;
 
       this.posts.add(postModel);
+      postModel.on('rendered', this.updatePostHeights());
+      if (postModel.get('position') === null) {
+        return;
+      }
       icon = new L.divIcon({
         className: 'marker',
         iconSize: L.Point(60, 60),
@@ -85,7 +105,6 @@
       };
       marker = L.marker([postModel.get('position').latitude, postModel.get('position').longitude], options);
       marker.addTo(this.map);
-      postModel.on('rendered', this.updatePostHeights());
       if (this.posts.length === 1) {
         return _.defer(function() {
           var position, post;
@@ -104,6 +123,9 @@
 
       this.currentPost = index;
       post = this.posts.at(index);
+      if (post.get('position') === null) {
+        return;
+      }
       position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
       this.map.setZoom(12);
       if (this.zoomTimeout != null) {
@@ -123,6 +145,7 @@
       var y,
         _this = this;
 
+      this.resize();
       this.postHeights = [];
       y = 0;
       return _.each($('.post'), function(el) {
@@ -143,8 +166,31 @@
       });
       index = this.postHeights.indexOf(index);
       if (this.currentPost !== index) {
-        return this.showPost(index);
+        this.showPost(index);
       }
+      if (this.paginationModel.get('page') < this.paginationModel.get('total') && (y / this.pagesHeight) > .7) {
+        return this.loadNextPage();
+      }
+    },
+    resize: function() {
+      this.windowHeight = $(window).height();
+      return this.pagesHeight = $('#left .pages').height();
+    },
+    loadNextPage: function() {
+      $('#left').unbind('scroll', this.checkPosition);
+      $('#left .pages').append("<div class=\"js-new-page\"></div>");
+      return $('.js-new-page').load("" + (this.paginationModel.get('next')) + " .pages", this.newPageAdded);
+    },
+    newPageAdded: function() {
+      var $newPage;
+
+      this.$('.js-new-page').attr('class', '');
+      $newPage = $(".page[data-page=" + (this.paginationModel.get('page') + 1) + "]");
+      this.paginationModel.set($newPage.data());
+      Transit.Main.extendViews();
+      this.updatePostHeights();
+      this.resize();
+      return $('#left').on('scroll', this.checkPosition);
     }
   });
 
@@ -161,16 +207,24 @@
       _.each(this.$('pre.json'), function(dataEl) {
         return _this.model.set(JSON.parse($(dataEl).html()));
       });
+      this.model.cleanUp();
       mapTag = _.find(this.model.get('meta').tags, function(tag) {
         return tag.name.indexOf("lat/long/zoom") === 0;
       });
       if (mapTag != null) {
         this.addMarker(mapTag);
       }
+      this.options.mapView.addPost(this.model);
       switch (this.model.get('type')) {
         case 'photoset':
           this.photosetView = new Transit.Views.PhotosetView({
             el: this.$('.photoset'),
+            model: this.model
+          });
+          break;
+        case 'text':
+          this.textView = new Transit.Views.TextView({
+            el: this.$el,
             model: this.model
           });
       }
@@ -188,8 +242,40 @@
         longitude: tag[1],
         zoom: tag[2]
       };
-      this.model.set('position', position);
-      return this.options.mapView.addMarker(this.model);
+      return this.model.set('position', position);
+    }
+  });
+
+  Transit.Views.TextView = Backbone.View.extend({
+    initialize: function() {
+      var flight;
+
+      _.bindAll(this);
+      flight = _.find(this.model.get('meta').tags, function(tag) {
+        return tag.name.toLowerCase() === 'flight';
+      });
+      if (flight != null) {
+        return this.setupFlight();
+      }
+    },
+    setupFlight: function() {
+      var airportCode, text,
+        _this = this;
+
+      text = this.$('h1').text();
+      airportCode = /[A-Z]{3}/g;
+      text = text.replace("-", "<i class=\"icon icon-flight\"></i>");
+      text = text.replace(airportCode, function(code) {
+        var el;
+
+        el = "<span class=\"airport-code\">";
+        _.each(code.split(""), function(letter) {
+          return el += "<span class=\"letter\">" + letter + "<span class=\"shadow\"></span></span>";
+        });
+        el += "</span>";
+        return el;
+      });
+      this.$('h1').html(text);
     }
   });
 

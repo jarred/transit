@@ -2445,16 +2445,11 @@ pre.json {
 }
 /* line 9, ../_scss/ui/_map.scss */
 #map .leaflet-tile-pane {
-  opacity: 0.24;
-  filter: alpha(opacity=24);
-}
-/* line 13, ../_scss/ui/_map.scss */
-#map:hover .leaflet-tile-pane {
-  opacity: 0.6;
-  filter: alpha(opacity=60);
+  opacity: 0.44;
+  filter: alpha(opacity=44);
 }
 
-/* line 19, ../_scss/ui/_map.scss */
+/* line 14, ../_scss/ui/_map.scss */
 .map-edge {
   position: absolute;
   top: 0px;
@@ -2464,12 +2459,12 @@ pre.json {
   z-index: 10;
   margin-right: -2px;
 }
-/* line 27, ../_scss/ui/_map.scss */
+/* line 22, ../_scss/ui/_map.scss */
 html.rgba .map-edge {
   background-color: rgba(0, 0, 0, 0.2);
 }
 
-/* line 32, ../_scss/ui/_map.scss */
+/* line 27, ../_scss/ui/_map.scss */
 .marker {
   width: 60px;
   height: 60px;
@@ -2479,11 +2474,11 @@ html.rgba .map-edge {
   border-radius: 50%;
   z-index: 401;
 }
-/* line 40, ../_scss/ui/_map.scss */
+/* line 35, ../_scss/ui/_map.scss */
 html.rgba .marker {
   background-color: rgba(0, 0, 0, 0.32);
 }
-/* line 43, ../_scss/ui/_map.scss */
+/* line 38, ../_scss/ui/_map.scss */
 .marker .photo {
   width: 56px;
   height: 56px;
@@ -2492,7 +2487,7 @@ html.rgba .marker {
   background-position: center center;
   margin: 2px;
 }
-/* line 51, ../_scss/ui/_map.scss */
+/* line 46, ../_scss/ui/_map.scss */
 .marker .icon-shell {
   margin: 2px;
   width: 56px;
@@ -2503,7 +2498,7 @@ html.rgba .marker {
   font: 400 30px/56px 'Helvetica Neue';
   text-align: center;
 }
-/* line 61, ../_scss/ui/_map.scss */
+/* line 56, ../_scss/ui/_map.scss */
 .marker .count {
   display: block;
   position: absolute;
@@ -2520,19 +2515,19 @@ html.rgba .marker {
   text-align: center;
   font: 400 11px/18px 'Helvetica Neue';
 }
-/* line 74, ../_scss/ui/_map.scss */
+/* line 69, ../_scss/ui/_map.scss */
 .marker:hover {
   z-index: 999;
 }
 
-/* line 79, ../_scss/ui/_map.scss */
+/* line 74, ../_scss/ui/_map.scss */
 .leaflet-control-attribution {
   background-color: #000 !important;
   color: #AAA !important;
   box-shadow: none !important;
   padding: 2px 6px !important;
 }
-/* line 84, ../_scss/ui/_map.scss */
+/* line 79, ../_scss/ui/_map.scss */
 .leaflet-control-attribution a {
   color: #FFF !important;
   text-decoration: none !important;
@@ -2555,7 +2550,50 @@ html.rgba .marker {
   width: 100%;
 }
 
-/* line 15, ../_scss/style.scss */
+/* line 3, ../_scss/posts/_text.scss */
+.text.flight h1 {
+  font: 600 50px/50px "Helvetica Neue", "Helvetica", Sans-Serif;
+  text-align: center;
+}
+/* line 7, ../_scss/posts/_text.scss */
+.text.flight .airport-code {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: top;
+  zoom: 1;
+  *display: inline;
+}
+/* line 9, ../_scss/posts/_text.scss */
+.text.flight .airport-code .letter {
+  display: -moz-inline-stack;
+  display: inline-block;
+  vertical-align: top;
+  zoom: 1;
+  *display: inline;
+  background-color: #111111;
+  color: #FFF;
+  margin-right: 2px;
+  padding: 4px 4px;
+  width: 1em;
+  text-align: center;
+  position: relative;
+}
+/* line 18, ../_scss/posts/_text.scss */
+.text.flight .airport-code .letter .shadow {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  bottom: 50%;
+  right: 0px;
+  display: none;
+}
+/* line 25, ../_scss/posts/_text.scss */
+html.rgba .text.flight .airport-code .letter .shadow {
+  display: block;
+  background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* line 16, ../_scss/style.scss */
 .map {
   width: 200px;
   height: 200px;
