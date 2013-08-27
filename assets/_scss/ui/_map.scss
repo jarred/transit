@@ -48,8 +48,8 @@
 		width: 56px;
 		height: 56px;
 		border-radius: 50%;
-		background-color: #FFF;
-		color: #CCC;
+		background-color: $black;
+		color: #FFF;
 		font: 400 30px/56px 'Helvetica Neue';		
 		text-align: center;
 	}
@@ -60,8 +60,8 @@
 		right: 0px;
 		width: 18px;
 		height: 18px;
-		color: #000;
-		background-color: #FFF;
+		color: #FFF;
+		background-color: $black;
 		@include border-radius(50%);
 		text-align: center;
 		font: 400 11px/18px 'Helvetica Neue';

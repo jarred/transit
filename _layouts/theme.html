@@ -29,8 +29,16 @@
     <div class="map-edge"></div>
 
     <div id="nav">
-      <div class="avatar" style="background-image: url('{PortraitURL-128}');">
-        
+      <div class="menu toggle">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+      <div class="avatar" style="background-image: url('{PortraitURL-128}');"></div>
+      <div id="date">
+        <p class="js-month"></p>
+        <p class="js-date"></p>
+        <p class="js-year"></p>
       </div>
       <div class="contents">
         {block:HasPages}
@@ -48,7 +56,8 @@
             <div class="post js-extend-view {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even} grid_container" id="post-{PostID}" data-view="PostView" data-type="{PostType}" data-permalink="{Permalink}">
               <pre type="application/json" class="json">
               {
-                "position": null
+                "position": null,
+                "date": "{ShortDayOfWeek} {ShortMonth} {DayOfMonthWithZero} {Year} {24Hour}:{Minutes}:{Seconds}"
               }
               </pre>
 
@@ -160,17 +169,7 @@
                   {% include tags.html %}
                 </div>
                 <div class="grid_col_4">
-                  {block:Photos}
-                  <div class="image">
-                    <img src="{PhotoURL-500}" />
-                    {block:Caption}
-                    <div class="caption">
-                      <p>{Caption}</p>
-                    </div>
-                    {/block:Caption}              
-                  </div>
-                  {block:Photos}
-
+                  <div class="photoset"></div>
                   <pre type="application/json" class="json">
                   {
                     "type": "photoset",

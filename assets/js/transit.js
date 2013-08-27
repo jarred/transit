@@ -47,8 +47,9 @@
       this.get('meta').tags = tags;
       if (this.get('type') === 'photoset') {
         photos = _.compact(this.get('photos'));
-        return this.set('photos', photos);
+        this.set('photos', photos);
       }
+      return this.set('date', new Date(this.get('date')));
     },
     markerHTML: function() {
       var html;
@@ -74,7 +75,6 @@
     initialize: function() {
       _.bindAll(this);
       this.paginationModel = new Backbone.Model($('.page').data());
-      console.log(this.paginationModel.toJSON());
       this.posts = new Backbone.Collection();
       this.map = new L.Map("map", {
         center: new L.LatLng(0, 0),
@@ -195,7 +195,37 @@
   });
 
   Transit.Views.PhotosetView = Backbone.View.extend({
-    initialize: function() {}
+    initialize: function() {
+      _.bindAll(this);
+      return this.render();
+    },
+    render: function() {
+      var photoset, row, rowCount,
+        _this = this;
+
+      photoset = "";
+      console.log(this.model.get('layout'));
+      rowCount = 0;
+      row = 0;
+      photoset += "<div class=\"row\">";
+      _.each(this.model.get('photos'), function(photo) {
+        photoset += "<div class=\"photo\">\n	<img src=\"" + photo.src + "\" />\n</div>";
+        console.log('rowCount', rowCount);
+        console.log('row', row);
+        console.log(Number(_this.model.get('layout')[row]));
+        if (rowCount >= Number(_this.model.get('layout')[row])) {
+          photoset += "</div><div class=\"row\">";
+          rowCount = 0;
+          row += 1;
+        } else {
+          rowCount++;
+        }
+        return console.log(rowCount);
+      });
+      photoset += "</div>";
+      console.log(photoset);
+      return this.$('.photoset').html(photoset);
+    }
   });
 
   Transit.Views.PostView = Backbone.View.extend({

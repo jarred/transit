@@ -2493,8 +2493,8 @@ html.rgba .marker {
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background-color: #FFF;
-  color: #CCC;
+  background-color: #111111;
+  color: #FFF;
   font: 400 30px/56px 'Helvetica Neue';
   text-align: center;
 }
@@ -2506,8 +2506,8 @@ html.rgba .marker {
   right: 0px;
   width: 18px;
   height: 18px;
-  color: #000;
-  background-color: #FFF;
+  color: #FFF;
+  background-color: #111111;
   -webkit-border-radius: 50%;
   border-radius: 50%;
   background-clip: padding-box;

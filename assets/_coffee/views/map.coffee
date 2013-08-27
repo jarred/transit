@@ -6,7 +6,6 @@ Transit.Views.MapView = Backbone.View.extend
 	initialize: -> 
 		_.bindAll @
 		@paginationModel = new Backbone.Model $('.page').data()
-		console.log @paginationModel.toJSON()
 		@posts = new Backbone.Collection()
 		@map = new L.Map "map", 
 			center: new L.LatLng(0,0)

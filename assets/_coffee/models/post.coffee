@@ -11,6 +11,8 @@ Transit.Models.PostModel = Backbone.Model.extend
 			photos = _.compact @get('photos')
 			@set 'photos', photos
 
+		@set 'date', new Date(@get('date'))
+
 	markerHTML: ->
 		html = ""
 		switch @get('type')
