@@ -6,13 +6,16 @@ Transit.Views.PhotosetView = Backbone.View.extend
 
 	photoTemplate: _.template """
 	<div class="cell">
-		<div class="image"><img src="<%= src %>" /></div>
+		<% if(highRes){ %>
+			<div class="image"><img src="<%= highRes %>" /></div>
+		<% }else{ %>
+			<div class="image"><img src="<%= src %>" /></div>
+		<% } %>
 	</div>
 	"""
 
 	render: ->
 		photoset = ""
-		console.log @model.get('layout')
 		rowCount = 0
 		row = 0
 		photoset += "<div class=\"row row_size_#{@model.get('layout')[0]}\">"

@@ -3,10 +3,10 @@
 
 @mixin breakpoint($point) {
 	@if $point == desktop {
-		@media (min-width: 979px) { @content; }
+		@media (min-width: 1024px) { @content; }
 	}
   @if $point == tablet {
-    @media (min-width: 767px) and (max-width: 979px) { @content; }
+    @media (min-width: 767px) and (max-width: 1024px) { @content; }
   }
   @else if $point == mobile {
     @media (max-width: 767px) { @content; }
@@ -31,17 +31,17 @@ $grid-debug: false;
   $grid-name: 'grid-8',
   $is-fluid: true,
   $column-width: 140,
-  $gutter-width: 20,
+  $gutter-width: 0,
   $gutter-property: 'margin',
   $num-columns: 8,
-  $padding-left: 20,
-  $padding-right: 20,
+  $padding-left: 0,
+  $padding-right: 0,
   $breakpoints: (
     (
       query 'screen and (max-width: 979px)',
       max-width 768px,
-      padding-left 10px,
-      padding-right 10px,
+      padding-left 20px,
+      padding-right 20px,
       column-width 42
       apply-to-browsers-w/o-media-queries true
     ),(
@@ -65,7 +65,7 @@ $grid-debug: false;
     (
       breakpoint 2,
       selector '.grid_col_2, .grid_col_3, .grid_col_4, .grid_col_5, .grid_col_6',
-      columns 6
+      columns 8
     )
   )
 );
@@ -80,4 +80,11 @@ $grid-debug: false;
 
 .grid_container{
   margin-right: 30%;  
+  margin-left: 20px;
+  @include breakpoint(tablet){
+    margin: 0px;
+  }
+  @include breakpoint(mobile){
+    margin: 0px;
+  }
 }

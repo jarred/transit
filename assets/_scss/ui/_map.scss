@@ -1,7 +1,5 @@
-#map,
-#map-bg{
+#map{
 	position: fixed;
-	background-color: $black;
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
@@ -10,10 +8,30 @@
 	.leaflet-tile-pane{
 		@include opacity(.44);
 	}
-}
-#map-bg{
-	z-index: 1;
-	background-color: $black;
+	#leaflet{
+		background-color: $black;
+		position: absolute;
+		top: 20px;
+		right: 20px;
+		bottom: 20px;
+		left: 20px;
+		z-index: 2;
+	}
+	.bg{
+		position: absolute;
+		z-index: 1;
+		top: 20px;
+		right: 20px;
+		bottom: 20px;
+		left: 20px;
+		background-color: $black;
+	}
+	@include breakpoint(tablet){
+	  display: none;
+	}
+	@include breakpoint(mobile){
+		display: none;
+	}
 }
 
 .marker{
@@ -64,6 +82,7 @@
 }
 
 .leaflet-control-attribution{
+	display: none !important;
 	background-color: #000 !important;
 	color: #AAA !important;
 	box-shadow: none !important;

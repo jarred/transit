@@ -13,6 +13,7 @@
     <meta name="description" content="{MetaDescription}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="alternate" type="application/rss+xml" title="(RSS 2.0)" href="{RSS}" />
+    <meta name="image:Header" content="{PortraitURL-128}"/>
     <style type="text/css">
     {CustomCSS}
     </style>
@@ -29,20 +30,21 @@
         </div>
         <div class="grid_col_4">
           {block:HasPages}
-          <ul class="pages">
+          <ul class="theme-pages">
             {block:Pages}<li><a href="{Url}">{Label}</a></li>{/block:Pages}
           </ul>
           {/block:HasPages}
           &nbsp;
         </div>
-        <div class="grid_col_2">
-          <div class="avatar"><a href="/"><img src="{PortraitURL-128}" /></a></div>
+        <div class="grid_col_2 avatar">
+          <a href="/"><img src="{image:Header}" /></a>
         </div>
       </div>
 
       <div class="js-posts">
         <div class="pages">
             <div class="page" data-page="{CurrentPage}" data-total="{TotalPages}" data-next="{block:NextPage}{NextPage}{/block:NextPage}">
+
               {block:Posts}
 
                 <div class="post js-extend-view {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even}" id="post-{PostID}" data-view="PostView" data-type="{PostType}" data-permalink="{Permalink}">
@@ -88,11 +90,12 @@
 
         </div>
       </div>
-
     </div>
 
-    <div id="map-bg"></div>
-    <div id="map"></div>
+    <div id="map">
+      <div class="bg"></div>
+      <div id="leaflet"></div>
+    </div>
 
     <script type="text/javascript" src="{{ page.server }}/assets/js/libs.js"></script>
     <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.3"></script>

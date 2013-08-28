@@ -1,8 +1,39 @@
 @import "compass/css3/transform";
 
+.post{
+	.date{
+		margin-bottom: 20px;
+		a{
+			text-decoration: none;
+			&.day{
+				color: #CCC;
+			}
+			&.time{
+				color: #DDD;
+			}
+		}
+	}
+	.caption{
+		margin-right: 20px;
+		font: 400 17px/22px $sans;
+		p{
+			margin-bottom: 20px;
+		}
+		a{
+			color: #777;
+			text-decoration: none;
+			border-bottom: 1px solid #CCC;
+			&:hover{
+				color: $black;
+				border-bottom-color: transparent;
+			}
+		}
+	}
+}
+
 .divider{
 	border-bottom: 1px solid #EEE;
-	margin: 40px 0px;
+	margin: 20px 0px;
 }
 
 .page{

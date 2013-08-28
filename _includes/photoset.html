@@ -7,7 +7,7 @@
     "height": {PhotoHeight-500},
     "caption": "{block:Caption}{Caption}{/block:Caption}",
     {block:HighRes}
-    "high-res": "{PhotoURL-HighRes}",
+    "highRes": "{PhotoURL-HighRes}",
     {/block:HighRes}
     "link": "{LinkURL}"
   },{/block:Photos}null],
@@ -16,7 +16,12 @@
 </pre>
 
 <div class="grid_row_8">
-  {% include date.html %}
+  <div class="grid_col_2">
+    {% include date.html %}
+    {block:Caption}
+      <div class="caption">{Caption}</div>
+    {/block:Caption}
+  </div>
   <div class="photoset grid_col_6"></div>
 </div>
 
@@ -24,9 +29,4 @@
   <div class="grid_col_2">
     {% include tags.html %}
   </div>
-  <div class="grid_col_4">
-    {block:Caption}
-    <div class="caption">{Caption}</div>
-    {/block:Caption}
-  </div>  
 </div>

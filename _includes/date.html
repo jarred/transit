@@ -1,8 +1,8 @@
-<div class="grid_col_2">
+<div class="date">
   {block:NewDayDate}
-  <span>{Month} {DayOfMonth}<sup>{DayOfMonthSuffix}</sup> {Year}</span><br />
+  <a href="{Permalink}" class="day"><span>{Month} {DayOfMonth}<sup>{DayOfMonthSuffix}</sup> {Year}</span><br /></a>
   {/block:NewDayDate}
   {block:Date}
-    <a href="{Permalink}">{12Hour}:{Minutes} <span class="am-pm">{AmPm}</span></a>
+    <a href="{Permalink}" class="time">{12Hour}:{Minutes} <span class="am-pm">{AmPm}</span></a>
   {/block:Date}
 </div>

@@ -1,17 +1,21 @@
-@import "maps/leaflet.scss";
+@import "helpers/_yui-reset";
+@import "maps/leaflet";
 @import "helpers/_variables";
 @import "helpers/_misc";
 @import "helpers/_shapes";
 @import "type/_typography";
-@import "normalize/_normalize";
 @import "grid/_layout";
 @import "ui/_post";
-@import "ui/_left";
 @import "ui/_date";
+@import "ui/_header";
 @import "ui/_map";
 @import "posts/_photoset";
 @import "posts/_photo";
 @import "posts/_text";
+
+html{
+	font: 400 14px/20px $sans;
+}
 
 .map{
 	width: 200px;
@@ -20,4 +24,8 @@
 	background-repeat: no-repeat;
 	background-position: center center;
 	background-color: #EEE;
+}
+
+.hide{
+	display: none !important;
 }

@@ -75,7 +75,7 @@
       _.bindAll(this);
       this.paginationModel = new Backbone.Model($('.page').data());
       this.posts = new Backbone.Collection();
-      this.map = new L.Map("map", {
+      this.map = new L.Map("leaflet", {
         center: new L.LatLng(0, 0),
         zoom: 16,
         scrollWheelZoom: false
@@ -184,16 +184,17 @@
       if (this.paginationModel.get('page') >= this.paginationModel.get('total')) {
         return;
       }
-      console.log('loadNextPage', this.paginationModel.toJSON());
-      $('.js-posts .pages').append("<div class=\"js-new-page\"></div>");
-      return $('.js-new-page').load("" + (this.paginationModel.get('next')) + " .pages", this.newPageAdded);
+      if (this.paginationModel.get("next") === "") {
+        return;
+      }
+      this.$newPage = $("<div class=\"js-new-pages\"></div>");
+      return this.$newPage.load("" + (this.paginationModel.get('next')) + " .pages .page", this.newPageAdded);
     },
     newPageAdded: function() {
       var $newPage,
         _this = this;
 
-      console.log('newPageAdded', arguments, this.paginationModel.toJSON());
-      this.$('.js-new-page').attr('class', '');
+      $('.js-posts .pages').append(this.$newPage.html());
       $newPage = $(".page[data-page=" + (this.paginationModel.get('page') + 1) + "]");
       this.paginationModel.set($newPage.data());
       Transit.Main.extendViews();
@@ -209,7 +210,8 @@
     initialize: function() {
       _.bindAll(this);
       if (this.model.get('photos')[0].width < this.model.get('photos')[0].height) {
-        return this.$el.addClass('landscape');
+        this.$el.addClass('landscape');
+        return this.$('.image_hold').attr('class', 'image_hold grid_col_4');
       }
     }
   });
@@ -219,13 +221,12 @@
       _.bindAll(this);
       return this.render();
     },
-    photoTemplate: _.template("<div class=\"cell\">\n	<div class=\"image\"><img src=\"<%= src %>\" /></div>\n</div>"),
+    photoTemplate: _.template("<div class=\"cell\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
     render: function() {
       var photoset, row, rowCount,
         _this = this;
 
       photoset = "";
-      console.log(this.model.get('layout'));
       rowCount = 0;
       row = 0;
       photoset += "<div class=\"row row_size_" + (this.model.get('layout')[0]) + "\">";

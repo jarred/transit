@@ -13,20 +13,24 @@
 </pre>
 
 <div class="grid_row_8">
-  {% include date.html %}
+  <div class="grid_col_2">
+    {% include date.html %}
+    {block:Caption}
+      <div class="caption">{Caption}</div>
+    {/block:Caption}
+  </div>
   <div class="image_hold grid_col_6">
-    <img src="{PhotoURL-500}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
+    <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
+    {block:HighRes}
+    <img src="{PhotoURL-HighRes}" />
+    {/block:HighRes}
   </div>        
 </div>
 
 <div class="grid_row_8">
-  <div class="grid_col_2">
-    {% include tags.html %}
-  </div>
+  <div class="grid_col_2">&nbsp;</div>
   <div class="grid_col_3">
-    {block:Caption}
-    <div class="caption">{Caption}</div>
-    {/block:Caption}
+    {% include tags.html %}
   </div>
   <div class="grid_col_3">
     {block:Exif}

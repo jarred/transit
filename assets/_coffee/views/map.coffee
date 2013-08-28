@@ -7,7 +7,7 @@ Transit.Views.MapView = Backbone.View.extend
 		_.bindAll @
 		@paginationModel = new Backbone.Model $('.page').data()
 		@posts = new Backbone.Collection()
-		@map = new L.Map "map", 
+		@map = new L.Map "leaflet", 
 			center: new L.LatLng(0,0)
 			zoom: 16
 			scrollWheelZoom: false
@@ -60,7 +60,6 @@ Transit.Views.MapView = Backbone.View.extend
 			@map.setZoom post.get('position').zoom
 		, 1000		
 
-
 	updatePostHeights: ->
 		@resize()
 		@postHeights = []
@@ -88,13 +87,12 @@ Transit.Views.MapView = Backbone.View.extend
 
 	loadNextPage: ->
 		return if @paginationModel.get('page') >= @paginationModel.get('total')
-		console.log 'loadNextPage', @paginationModel.toJSON()
-		$('.js-posts .pages').append "<div class=\"js-new-page\"></div>"
-		$('.js-new-page').load "#{@paginationModel.get('next')} .pages", @newPageAdded
+		return if @paginationModel.get("next") == ""
+		@$newPage = $("<div class=\"js-new-pages\"></div>")
+		@$newPage.load "#{@paginationModel.get('next')} .pages .page", @newPageAdded
 
 	newPageAdded: ->
-		console.log 'newPageAdded', arguments, @paginationModel.toJSON()
-		@$('.js-new-page').attr 'class', ''
+		$('.js-posts .pages').append @$newPage.html()
 		$newPage = $(".page[data-page=#{@paginationModel.get('page') + 1}]")
 		@paginationModel.set $newPage.data()
 		Transit.Main.extendViews()
