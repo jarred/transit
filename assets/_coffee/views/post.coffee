@@ -8,9 +8,10 @@ Transit.Views.PostView = Backbone.View.extend
 		@model.cleanUp()
 
 		# check for geotags
-		mapTag = _.find @model.get('meta').tags, (tag) ->
+		mapTag = _.find @model.get('tags'), (tag) ->
 			return tag.name.indexOf("lat/long/zoom") == 0
 		@addMarker mapTag if mapTag?
+		@$("li[data-tag='#{ mapTag.name }']").remove()
 		@options.mapView.addPost @model
 
 		# initiate the different post types
@@ -21,6 +22,10 @@ Transit.Views.PostView = Backbone.View.extend
 					model: @model
 			when 'text'
 				@textView = new Transit.Views.TextView
+					el: @$el
+					model: @model
+			when 'photo'
+				@photoView = new Transit.Views.PhotoView
 					el: @$el
 					model: @model
 

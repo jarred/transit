@@ -1,0 +1,60 @@
+<pre type="application/json" class="json">
+{
+  "photos": [{ 
+    "src": "{PhotoURL-500}",
+    "width": {PhotoWidth-500},
+    "height": {PhotoHeight-500},
+    {block:HighRes}
+    "high-res": "{PhotoURL-HighRes}",
+    {/block:HighRes}
+    "link": "{LinkURL}"
+  }]
+}
+</pre>
+
+<div class="grid_row_8">
+  {% include date.html %}
+  <div class="image_hold grid_col_6">
+    <img src="{PhotoURL-500}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
+  </div>        
+</div>
+
+<div class="grid_row_8">
+  <div class="grid_col_2">
+    {% include tags.html %}
+  </div>
+  <div class="grid_col_3">
+    {block:Caption}
+    <div class="caption">{Caption}</div>
+    {/block:Caption}
+  </div>
+  <div class="grid_col_3">
+    {block:Exif}
+    <pre class="json">
+      {
+        "exif": true
+      }
+    </pre>
+    <div class="exif">
+      <dl>
+      {block:Camera}
+        <dt>Camera</dt>
+        <dd>{Camera}</dd>
+      {/block:Camera}
+      {block:Aperture}
+        <dt>Aperture</dt>
+        <dd>{Aperture}</dd>
+      {/block:Aperture}
+      {block:Exposure}
+        <dt>Exposure</dt>
+        <dd>{Exposure}</dd>
+      {/block:Exposure}
+      {block:FocalLength}
+        <dt>Focal Length</dt>
+        <dd>{FocalLength}</dd>
+      {/block:FocalLength}
+      </dl>
+    </div>  
+    {/block:Exif}
+  </div>
+</div>

@@ -1,0 +1,16 @@
+<div class="panorama">
+  <div class="image">
+    {block:Photo}
+    <img src="{PhotoURL-500}" />
+    {/block:Photo}
+  </div>
+  <pre type="application/json" class="json meta">
+  {
+    "panorama": {
+      "url": "{PhotoURL-Panorama}",
+      "width": {PhotoWidth-Panorama,
+      "height": {PhotoHeight-Panorama}
+    }  
+  }
+  </pre>
+</div>

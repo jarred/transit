@@ -1,27 +1,19 @@
-#map{
-	position: absolute;
+#map,
+#map-bg{
+	position: fixed;
+	background-color: $black;
 	top: 0px;
 	right: 0px;
 	bottom: 0px;
-	left: 60%;
-	background-color: #000;
-	z-index: 1;
+	width: 30%;
+	z-index: 2;
 	.leaflet-tile-pane{
 		@include opacity(.44);
 	}
 }
-
-.map-edge{
-	position: absolute;
-	top: 0px;
-	bottom: 0px;
-	right: 40%;
-	width: 2px;
-	z-index: 10;
-	margin-right: -2px;
-	html.rgba &{
-		background-color: rgba(#000, .2);
-	}
+#map-bg{
+	z-index: 1;
+	background-color: $black;
 }
 
 .marker{

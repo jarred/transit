@@ -4,28 +4,26 @@ Transit.Views.PhotosetView = Backbone.View.extend
 		_.bindAll @
 		@render()
 
+	photoTemplate: _.template """
+	<div class="cell">
+		<div class="image"><img src="<%= src %>" /></div>
+	</div>
+	"""
+
 	render: ->
 		photoset = ""
 		console.log @model.get('layout')
 		rowCount = 0
 		row = 0
-		photoset += "<div class=\"row\">"
-		_.each @model.get('photos'), (photo) =>
-			photoset += """
-			<div class="photo">
-				<img src="#{photo.src}" />
-			</div>
-			"""
-			console.log 'rowCount', rowCount
-			console.log 'row', row
-			console.log Number(@model.get('layout')[row])
+		photoset += "<div class=\"row row_size_#{@model.get('layout')[0]}\">"
+		_.each @model.get('photos'), (photo, index, all) =>
+			photoset += @photoTemplate photo
+			rowCount++
 			if rowCount >= Number(@model.get('layout')[row])
-				photoset += "</div><div class=\"row\">"
+				row++
 				rowCount = 0
-				row += 1
-			else
-				rowCount++
-			console.log rowCount
-		photoset += "</div>"
-		console.log photoset
-		@$('.photoset').html photoset
+				if index < all.length - 1
+					photoset += "<div class=\"clearfix\"></div></div><div class=\"row row_size_#{@model.get('layout')[row]}\">"
+		photoset += "<div class=\"clearfix\"></div></div>"
+	
+		@$el.html photoset

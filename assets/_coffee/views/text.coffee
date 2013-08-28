@@ -2,7 +2,7 @@ Transit.Views.TextView = Backbone.View.extend
 
 	initialize: ->
 		_.bindAll @
-		flight = _.find @model.get('meta').tags, (tag) ->
+		flight = _.find @model.get('tags'), (tag) ->
 			return tag.name.toLowerCase() == 'flight'
 		@setupFlight() if flight?
 

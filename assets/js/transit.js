@@ -41,10 +41,9 @@
       return _.bindAll(this);
     },
     cleanUp: function() {
-      var photos, tags;
+      var photos;
 
-      tags = _.compact(this.get('meta').tags);
-      this.get('meta').tags = tags;
+      this.set('tags', _.compact(this.get('tags')));
       if (this.get('type') === 'photoset') {
         photos = _.compact(this.get('photos'));
         this.set('photos', photos);
@@ -78,12 +77,13 @@
       this.posts = new Backbone.Collection();
       this.map = new L.Map("map", {
         center: new L.LatLng(0, 0),
-        zoom: 16
+        zoom: 16,
+        scrollWheelZoom: false
       });
       this.map.addLayer(new L.StamenTileLayer("toner"));
-      $(window).on('resize', this.resize);
+      $(window).bind('resize', this.resize);
       this.resize();
-      $('#left').on('scroll', this.checkPosition);
+      $(document).bind('scroll', this.checkPosition);
       return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
     },
     addPost: function(postModel) {
@@ -123,7 +123,10 @@
 
       this.currentPost = index;
       post = this.posts.at(index);
-      if (post.get('position') === null) {
+      if (post === null || void 0) {
+        return;
+      }
+      if (!post.get('position') === null) {
         return;
       }
       position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
@@ -160,7 +163,7 @@
       var index, y,
         _this = this;
 
-      y = $('#left').scrollTop() + 300;
+      y = $(document).scrollTop() + 300;
       index = _.find(this.postHeights, function(value) {
         return y <= value;
       });
@@ -168,29 +171,46 @@
       if (this.currentPost !== index) {
         this.showPost(index);
       }
-      if (this.paginationModel.get('page') < this.paginationModel.get('total') && (y / this.pagesHeight) > .7) {
+      if (((y / this.pagesHeight) > .7) && (this.paginationModel.get('page') < this.paginationModel.get('total'))) {
+        $(document).unbind('scroll', this.checkPosition);
         return this.loadNextPage();
       }
     },
     resize: function() {
       this.windowHeight = $(window).height();
-      return this.pagesHeight = $('#left .pages').height();
+      return this.pagesHeight = $('.js-posts .pages').height();
     },
     loadNextPage: function() {
-      $('#left').unbind('scroll', this.checkPosition);
-      $('#left .pages').append("<div class=\"js-new-page\"></div>");
+      if (this.paginationModel.get('page') >= this.paginationModel.get('total')) {
+        return;
+      }
+      console.log('loadNextPage', this.paginationModel.toJSON());
+      $('.js-posts .pages').append("<div class=\"js-new-page\"></div>");
       return $('.js-new-page').load("" + (this.paginationModel.get('next')) + " .pages", this.newPageAdded);
     },
     newPageAdded: function() {
-      var $newPage;
+      var $newPage,
+        _this = this;
 
+      console.log('newPageAdded', arguments, this.paginationModel.toJSON());
       this.$('.js-new-page').attr('class', '');
       $newPage = $(".page[data-page=" + (this.paginationModel.get('page') + 1) + "]");
       this.paginationModel.set($newPage.data());
       Transit.Main.extendViews();
-      this.updatePostHeights();
-      this.resize();
-      return $('#left').on('scroll', this.checkPosition);
+      return _.defer(function() {
+        _this.updatePostHeights();
+        _this.resize();
+        return $(document).bind('scroll', _this.checkPosition);
+      });
+    }
+  });
+
+  Transit.Views.PhotoView = Backbone.View.extend({
+    initialize: function() {
+      _.bindAll(this);
+      if (this.model.get('photos')[0].width < this.model.get('photos')[0].height) {
+        return this.$el.addClass('landscape');
+      }
     }
   });
 
@@ -199,6 +219,7 @@
       _.bindAll(this);
       return this.render();
     },
+    photoTemplate: _.template("<div class=\"cell\">\n	<div class=\"image\"><img src=\"<%= src %>\" /></div>\n</div>"),
     render: function() {
       var photoset, row, rowCount,
         _this = this;
@@ -207,24 +228,20 @@
       console.log(this.model.get('layout'));
       rowCount = 0;
       row = 0;
-      photoset += "<div class=\"row\">";
-      _.each(this.model.get('photos'), function(photo) {
-        photoset += "<div class=\"photo\">\n	<img src=\"" + photo.src + "\" />\n</div>";
-        console.log('rowCount', rowCount);
-        console.log('row', row);
-        console.log(Number(_this.model.get('layout')[row]));
+      photoset += "<div class=\"row row_size_" + (this.model.get('layout')[0]) + "\">";
+      _.each(this.model.get('photos'), function(photo, index, all) {
+        photoset += _this.photoTemplate(photo);
+        rowCount++;
         if (rowCount >= Number(_this.model.get('layout')[row])) {
-          photoset += "</div><div class=\"row\">";
+          row++;
           rowCount = 0;
-          row += 1;
-        } else {
-          rowCount++;
+          if (index < all.length - 1) {
+            return photoset += "<div class=\"clearfix\"></div></div><div class=\"row row_size_" + (_this.model.get('layout')[row]) + "\">";
+          }
         }
-        return console.log(rowCount);
       });
-      photoset += "</div>";
-      console.log(photoset);
-      return this.$('.photoset').html(photoset);
+      photoset += "<div class=\"clearfix\"></div></div>";
+      return this.$el.html(photoset);
     }
   });
 
@@ -238,12 +255,13 @@
         return _this.model.set(JSON.parse($(dataEl).html()));
       });
       this.model.cleanUp();
-      mapTag = _.find(this.model.get('meta').tags, function(tag) {
+      mapTag = _.find(this.model.get('tags'), function(tag) {
         return tag.name.indexOf("lat/long/zoom") === 0;
       });
       if (mapTag != null) {
         this.addMarker(mapTag);
       }
+      this.$("li[data-tag='" + mapTag.name + "']").remove();
       this.options.mapView.addPost(this.model);
       switch (this.model.get('type')) {
         case 'photoset':
@@ -254,6 +272,12 @@
           break;
         case 'text':
           this.textView = new Transit.Views.TextView({
+            el: this.$el,
+            model: this.model
+          });
+          break;
+        case 'photo':
+          this.photoView = new Transit.Views.PhotoView({
             el: this.$el,
             model: this.model
           });
@@ -281,7 +305,7 @@
       var flight;
 
       _.bindAll(this);
-      flight = _.find(this.model.get('meta').tags, function(tag) {
+      flight = _.find(this.model.get('tags'), function(tag) {
         return tag.name.toLowerCase() === 'flight';
       });
       if (flight != null) {

@@ -10,13 +10,15 @@ Transit.Views.MapView = Backbone.View.extend
 		@map = new L.Map "map", 
 			center: new L.LatLng(0,0)
 			zoom: 16
+			scrollWheelZoom: false
 		@map.addLayer new L.StamenTileLayer("toner")
+		# @map.addLayer new L.Google("ROADMAP")
 		# L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		#     attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+		    # attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
 		# }).addTo(@map);
-		$(window).on 'resize', @resize
+		$(window).bind 'resize', @resize
 		@resize()
-		$('#left').on 'scroll', @checkPosition
+		$(document).bind 'scroll', @checkPosition
 		@updateHeightsInt = setInterval @updatePostHeights, 2000
 
 	addPost: (postModel) ->
@@ -45,7 +47,8 @@ Transit.Views.MapView = Backbone.View.extend
 	showPost: (index) ->
 		@currentPost = index
 		post = @posts.at index
-		return if post.get('position') is null
+		return if post is null or undefined
+		return if !post.get('position') is null
 		position = new L.LatLng post.get('position').latitude, post.get('position').longitude
 		@map.setZoom 12
 		clearTimeout @zoomTimeout if @zoomTimeout?
@@ -57,6 +60,7 @@ Transit.Views.MapView = Backbone.View.extend
 			@map.setZoom post.get('position').zoom
 		, 1000		
 
+
 	updatePostHeights: ->
 		@resize()
 		@postHeights = []
@@ -67,30 +71,34 @@ Transit.Views.MapView = Backbone.View.extend
 			y += $el.height() + 140
 
 	checkPosition: (e) ->
-		y = $('#left').scrollTop() + 300
+		y = $(document).scrollTop() + 300
 		index = _.find @postHeights, (value) =>
 			return y <= value
 		index = @postHeights.indexOf index
 		if @currentPost != index
 			@showPost index
 
-		if @paginationModel.get('page') < @paginationModel.get('total') && (y / @pagesHeight) > .7
+		if ((y / @pagesHeight) > .7) && (@paginationModel.get('page') < @paginationModel.get('total'))
+			$(document).unbind 'scroll', @checkPosition
 			@loadNextPage()
 
 	resize: ->
 		@windowHeight = $(window).height()
-		@pagesHeight = $('#left .pages').height()
+		@pagesHeight = $('.js-posts .pages').height()
 
 	loadNextPage: ->
-		$('#left').unbind 'scroll', @checkPosition
-		$('#left .pages').append "<div class=\"js-new-page\"></div>"
+		return if @paginationModel.get('page') >= @paginationModel.get('total')
+		console.log 'loadNextPage', @paginationModel.toJSON()
+		$('.js-posts .pages').append "<div class=\"js-new-page\"></div>"
 		$('.js-new-page').load "#{@paginationModel.get('next')} .pages", @newPageAdded
 
 	newPageAdded: ->
+		console.log 'newPageAdded', arguments, @paginationModel.toJSON()
 		@$('.js-new-page').attr 'class', ''
 		$newPage = $(".page[data-page=#{@paginationModel.get('page') + 1}]")
 		@paginationModel.set $newPage.data()
 		Transit.Main.extendViews()
-		@updatePostHeights()
-		@resize()
-		$('#left').on 'scroll', @checkPosition
+		_.defer () =>
+			@updatePostHeights()
+			@resize()
+			$(document).bind 'scroll', @checkPosition

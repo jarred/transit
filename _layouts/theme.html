@@ -9,10 +9,6 @@
     <title>{Title}{block:PostTitle} - {PostTitle}{/block:PostTitle}</title>
     <link rel="stylesheet" href="{{ page.server }}/assets/css/style.css">
     <script type="text/javascript" src="{{ page.server }}/assets/js/modernizr.js"></script>
-    {% if page.dev_server %}
-    <link rel="stylesheet" href="{{ page.dev_server }}/assets/css/style.css">
-    <script type="text/javascript" src="{{ page.dev_server }}/assets/js/modernizr.js"></script>
-    {% endif %}
     <link rel="stylesheet" href="{{ page.server }}/assets/fontello/css/fontello.css">
     <meta name="description" content="{MetaDescription}" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,197 +19,84 @@
   </head>
   <body>
 
-    <div id="site-preloader"></div>
+    <div id="site-preloader" class="first-run"></div>
 
-    <div id="map"></div>
-    <div class="map-edge"></div>
-
-    <div id="nav">
-      <div class="menu toggle">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
+    <div class="grid_container">
+      <div class="grid_row_8" id="header">
+        <div class="grid_col_2">
+          <h1><a href="/">{Title}</a></h1>
+          <p class="description">{Description}</p>
+        </div>
+        <div class="grid_col_4">
+          {block:HasPages}
+          <ul class="pages">
+            {block:Pages}<li><a href="{Url}">{Label}</a></li>{/block:Pages}
+          </ul>
+          {/block:HasPages}
+          &nbsp;
+        </div>
+        <div class="grid_col_2">
+          <div class="avatar"><a href="/"><img src="{PortraitURL-128}" /></a></div>
+        </div>
       </div>
-      <div class="avatar" style="background-image: url('{PortraitURL-128}');"></div>
-      <div id="date">
-        <p class="js-month"></p>
-        <p class="js-date"></p>
-        <p class="js-year"></p>
-      </div>
-      <div class="contents">
-        {block:HasPages}
-        <ul>
-          {block:Pages}<li><a href="{URL}">{Label}</a></li>{/block:Pages}
-        </ul> 
-        {/block:HasPages}
-      </div>
-    </div>
 
-    <div id="left">
-      <div class="pages">
-        <div class="page" data-page="{CurrentPage}" data-total="{TotalPages}" {block:NextPage}data-next="{NextPage}"{/block:NextPage}>
-          {block:Posts}
-            <div class="post js-extend-view {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even} grid_container" id="post-{PostID}" data-view="PostView" data-type="{PostType}" data-permalink="{Permalink}">
-              <pre type="application/json" class="json">
-              {
-                "position": null,
-                "date": "{ShortDayOfWeek} {ShortMonth} {DayOfMonthWithZero} {Year} {24Hour}:{Minutes}:{Seconds}"
-              }
-              </pre>
+      <div class="js-posts">
+        <div class="pages">
+            <div class="page" data-page="{CurrentPage}" data-total="{TotalPages}" data-next="{block:NextPage}{NextPage}{/block:NextPage}">
+              {block:Posts}
 
-              {% include date.html %}
+                <div class="post js-extend-view {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even}" id="post-{PostID}" data-view="PostView" data-type="{PostType}" data-permalink="{Permalink}">
 
-              {block:Title}
-              <div class="grid_row_6">
-                <div class="grid_col_3">
-                  <h1>{Title}</h1>
-                </div>
-              </div>
-              {/block:Title}
-
-              {block:Text}
-              <div class="grid_row_6">
-                <div class="grid_col_1">&nbsp;</div>
-                <div class="grid_col_4">
-                  {Body}
-                </div>
-              </div>
-              {/block:Text}
-
-              {block:Photo}
-              <pre type="application/json" class="json">
-              {
-                "photos": [{ 
-                  "src": "{PhotoURL-500}",
-                  {block:HighRes}
-                  "high-res": "{PhotoURL-HighRes}",
-                  {/block:HighRes}
-                  "link": "{LinkURL}"
-                }]
-              }
-              </pre>
-              <div class="image_hold">
-                <div class="grid_row_6">
-                  <div class="grid_col_6">
-                    {LinkOpenTag}
-                      <img src="{PhotoURL-400}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
-                    {LinkCloseTag}
-                  </div>
-                </div>
-              </div>        
-              <div class="grid_row_6">
-                <div class="grid_col_1">&nbsp;</div>
-                <div class="grid_col_2">
-                  {block:Caption}
-                  <div class="caption">{Caption}</div>
-                  {/block:Caption}
-                </div>
-                <div class="grid_col_2">
-                  {% include tags.html %}
-                  {block:Exif}
-                  <pre class="json">
-                    {
-                      "exif": true
-                    }
-                  </pre>
-                  <div class="exif">
-                    <dl>
-                    {block:Camera}
-                      <dt>Camera</dt>
-                      <dd>{Camera}</dd>
-                    {/block:Camera}
-                    {block:Aperture}
-                      <dt>Aperture</dt>
-                      <dd>{Aperture}</dd>
-                    {/block:Aperture}
-                    {block:Exposure}
-                      <dt>Exposure</dt>
-                      <dd>{Exposure}</dd>
-                    {/block:Exposure}
-                    {block:FocalLength}
-                      <dt>Focal Length</dt>
-                      <dd>{FocalLength}</dd>
-                    {/block:FocalLength}
-                    </dl>
-                  </div>  
-                  {/block:Exif}
-                </div>
-              </div>
-              {/block:Photo}
-
-              {block:Panorama}
-              <div class="grid_row_12 panorama">
-                <div class="image grid_col_12">
-                  {block:Photo}
-                  <img src="{PhotoURL-500}" />
-                  {/block:Photo}
-                </div>
-                <pre type="application/json" class="json meta">
-                {
-                  "panorama": {
-                    "url": "{PhotoURL-Panorama}",
-                    "width": {PhotoWidth-Panorama,
-                    "height": {PhotoHeight-Panorama}
-                  }  
-                }
-                </pre>
-              </div>
-              {/block:Panorama}
-
-              {block:Photoset}
-              <div class="grid_row_6">
-                <div class="grid_col_1">
-                  {block:Caption}
-                  <div class="caption">{Caption}</div>
-                  {/block:Caption}
-                  {% include tags.html %}
-                </div>
-                <div class="grid_col_4">
-                  <div class="photoset"></div>
                   <pre type="application/json" class="json">
                   {
-                    "type": "photoset",
-                    "photos": [{block:Photos}{ 
-                      "src": "{PhotoURL-500}",
-                      "caption": "{block:Caption}{Caption}{/block:Caption}",
-                      {block:HighRes}
-                      "high-res": "{PhotoURL-HighRes}",
-                      {/block:HighRes}
-                      "link": "{LinkURL}"
-                    },{/block:Photos}null],
-                    "layout": {JSPhotosetLayout}
+                    "position": null,
+                    "date": "{ShortDayOfWeek} {ShortMonth} {DayOfMonthWithZero} {Year} {24Hour}:{Minutes}:{Seconds}",
+                    {block:HasTags}
+                    "tags": [{block:Tags}{
+                      "name": "{Tag}",
+                      "url": "{TagURL}"
+                    },{/block:Tags}null]
+                    {/block:HasTags}
                   }
                   </pre>
 
-                </div>
-              </div>
-              {/block:Photoset}
+                  {block:Text}
+                    {% include text.html %}
+                  {/block:Text}
 
-              <pre type="application/json" class="json meta">
-              {
-                "meta": {
-                  {block:HasTags}
-                  "tags": [{block:Tags}{
-                    "name": "{Tag}",
-                    "url": "{TagURL}"
-                  },{/block:Tags}null]
-                  {/block:HasTags}
-                }  
-              }
-              </pre>
+                  {block:Photo}
+                    {% include photo.html %}
+                  {/block:Photo}
+
+                  {block:Panorama}
+                    {% include panorama.html %}
+                  {/block:Panorama}
+
+                  {block:Photoset}
+                    {% include photoset.html %}
+                  {/block:Photoset}
+                </div>
+
+                <div class="grid_row_8">
+                  <div class="grid_col_8">
+                    <div class="divider"></div>
+                  </div>
+                </div>
+              {/block:Posts}
             </div>
-            <div class="divider"></div>
-          {/block:Posts}
+          </div>
+
         </div>
       </div>
-      <div class="buffer"></div>
+
     </div>
+
+    <div id="map-bg"></div>
+    <div id="map"></div>
+
     <script type="text/javascript" src="{{ page.server }}/assets/js/libs.js"></script>
     <script type="text/javascript" src="http://maps.stamen.com/js/tile.stamen.js?v1.2.3"></script>
     <script type="text/javascript" src="{{ page.server }}/assets/js/transit.js"></script>   
-    {% if page.dev_server %}
-    <script type="text/javascript" src="{{ page.dev_server }}/assets/js/transit.js"></script>   
-    {% endif %} 
     <script type="text/javascript">
     window.TransitTheme.Main.init();
     </script>

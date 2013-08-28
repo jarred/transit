@@ -23,81 +23,61 @@
   }
 }
 
-/*
-
 $degredation-selector: '.no_media_queries';
 $ie6-selector: '.ie6';
 $grid-debug: false;
 
 @include define-grid-settings(
-	$grid-name: 'grid-6',
-	$is-fluid: true,
-	$column-width: 140,
-	$gutter-width: 20,
-	$gutter-property: 'margin',
-	$num-columns: 6,
-	$padding-left: 20,
-	$padding-right: 20,
-	$breakpoints: (
-		(
-		  query 'screen and (max-width: 979px)',
-		  max-width 768px,
-		  padding-left 10px,
-		  padding-right 10px,
-		  column-width 42
-		  apply-to-browsers-w/o-media-queries true
-		),(
-			query 'screen and (max-width: 767px)',
-			max-width 100%,
-			padding-left 20px,
-			padding-right 20px
-		)
+  $grid-name: 'grid-8',
+  $is-fluid: true,
+  $column-width: 140,
+  $gutter-width: 20,
+  $gutter-property: 'margin',
+  $num-columns: 8,
+  $padding-left: 20,
+  $padding-right: 20,
+  $breakpoints: (
+    (
+      query 'screen and (max-width: 979px)',
+      max-width 768px,
+      padding-left 10px,
+      padding-right 10px,
+      column-width 42
+      apply-to-browsers-w/o-media-queries true
+    ),(
+      query 'screen and (max-width: 767px)',
+      max-width 100%,
+      padding-left 20px,
+      padding-right 20px
+    )
   )
 );
 
 @include apply-grid(
-	$use-grid: 'grid-6',
-	$container-selector: '.grid_container',
-	$row-selector: '.grid_row_6',
-	$row-extend-selectors: '%grid_row',
-	$column-selector-prefix: '.grid_col_',
-	$column-extend-selectors: '%grid_col',
-	$output-column-styles-for: 1 2 3 4 5 6,
-	$break-columns: (
-		(
-			breakpoint 2,
-			selector '.grid_col_2, .grid_col_3, .grid_col_4, .grid_col_5, .grid_col_6',
-			columns 6
-		)
-	)
+  $use-grid: 'grid-8',
+  $container-selector: '.grid_container',
+  $row-selector: '.grid_row_8',
+  $row-extend-selectors: '%grid_row',
+  $column-selector-prefix: '.grid_col_',
+  $column-extend-selectors: '%grid_col',
+  $output-column-styles-for: 1 2 3 4 5 6 7 8,
+  $break-columns: (
+    (
+      breakpoint 2,
+      selector '.grid_col_2, .grid_col_3, .grid_col_4, .grid_col_5, .grid_col_6',
+      columns 6
+    )
+  )
 );
 
 %grid_row{
-	@include clearfix;
+  @include clearfix;
 }
 
 %grid_col {
-	float: left;
+  float: left;
 }
 
 .grid_container{
-	@include clearfix;
-	margin-left: auto;
-	margin-right: auto;
-	background-color: #FFF;
-}
-
-*/
-
-#left{
-	position: absolute;
-	left: 80px;
-	top: 0px;
-	bottom: 0px;
-	right: 40%;
-	overflow: scroll;
-	background-color: #FFF;
-	.buffer{
-		height: 1000px;
-	}
+  margin-right: 30%;  
 }

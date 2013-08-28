@@ -2209,141 +2209,167 @@ table {
    Clearfix
    ----------------------------- */
 /* line 18, ../_scss/grid/_clearfix.scss */
-.clearfix {
+.clearfix, .grid_row_8 {
   zoom: 1;
 }
 /* line 9, ../_scss/grid/_clearfix.scss */
-.clearfix:before, .clearfix:after {
+.clearfix:before, .grid_row_8:before, .clearfix:after, .grid_row_8:after {
   content: " ";
   display: table;
 }
 /* line 13, ../_scss/grid/_clearfix.scss */
-.clearfix:after {
+.clearfix:after, .grid_row_8:after {
   clear: both;
 }
 
-/*
-
-$degredation-selector: '.no_media_queries';
-$ie6-selector: '.ie6';
-$grid-debug: false;
-
-@include define-grid-settings(
-	$grid-name: 'grid-6',
-	$is-fluid: true,
-	$column-width: 140,
-	$gutter-width: 20,
-	$gutter-property: 'margin',
-	$num-columns: 6,
-	$padding-left: 20,
-	$padding-right: 20,
-	$breakpoints: (
-		(
-		  query 'screen and (max-width: 979px)',
-		  max-width 768px,
-		  padding-left 10px,
-		  padding-right 10px,
-		  column-width 42
-		  apply-to-browsers-w/o-media-queries true
-		),(
-			query 'screen and (max-width: 767px)',
-			max-width 100%,
-			padding-left 20px,
-			padding-right 20px
-		)
-  )
-);
-
-@include apply-grid(
-	$use-grid: 'grid-6',
-	$container-selector: '.grid_container',
-	$row-selector: '.grid_row_6',
-	$row-extend-selectors: '%grid_row',
-	$column-selector-prefix: '.grid_col_',
-	$column-extend-selectors: '%grid_col',
-	$output-column-styles-for: 1 2 3 4 5 6,
-	$break-columns: (
-		(
-			breakpoint 2,
-			selector '.grid_col_2, .grid_col_3, .grid_col_4, .grid_col_5, .grid_col_6',
-			columns 6
-		)
-	)
-);
-
-%grid_row{
-	@include clearfix;
+/* -----------------------------
+   Sassy Grid mixin
+   @author: Frej Raahede Nielsen
+   @documentation: http://springload.github.com/sassy-grid/
+   ----------------------------- */
+/* line 594, ../_scss/grid/_grid-core.scss */
+.grid_container {
+  max-width: 1300px;
+}
+/* line 602, ../_scss/grid/_grid-core.scss */
+.ie7 .grid_container, .ie6 .grid_container {
+  /* Locking IE6 and IE7 due to sub-pixel rounding issue */
+  width: 1300px;
 }
 
-%grid_col {
-	float: left;
+/* line 613, ../_scss/grid/_grid-core.scss */
+.grid_row_8 {
+  padding-left: 0.76%;
+  padding-right: 0.76%;
 }
 
-.grid_container{
-	@include clearfix;
-	margin-left: auto;
-	margin-right: auto;
-	background-color: #FFF;
+/* line 622, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_1, .grid_row_8 .grid_col_2, .grid_row_8 .grid_col_3, .grid_row_8 .grid_col_4, .grid_row_8 .grid_col_5, .grid_row_8 .grid_col_6, .grid_row_8 .grid_col_7, .grid_row_8 .grid_col_8 {
+  margin-left: 0.78%;
+  margin-right: 0.78%;
 }
 
-*/
-/* line 92, ../_scss/grid/_layout.scss */
-#left {
-  position: absolute;
-  left: 80px;
-  top: 0px;
-  bottom: 0px;
-  right: 40%;
-  overflow: scroll;
-  background-color: #FFF;
-}
-/* line 100, ../_scss/grid/_layout.scss */
-#left .buffer {
-  height: 1000px;
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_1 {
+  width: 10.93%;
 }
 
-/* line 1, ../_scss/ui/_post.scss */
-.post {
-  margin: 40px;
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_2 {
+  width: 23.43%;
 }
 
-/* line 5, ../_scss/ui/_post.scss */
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_3 {
+  width: 35.93%;
+}
+
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_4 {
+  width: 48.43%;
+}
+
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_5 {
+  width: 60.93%;
+}
+
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_6 {
+  width: 73.43%;
+}
+
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_7 {
+  width: 85.93%;
+}
+
+/* line 552, ../_scss/grid/_grid-core.scss */
+.grid_row_8 .grid_col_8 {
+  width: 98.43%;
+}
+
+@media screen and (max-width: 979px) {
+  /* line 384, ../_scss/grid/_grid-core.scss */
+  .grid_container {
+    max-width: 768px;
+  }
+
+  /* line 403, ../_scss/grid/_grid-core.scss */
+  .grid_row_8 {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media screen and (max-width: 767px) {
+  /* line 384, ../_scss/grid/_grid-core.scss */
+  .grid_container {
+    max-width: 100%;
+  }
+
+  /* line 403, ../_scss/grid/_grid-core.scss */
+  .grid_row_8 {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  /* line 552, ../_scss/grid/_grid-core.scss */
+  .grid_row_8 .grid_col_2, .grid_row_8 .grid_col_3, .grid_row_8 .grid_col_4, .grid_row_8 .grid_col_5, .grid_row_8 .grid_col_6 {
+    width: 73.43%;
+  }
+}
+/* IE6 fix: fixes double margin on floated elements */
+/* line 735, ../_scss/grid/_grid-core.scss */
+.ie6 .grid_row_8 .grid_col_1, .grid_row_8 .ie6 .grid_col_1, .ie6 .grid_row_8 .grid_col_2, .grid_row_8 .ie6 .grid_col_2, .ie6 .grid_row_8 .grid_col_3, .grid_row_8 .ie6 .grid_col_3, .ie6 .grid_row_8 .grid_col_4, .grid_row_8 .ie6 .grid_col_4, .ie6 .grid_row_8 .grid_col_5, .grid_row_8 .ie6 .grid_col_5, .ie6 .grid_row_8 .grid_col_6, .grid_row_8 .ie6 .grid_col_6, .ie6 .grid_row_8 .grid_col_7, .grid_row_8 .ie6 .grid_col_7, .ie6 .grid_row_8 .grid_col_8, .grid_row_8 .ie6 .grid_col_8 {
+  display: inline;
+}
+
+/* line 77, ../_scss/grid/_layout.scss */
+.grid_row_8 .grid_col_1, .grid_row_8 .grid_col_2, .grid_row_8 .grid_col_3, .grid_row_8 .grid_col_4, .grid_row_8 .grid_col_5, .grid_row_8 .grid_col_6, .grid_row_8 .grid_col_7, .grid_row_8 .grid_col_8 {
+  float: left;
+}
+
+/* line 81, ../_scss/grid/_layout.scss */
+.grid_container {
+  margin-right: 30%;
+}
+
+/* line 3, ../_scss/ui/_post.scss */
 .divider {
-  border-bottom: 1px dotted #eee;
-  height: 50px;
-  margin-bottom: 49px;
+  border-bottom: 1px solid #EEE;
+  margin: 40px 0px;
 }
 
-/* line 11, ../_scss/ui/_post.scss */
+/* line 8, ../_scss/ui/_post.scss */
+.page {
+  position: relative;
+}
+
+/* line 12, ../_scss/ui/_post.scss */
 pre.json {
   display: none;
 }
 
-/* line 1, ../_scss/ui/_nav.scss */
-#nav {
-  position: absolute;
+/* line 18, ../_scss/ui/_post.scss */
+.tags ul,
+.tags li {
+  margin: 0px;
+  padding: 0px;
+  list-style-type: none;
+}
+
+/* line 1, ../_scss/ui/_left.scss */
+#left {
+  position: fixed;
   left: 0px;
   top: 0px;
+  width: 219px;
   bottom: 0px;
-  width: 80px;
-  background-color: #F5F5F5;
+  border-right: 1px solid #F9F9F9;
 }
-/* line 8, ../_scss/ui/_nav.scss */
-#nav .contents {
-  display: none;
-}
-/* line 11, ../_scss/ui/_nav.scss */
-#nav .avatar {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  margin: 10px;
-  background-size: cover;
-  background-position: center center;
-}
-/* line 19, ../_scss/ui/_nav.scss */
-#nav:hover {
-  background-color: #222;
+/* line 8, ../_scss/ui/_left.scss */
+#left h1 {
+  font: 400 16px/20px "Helvetica Neue", "Helvetica", Sans-Serif;
 }
 
 /* line 2, ../_scss/ui/_date.scss */
@@ -2433,38 +2459,31 @@ pre.json {
   padding: 1px;
 }
 
-/* line 1, ../_scss/ui/_map.scss */
-#map {
-  position: absolute;
+/* line 2, ../_scss/ui/_map.scss */
+#map,
+#map-bg {
+  position: fixed;
+  background-color: #111111;
   top: 0px;
   right: 0px;
   bottom: 0px;
-  left: 60%;
-  background-color: #000;
-  z-index: 1;
+  width: 30%;
+  z-index: 2;
 }
-/* line 9, ../_scss/ui/_map.scss */
-#map .leaflet-tile-pane {
+/* line 10, ../_scss/ui/_map.scss */
+#map .leaflet-tile-pane,
+#map-bg .leaflet-tile-pane {
   opacity: 0.44;
   filter: alpha(opacity=44);
 }
 
 /* line 14, ../_scss/ui/_map.scss */
-.map-edge {
-  position: absolute;
-  top: 0px;
-  bottom: 0px;
-  right: 40%;
-  width: 2px;
-  z-index: 10;
-  margin-right: -2px;
-}
-/* line 22, ../_scss/ui/_map.scss */
-html.rgba .map-edge {
-  background-color: rgba(0, 0, 0, 0.2);
+#map-bg {
+  z-index: 1;
+  background-color: #111111;
 }
 
-/* line 27, ../_scss/ui/_map.scss */
+/* line 19, ../_scss/ui/_map.scss */
 .marker {
   width: 60px;
   height: 60px;
@@ -2474,11 +2493,11 @@ html.rgba .map-edge {
   border-radius: 50%;
   z-index: 401;
 }
-/* line 35, ../_scss/ui/_map.scss */
+/* line 27, ../_scss/ui/_map.scss */
 html.rgba .marker {
   background-color: rgba(0, 0, 0, 0.32);
 }
-/* line 38, ../_scss/ui/_map.scss */
+/* line 30, ../_scss/ui/_map.scss */
 .marker .photo {
   width: 56px;
   height: 56px;
@@ -2487,7 +2506,7 @@ html.rgba .marker {
   background-position: center center;
   margin: 2px;
 }
-/* line 46, ../_scss/ui/_map.scss */
+/* line 38, ../_scss/ui/_map.scss */
 .marker .icon-shell {
   margin: 2px;
   width: 56px;
@@ -2498,7 +2517,7 @@ html.rgba .marker {
   font: 400 30px/56px 'Helvetica Neue';
   text-align: center;
 }
-/* line 56, ../_scss/ui/_map.scss */
+/* line 48, ../_scss/ui/_map.scss */
 .marker .count {
   display: block;
   position: absolute;
@@ -2515,38 +2534,56 @@ html.rgba .marker {
   text-align: center;
   font: 400 11px/18px 'Helvetica Neue';
 }
-/* line 69, ../_scss/ui/_map.scss */
+/* line 61, ../_scss/ui/_map.scss */
 .marker:hover {
   z-index: 999;
 }
 
-/* line 74, ../_scss/ui/_map.scss */
+/* line 66, ../_scss/ui/_map.scss */
 .leaflet-control-attribution {
   background-color: #000 !important;
   color: #AAA !important;
   box-shadow: none !important;
   padding: 2px 6px !important;
 }
-/* line 79, ../_scss/ui/_map.scss */
+/* line 71, ../_scss/ui/_map.scss */
 .leaflet-control-attribution a {
   color: #FFF !important;
   text-decoration: none !important;
 }
 
-/* line 3, ../_scss/posts/_photoset.scss */
-.photoset .image img {
+/* line 2, ../_scss/posts/_photoset.scss */
+.photoset .row {
+  clear: both;
+  margin-bottom: 20px;
+}
+/* line 7, ../_scss/posts/_photoset.scss */
+.photoset .cell img {
   display: block;
   width: 100%;
 }
+/* line 13, ../_scss/posts/_photoset.scss */
+.photoset .row_size_2 .cell {
+  float: left;
+  width: 50%;
+}
+/* line 17, ../_scss/posts/_photoset.scss */
+.photoset .row_size_2 .cell:nth-child(1) .image {
+  margin-right: 10px;
+}
+/* line 22, ../_scss/posts/_photoset.scss */
+.photoset .row_size_2 .cell:nth-child(2) .image {
+  margin-left: 10px;
+}
+/* line 29, ../_scss/posts/_photoset.scss */
+.photoset .row_size_3 .cell {
+  float: left;
+  width: 33%;
+}
 
 /* line 2, ../_scss/posts/_photo.scss */
-.photo .image_hold {
-  background-color: #111111;
-}
-/* line 4, ../_scss/posts/_photo.scss */
-.photo .image_hold img {
+.photo img {
   display: block;
-  margin: 10px 0px;
   width: 100%;
 }
 

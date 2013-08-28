@@ -19,7 +19,7 @@ for tagger:
 
 for the theme:
 
-`uglifyjs -o assets/js/libs.js assets/js/_libs/jquery.js assets/js/_libs/underscore.js assets/js/_libs/backbone.js`
+`uglifyjs -o assets/js/libs.js assets/js/_libs/jquery.js assets/js/_libs/underscore.js assets/js/_libs/backbone.js assets/js/_libs/leaflet-src.js assets/js/_libs/jquery.sticky.js`
 
 # Coffeescript
 

@@ -1,8 +1,34 @@
 .photoset{
-	.image{
+	.row{
+		clear: both;
+		margin-bottom: 20px;
+	}
+	.cell{
 		img{
 			display: block;
 			width: 100%;
+		}
+	}
+	.row_size_2{
+		.cell{
+			float: left;
+			width: 50%;
+			&:nth-child(1){
+				.image{
+					margin-right: 10px;					
+				}
+			}
+			&:nth-child(2){
+				.image{
+					margin-left: 10px;
+				}
+			}
+		}
+	}
+	.row_size_3{
+		.cell{
+			float: left;
+			width: 33%;
 		}
 	}
 }

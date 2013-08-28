@@ -1,18 +1,8 @@
-{block:Date}
-  <div class="date">
-    <a href="{Permalink}">
-      <span class="day_of_week">{DayOfWeek}</span>
-      <span class="calendar">
-        <span class="short_month">{ShortMonth}</span>
-        <span class="day_of_month_with_zero">{DayOfMonthWithZero}</span>
-        <span class="year">{Year}</span>
-      </span>
-      <span class="clock">
-        <span class="hours">{12HourWithZero}</span>
-        <span class="divider">:</span>
-        <span class="minutes">{Minutes}</span>
-        <span class="am-pm">{AmPm}</span>
-      </span>
-    </a>
-  </div>
-{/block:Date}
+<div class="grid_col_2">
+  {block:NewDayDate}
+  <span>{Month} {DayOfMonth}<sup>{DayOfMonthSuffix}</sup> {Year}</span><br />
+  {/block:NewDayDate}
+  {block:Date}
+    <a href="{Permalink}">{12Hour}:{Minutes} <span class="am-pm">{AmPm}</span></a>
+  {/block:Date}
+</div>

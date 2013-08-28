@@ -4,8 +4,7 @@ Transit.Models.PostModel = Backbone.Model.extend
 		_.bindAll @
 
 	cleanUp: ->
-		tags = _.compact @get('meta').tags
-		@get('meta').tags = tags
+		@set 'tags', _.compact @get('tags')
 		
 		if @get('type') == 'photoset'
 			photos = _.compact @get('photos')
