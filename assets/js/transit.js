@@ -151,19 +151,20 @@
       this.resize();
       this.postHeights = [];
       y = 0;
-      return _.each($('.post'), function(el) {
+      _.each($('.post'), function(el) {
         var $el;
 
         $el = $(el);
-        _this.postHeights.push($el.height() + y + 140);
-        return y += $el.height() + 140;
+        _this.postHeights.push($el.height() + y + 41);
+        return y += $el.height() + 41;
       });
+      return console.log(this.postHeights);
     },
     checkPosition: function(e) {
       var index, y,
         _this = this;
 
-      y = $(document).scrollTop() + 300;
+      y = $(document).scrollTop() + 0;
       index = _.find(this.postHeights, function(value) {
         return y <= value;
       });
@@ -242,7 +243,10 @@
         }
       });
       photoset += "<div class=\"clearfix\"></div></div>";
-      return this.$el.html(photoset);
+      this.$el.html(photoset);
+      return _.defer(function() {
+        return _this.model.trigger('rendered');
+      });
     }
   });
 

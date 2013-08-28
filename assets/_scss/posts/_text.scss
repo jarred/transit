@@ -2,7 +2,6 @@
 	&.flight{
 		h1{
 			font: 600 50px/50px $sans;
-			text-align: center;
 		}
 		.airport-code{
 			@include inline-block;

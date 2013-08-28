@@ -66,11 +66,12 @@ Transit.Views.MapView = Backbone.View.extend
 		y = 0;
 		_.each $('.post'), (el) =>
 			$el = $(el)
-			@postHeights.push $el.height() + y + 140
-			y += $el.height() + 140
+			@postHeights.push $el.height() + y + 41
+			y += $el.height() + 41
+		console.log @postHeights
 
 	checkPosition: (e) ->
-		y = $(document).scrollTop() + 300
+		y = $(document).scrollTop() + 0
 		index = _.find @postHeights, (value) =>
 			return y <= value
 		index = @postHeights.indexOf index

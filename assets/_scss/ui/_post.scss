@@ -13,9 +13,22 @@
 			}
 		}
 	}
+	.tags{
+		a{
+			text-decoration: none;
+			color: #CCC;
+			&:hover{
+				color: $black;
+			}
+		}
+	}
 	.caption{
 		margin-right: 20px;
-		font: 400 17px/22px $sans;
+		font: 400 15px/20px $sans;
+		h1{
+			font: 600 20px/22px $sans;
+			margin-bottom: 20px;
+		}
 		p{
 			margin-bottom: 20px;
 		}

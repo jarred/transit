@@ -2102,44 +2102,58 @@ legend {
 .post .date a.time {
   color: #DDD;
 }
-/* line 16, ../_scss/ui/_post.scss */
+/* line 17, ../_scss/ui/_post.scss */
+.post .tags a {
+  text-decoration: none;
+  color: #CCC;
+}
+/* line 20, ../_scss/ui/_post.scss */
+.post .tags a:hover {
+  color: #111111;
+}
+/* line 25, ../_scss/ui/_post.scss */
 .post .caption {
   margin-right: 20px;
-  font: 400 17px/22px "Helvetica Neue", "Helvetica", Sans-Serif;
+  font: 400 15px/20px "Helvetica Neue", "Helvetica", Sans-Serif;
 }
-/* line 19, ../_scss/ui/_post.scss */
+/* line 28, ../_scss/ui/_post.scss */
+.post .caption h1 {
+  font: 600 20px/22px "Helvetica Neue", "Helvetica", Sans-Serif;
+  margin-bottom: 20px;
+}
+/* line 32, ../_scss/ui/_post.scss */
 .post .caption p {
   margin-bottom: 20px;
 }
-/* line 22, ../_scss/ui/_post.scss */
+/* line 35, ../_scss/ui/_post.scss */
 .post .caption a {
   color: #777;
   text-decoration: none;
   border-bottom: 1px solid #CCC;
 }
-/* line 26, ../_scss/ui/_post.scss */
+/* line 39, ../_scss/ui/_post.scss */
 .post .caption a:hover {
   color: #111111;
   border-bottom-color: transparent;
 }
 
-/* line 34, ../_scss/ui/_post.scss */
+/* line 47, ../_scss/ui/_post.scss */
 .divider {
   border-bottom: 1px solid #EEE;
   margin: 20px 0px;
 }
 
-/* line 39, ../_scss/ui/_post.scss */
+/* line 52, ../_scss/ui/_post.scss */
 .page {
   position: relative;
 }
 
-/* line 43, ../_scss/ui/_post.scss */
+/* line 56, ../_scss/ui/_post.scss */
 pre.json {
   display: none;
 }
 
-/* line 49, ../_scss/ui/_post.scss */
+/* line 62, ../_scss/ui/_post.scss */
 .tags ul,
 .tags li {
   margin: 0px;
@@ -2405,9 +2419,8 @@ html.rgba .marker {
 /* line 3, ../_scss/posts/_text.scss */
 .text.flight h1 {
   font: 600 50px/50px "Helvetica Neue", "Helvetica", Sans-Serif;
-  text-align: center;
 }
-/* line 7, ../_scss/posts/_text.scss */
+/* line 6, ../_scss/posts/_text.scss */
 .text.flight .airport-code {
   display: -moz-inline-stack;
   display: inline-block;
@@ -2415,7 +2428,7 @@ html.rgba .marker {
   zoom: 1;
   *display: inline;
 }
-/* line 9, ../_scss/posts/_text.scss */
+/* line 8, ../_scss/posts/_text.scss */
 .text.flight .airport-code .letter {
   display: -moz-inline-stack;
   display: inline-block;
@@ -2430,7 +2443,7 @@ html.rgba .marker {
   text-align: center;
   position: relative;
 }
-/* line 18, ../_scss/posts/_text.scss */
+/* line 17, ../_scss/posts/_text.scss */
 .text.flight .airport-code .letter .shadow {
   position: absolute;
   left: 0px;
@@ -2439,7 +2452,7 @@ html.rgba .marker {
   right: 0px;
   display: none;
 }
-/* line 25, ../_scss/posts/_text.scss */
+/* line 24, ../_scss/posts/_text.scss */
 html.rgba .text.flight .airport-code .letter .shadow {
   display: block;
   background-color: rgba(255, 255, 255, 0.3);

@@ -28,5 +28,6 @@ Transit.Views.PhotosetView = Backbone.View.extend
 				if index < all.length - 1
 					photoset += "<div class=\"clearfix\"></div></div><div class=\"row row_size_#{@model.get('layout')[row]}\">"
 		photoset += "<div class=\"clearfix\"></div></div>"
-	
 		@$el.html photoset
+		_.defer () =>
+			@model.trigger 'rendered'
