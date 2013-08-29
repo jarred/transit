@@ -15,7 +15,7 @@ A tumblr theme designed specifically for travellers.
 
 for tagger:
 
-`uglifyjs -o assets/js/libs.js assets/js/_libs/jquery.js assets/js/_libs/underscore.js assets/js/_libs/backbone.js assets/js/_libs/jquery-ui-1.10.3.custom.js assets/js/_libs/leaflet-src.js`
+`uglifyjs -o assets/js/app-libs.js assets/js/_libs/jquery.js assets/js/_libs/underscore.js assets/js/_libs/backbone.js assets/js/_libs/jquery-ui-1.10.3.custom.js assets/js/_libs/leaflet-src.js`
 
 for the theme:
 
