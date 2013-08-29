@@ -14,6 +14,7 @@
 		}
 	}
 	.tags{
+		color: #DDD;
 		a{
 			text-decoration: none;
 			color: #CCC;
@@ -23,7 +24,7 @@
 		}
 		.separator{
 			color: #DDD;
-			&:last-child{
+			&:last-of-type{
 				display: none;
 			}
 		}
