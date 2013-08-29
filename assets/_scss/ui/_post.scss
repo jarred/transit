@@ -21,6 +21,12 @@
 				color: $black;
 			}
 		}
+		.separator{
+			color: #DDD;
+			&:last-child{
+				display: none;
+			}
+		}
 	}
 	.caption{
 		margin-right: 20px;

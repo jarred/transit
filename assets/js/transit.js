@@ -151,14 +151,13 @@
       this.resize();
       this.postHeights = [];
       y = 0;
-      _.each($('.post'), function(el) {
+      return _.each($('.post'), function(el) {
         var $el;
 
         $el = $(el);
         _this.postHeights.push($el.height() + y + 41);
         return y += $el.height() + 41;
       });
-      return console.log(this.postHeights);
     },
     checkPosition: function(e) {
       var index, y,

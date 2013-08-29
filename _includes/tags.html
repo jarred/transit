@@ -1,9 +1,7 @@
 {block:HasTags}
 <div class="tags">
-  <ul>
-    {block:Tags}
-    <li data-tag="{Tag}"><a href="{TagURL}">#{Tag}</a></li>
-    {/block:Tags}
-  </ul>
+  <p>
+    {block:Tags}<a href="{TagURL}">#{Tag}</a><span class="separator">,&nbsp;</span>{/block:Tags}.
+  </p>
 </div>
 {/block:HasTags}
