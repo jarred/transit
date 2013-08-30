@@ -265,7 +265,7 @@
       if (mapTag != null) {
         this.addMarker(mapTag);
       }
-      this.$("a[data-tag='" + mapTag.name + "']").remove();
+      this.$("[data-tag='" + mapTag.name + "']").remove();
       this.options.mapView.addPost(this.model);
       switch (this.model.get('type')) {
         case 'photoset':

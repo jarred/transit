@@ -11,7 +11,7 @@ Transit.Views.PostView = Backbone.View.extend
 		mapTag = _.find @model.get('tags'), (tag) ->
 			return tag.name.indexOf("lat/long/zoom") == 0
 		@addMarker mapTag if mapTag?
-		@$("a[data-tag='#{ mapTag.name }']").remove()
+		@$("[data-tag='#{ mapTag.name }']").remove()
 		@options.mapView.addPost @model
 
 		# initiate the different post types

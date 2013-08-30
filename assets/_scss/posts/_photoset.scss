@@ -26,7 +26,22 @@
 	.row_size_3{
 		.cell{
 			float: left;
-			width: 33%;
+			width: 33.33333%;
+			&:nth-child(1){
+				.image{
+					margin-right: 10px;
+				}
+			}
+			&:nth-child(2){
+				.image{
+					margin: 0px 10px;	
+				}
+			}
+			&:nth-child(3){
+				.image{
+					margin-left: 10px;
+				}
+			}
 		}
 	}
 }
