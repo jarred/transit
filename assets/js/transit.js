@@ -221,7 +221,7 @@
       _.bindAll(this);
       return this.render();
     },
-    photoTemplate: _.template("<div class=\"cell\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
+    photoTemplate: _.template("<div class=\"cell\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n	<% if(caption){ %>\n		<p class=\"caption\"><%= caption %></p>\n	<% } %>\n</div>"),
     render: function() {
       var photoset, row, rowCount,
         _this = this;
@@ -231,6 +231,7 @@
       row = 0;
       photoset += "<div class=\"row row_size_" + (this.model.get('layout')[0]) + "\">";
       _.each(this.model.get('photos'), function(photo, index, all) {
+        console.log(photo);
         photoset += _this.photoTemplate(photo);
         rowCount++;
         if (rowCount >= Number(_this.model.get('layout')[row])) {

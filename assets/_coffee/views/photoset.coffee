@@ -11,6 +11,9 @@ Transit.Views.PhotosetView = Backbone.View.extend
 		<% }else{ %>
 			<div class="image"><img src="<%= src %>" /></div>
 		<% } %>
+		<% if(caption){ %>
+			<p class="caption"><%= caption %></p>
+		<% } %>
 	</div>
 	"""
 
@@ -20,6 +23,7 @@ Transit.Views.PhotosetView = Backbone.View.extend
 		row = 0
 		photoset += "<div class=\"row row_size_#{@model.get('layout')[0]}\">"
 		_.each @model.get('photos'), (photo, index, all) =>
+			console.log photo
 			photoset += @photoTemplate photo
 			rowCount++
 			if rowCount >= Number(@model.get('layout')[row])
