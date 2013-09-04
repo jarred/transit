@@ -221,19 +221,23 @@
       _.bindAll(this);
       return this.render();
     },
-    photoTemplate: _.template("<div class=\"cell\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n	<% if(caption){ %>\n		<p class=\"caption\"><%= caption %></p>\n	<% } %>\n</div>"),
+    photoTemplate: _.template("<div class=\"cell\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n	<% if(caption){ %>\n		<span class=\"caption-index\"><%= index %></span>\n	<% } %>\n</div>"),
     render: function() {
-      var photoset, row, rowCount,
+      var captions, photoset, row, rowCount,
         _this = this;
 
       photoset = "";
+      captions = "<ul class=\"image-captions\">";
       rowCount = 0;
       row = 0;
       photoset += "<div class=\"row row_size_" + (this.model.get('layout')[0]) + "\">";
       _.each(this.model.get('photos'), function(photo, index, all) {
-        console.log(photo);
+        photo.index = index + 1;
         photoset += _this.photoTemplate(photo);
         rowCount++;
+        if (photo.caption) {
+          captions += "<li><span class=\"number\">" + photo.index + "</span> " + photo.caption + "</li>";
+        }
         if (rowCount >= Number(_this.model.get('layout')[row])) {
           row++;
           rowCount = 0;
@@ -243,7 +247,15 @@
         }
       });
       photoset += "<div class=\"clearfix\"></div></div>";
+      captions += "</ul>";
+      this.$el.parents('.post').find('.caption').append(captions);
       this.$el.html(photoset);
+      _.each(this.$('.row_size_2'), function(el, index) {
+        return $(el).addClass("numero_" + index);
+      });
+      _.each(this.$('.row_size_3'), function(el, index) {
+        return $(el).addClass("numero_" + index);
+      });
       return _.defer(function() {
         return _this.model.trigger('rendered');
       });

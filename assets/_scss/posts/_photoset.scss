@@ -1,67 +1,115 @@
 .photoset{
 // 	width: 500px;
-	@include center-block;
+	padding: 0px;
+	$border: 2px;
 	.row{
 		clear: both;
-		margin-bottom: 50px;
 	}
 	img{
 		display: block;
-		width: 100%;
+// 		width: 100%;
 		position: relative;
 		z-index: 1;
 	}
 	.cell{
 		position: relative;
+		.caption-index{
+			position: absolute;
+			left: 0px;
+			bottom: 0px;
+			display: block;
+			width: 24px;
+			height: 24px;
+			z-index: 10;
+			font: 400 12px/24px $sans;
+			color: $black;
+			background-color: #FFF;
+			text-align: center;
+		}
 	}
-	.caption{
-		font: 400 11px/20px $sans;
-		margin-top: 4px;
-		z-index: 2;
-		color: #AAA;
-	}
-	.row_size_1{
-		.cell{
-			margin: 0px 50px;
+	.row{
+		margin-bottom: $border;
+		position: relative;
+		&:last-child{
+			margin-bottom: 0px;
 		}
 	}
 	.row_size_2{
 		.cell{
 			float: left;
-			width: 50%;
-			&:nth-child(1){
-				.image{
-					margin-right: 25px;
-				}
+		}
+		.cell:nth-child(1){
+			.image{
+				margin-right: $border/2;	
 			}
-			&:nth-child(2){
-				.image{
-					margin-left: 25px;
-				}
+		}
+		.cell:nth-child(2){
+			.image{
+				margin-left: $border/2;	
+			}
+		}
+		&.numero_0,
+		&.numero_2{
+			.cell:nth-child(1){
+				width: 60%;
+			}
+			.cell:nth-child(2){
+				width: 40%;
+				position: absolute;
+				right: 0px;
+				bottom: 0px;
+			}
+		}
+		&.numero_1{
+			.cell:nth-child(1){
+				width: 40%;
+			}
+			.cell:nth-child(2){
+				width: 60%;
+			}
+		}
+		&.numero_2{
+			.cell:nth-child(2){
+				top: 0px;
+				bottom: auto;
 			}
 		}
 	}
 	.row_size_3{
 		.cell{
 			float: left;
-			width: 33.33333%;
+			width: 33.3%;
 			&:nth-child(1){
 				.image{
-					margin-right: 25px;
-					margin-top: 0px;
+					margin-right: $border/2;
 				}
 			}
 			&:nth-child(2){
 				.image{
-					margin: 0px 25px;	
+					margin: 0px $border/2;
 				}
 			}
 			&:nth-child(3){
 				.image{
-					margin-left: 25px;
-					margin-top: 0px;
+					margin-left: $border/2;
 				}
 			}
+		}
+	}
+}
+
+.image-captions{
+	font: 400 12px/18px $sans;
+	li{
+		padding-left: 30px;
+		margin-bottom: 4px;
+		position: relative;
+		color: #999;
+		.number{
+			position: absolute;
+			left: 0px;
+			top: 0px;
+			color: #CCC;
 		}
 	}
 }
