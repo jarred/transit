@@ -3,10 +3,13 @@
 .post{
 	.date{
 		margin-bottom: 20px;
+		font: 400 14px/20px $sans;
+		text-align: center;
 		a{
 			text-decoration: none;
 			&.day{
 				color: #CCC;
+				margin-right: 10px;
 			}
 			&.time{
 				color: #DDD;
@@ -31,9 +34,10 @@
 	}
 	.caption{
 		margin-right: 20px;
-		font: 400 15px/20px $sans;
+		font: 400 20px/24px Georgia;
 		h1{
-			font: 600 20px/22px $sans;
+			font: 600 40px/42px $sans;
+			letter-spacing: -1px;
 			margin-bottom: 20px;
 		}
 		p{
@@ -52,8 +56,7 @@
 }
 
 .divider{
-	border-bottom: 1px solid #EEE;
-	margin: 20px 0px;
+	margin: 80px 0px;
 }
 
 .page{

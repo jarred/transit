@@ -15,16 +15,12 @@
 }
 </pre>
 
-<div class="grid_row_8">
-  <div class="grid_col_2">
-    {% include date.html %}
-    {block:Caption}
-      <div class="caption">{Caption}</div>
-    {/block:Caption}
-  </div>
-  <div class="grid_col_6">
-    <div class="photoset"></div>
-  </div>
+{% include date.html %}
+
+<div class="photoset">
+  {block:Caption}
+    <div class="block caption">{Caption}</div>
+  {/block:Caption}
 </div>
 
 <div class="grid_row_8">
