@@ -7,7 +7,7 @@ Transit.Views.PhotosetView = Backbone.View.extend
 	photoTemplate: _.template """
 	<div class="block photo">
 		<% if(caption){ %>
-			<span class="caption-index">0<%= index %>.</span>
+			<span class="caption-index">0<%= index %></span>
 		<% } %>
 		<% if(highRes){ %>
 			<div class="image"><img src="<%= highRes %>" /></div>
@@ -28,7 +28,7 @@ Transit.Views.PhotosetView = Backbone.View.extend
 			@$el.append $el
 		_.each @model.get('photos'), (photo, index) =>
 			if photo.caption != ""
-				@$el.append "<div class=\"block image-caption\"><p><span class=\"number\">0#{index + 1}.</span><br />#{photo.caption}</p></div>"
+				@$el.append "<div class=\"block image-caption\"><p><span class=\"number\">0#{index + 1} <br />&mdash;</span><br />#{photo.caption}</p></div>"
 
 		# photoset = ""
 		# captions = "<ul class=\"image-captions\">"

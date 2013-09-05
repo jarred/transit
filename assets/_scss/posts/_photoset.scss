@@ -2,11 +2,28 @@
 // 	width: 500px;
 	padding: 0px;
 	$border: 2px;
+	h1{
+		font: 600 40px/42px $sans;
+		letter-spacing: -1px;
+		margin-bottom: 20px;
+	}
+	p{
+		font: 400 20px/24px Georgia;
+	}
+	h1,
+	p{
+		float: left;
+		width: 27%;
+		margin: 20px;
+	}
 	.block{
 		float: left;
 		position: relative;
 		.image{
 			margin: 20px;
+			@include breakpoint(mobile){
+				margin: 10px;
+			}
 		}
 	}
 	.photo{
@@ -25,20 +42,18 @@
 		}
 	}
 	.image-caption{
-		width: 15%;
+		width: 33%;
 		font: 400 12px/17px $sans;
 		p{
 			margin: 20px;
+			font: 400 12px/17px $sans;
+			width: auto;
 		}
 	}
-	.caption{
-		width: 30%;
-		margin: 20px;
-	}
 	.landscape{
-		width: 50%;
+		width: 66%;
 	}
 	.portrait{
-		width: 30%;
+		width: 33%;
 	}
 }

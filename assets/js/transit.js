@@ -221,7 +221,7 @@
       _.bindAll(this);
       return this.render();
     },
-    photoTemplate: _.template("<div class=\"block photo\">\n	<% if(caption){ %>\n		<span class=\"caption-index\">0<%= index %>.</span>\n	<% } %>\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
+    photoTemplate: _.template("<div class=\"block photo\">\n	<% if(caption){ %>\n		<span class=\"caption-index\">0<%= index %></span>\n	<% } %>\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
     render: function() {
       var _this = this;
 
@@ -239,7 +239,7 @@
       });
       return _.each(this.model.get('photos'), function(photo, index) {
         if (photo.caption !== "") {
-          return _this.$el.append("<div class=\"block image-caption\"><p><span class=\"number\">0" + (index + 1) + ".</span><br />" + photo.caption + "</p></div>");
+          return _this.$el.append("<div class=\"block image-caption\"><p><span class=\"number\">0" + (index + 1) + " <br />&mdash;</span><br />" + photo.caption + "</p></div>");
         }
       });
     }
