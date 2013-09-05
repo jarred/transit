@@ -30,7 +30,7 @@ $grid-debug: false;
 @include define-grid-settings(
   $grid-name: 'grid-8',
   $is-fluid: true,
-  $column-width: 140,
+  $column-width: 200,
   $gutter-width: 0,
   $gutter-property: 'margin',
   $num-columns: 8,

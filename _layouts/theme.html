@@ -22,13 +22,13 @@
 
     <div id="site-preloader" class="first-run"></div>
 
-    <div class="grid_container">
-      <div class="grid_row_8" id="header">
+    <div class="grid_container" id="header">
+      <div class="grid_row_8">
         <div class="grid_col_2">
           <h1><a href="/">{Title}</a></h1>
           <p class="description">{Description}</p>
         </div>
-        <div class="grid_col_4">
+        <div class="grid_col_3">
           {block:HasPages}
           <ul class="theme-pages">
             {block:Pages}<li><a href="{Url}">{Label}</a></li>{/block:Pages}
@@ -36,11 +36,13 @@
           {/block:HasPages}
           &nbsp;
         </div>
-        <div class="grid_col_2 avatar">
+        <div class="grid_col_3 avatar">
           <a href="/"><img src="{image:Header}" /></a>
         </div>
       </div>
+    </div>
 
+    <div class="grid_container">
       <div class="js-posts">
         <div class="pages">
             <div class="page" data-page="{CurrentPage}" data-total="{TotalPages}" data-next="{block:NextPage}{NextPage}{/block:NextPage}">

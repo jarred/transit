@@ -1,11 +1,17 @@
 #header{
-	margin-top: 20px;
-	border-bottom: 1px solid #EEE;
-	padding-bottom: 20px;
+	background-color: #EEE;
 	margin-bottom: 20px;
+	margin-left: 0px !important;
+	overflow: visible;
+	position: relative;
+	padding-left: 20px;
+	z-index: 100;
 	.avatar{
+		position: relative;
+		right: -20px;
 		img{
 			width: 100%;
+			display: block;
 		}
 	}
 }
