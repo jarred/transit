@@ -8,13 +8,22 @@
 		margin-bottom: 20px;
 	}
 	p{
-		font: 400 20px/24px Georgia;
+		font: 400 20px/24px $sans;
+	}
+	a{
+		font-weight: bold;
+		text-decoration: none;
+		border-bottom: 1px solid #CCC;
+		color: $black;
 	}
 	h1,
 	p{
 		float: left;
 		width: 27%;
 		margin: 20px;
+	}
+	.row{
+		display: inline;
 	}
 	.block{
 		float: left;
@@ -42,8 +51,12 @@
 		}
 	}
 	.image-caption{
-		width: 33%;
+		width: 20%;
 		font: 400 12px/17px $sans;
+		.number{
+			display: block;
+			color: #AAA;
+		}
 		p{
 			margin: 20px;
 			font: 400 12px/17px $sans;
@@ -51,9 +64,9 @@
 		}
 	}
 	.landscape{
-		width: 66%;
+		width: 50%;
 	}
 	.portrait{
-		width: 33%;
+		width: 50%;
 	}
 }

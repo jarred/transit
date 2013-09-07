@@ -1,10 +1,13 @@
 @import "compass/css3/transform";
 
 .post{
+	.row{
+		display: inline;
+	}
 	.date{
-		margin-bottom: 20px;
-		font: 400 14px/20px $sans;
-		text-align: center;
+		margin: 20px;
+		font: 400 13px/20px $sans;
+		text-align: left;
 		a{
 			text-decoration: none;
 			&.day{
@@ -34,7 +37,7 @@
 	}
 	.caption{
 		margin-right: 20px;
-		font: 400 20px/24px Georgia;
+		font: 400 20px/24px $sans;
 		h1{
 			font: 600 40px/42px $sans;
 			letter-spacing: -1px;

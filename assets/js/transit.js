@@ -221,27 +221,44 @@
       _.bindAll(this);
       return this.render();
     },
-    photoTemplate: _.template("<div class=\"block photo\">\n	<% if(caption){ %>\n		<span class=\"caption-index\">0<%= index %></span>\n	<% } %>\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
+    photoTemplate: _.template("<div class=\"block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>\">\n	<% if(caption){ %>\n		<span class=\"caption-index\">0<%= index %></span>\n	<% } %>\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
     render: function() {
-      var _this = this;
+      var photoset, row, rowCount,
+        _this = this;
 
-      _.each(this.model.get('photos'), function(photo, index) {
-        var $el;
-
+      photoset = "";
+      rowCount = 0;
+      row = 0;
+      photoset += "<div class=\"row row_size_" + (this.model.get('layout')[0]) + "\">";
+      _.each(this.model.get('photos'), function(photo, index, all) {
         photo.index = index + 1;
-        $el = $(_this.photoTemplate(photo));
-        if (photo.width > photo.height) {
-          $el.addClass('landscape');
-        } else {
-          $el.addClass('portrait');
+        photoset += _this.photoTemplate(photo);
+        rowCount++;
+        if (rowCount >= Number(_this.model.get('layout')[row])) {
+          row++;
+          rowCount = 0;
+          if (index < all.length - 1) {
+            return photoset += "</div><div class=\"row row_size_" + (_this.model.get('layout')[row]) + "\">";
+          }
         }
-        return _this.$el.append($el);
       });
-      return _.each(this.model.get('photos'), function(photo, index) {
+      photoset += "</div>";
+      this.$el.append(photoset);
+      _.each(this.model.get('photos'), function(photo, index) {
         if (photo.caption !== "") {
-          return _this.$el.append("<div class=\"block image-caption\"><p><span class=\"number\">0" + (index + 1) + " <br />&mdash;</span><br />" + photo.caption + "</p></div>");
+          return _this.$el.append("<div class=\"block image-caption\"><p><span class=\"number\">" + (index + 1) + " &mdash; </span>" + photo.caption + "</p></div>");
         }
       });
+      _.each(this.$('.row_size_2'), function(el, index) {
+        return $(el).addClass("numero_" + index);
+      });
+      _.each(this.$('.row_size_3'), function(el, index) {
+        return $(el).addClass("numero_" + index);
+      });
+      _.defer(function() {
+        return _this.model.trigger('rendered');
+      });
+      return this.$el.append("<div class=\"clearfix\"></div>");
     }
   });
 

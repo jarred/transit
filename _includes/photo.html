@@ -14,18 +14,22 @@
 
 {% include date.html %}
 
+<div class="image_hold">
+  <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
+  {block:HighRes}
+  <img src="{PhotoURL-HighRes}" />
+  {/block:HighRes}
+</div>   
+
+{block:Caption}
+  <div class="caption">{Caption}</div>
+{/block:Caption}
+     
+
+
 <div class="grid_row_8">
   <div class="grid_col_2">
-    {block:Caption}
-      <div class="caption">{Caption}</div>
-    {/block:Caption}
   </div>
-  <div class="image_hold grid_col_6">
-    <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
-    {block:HighRes}
-    <img src="{PhotoURL-HighRes}" />
-    {/block:HighRes}
-  </div>        
 </div>
 
 <div class="grid_row_8">
