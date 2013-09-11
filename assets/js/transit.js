@@ -49,22 +49,6 @@
         this.set('photos', photos);
       }
       return this.set('date', new Date(this.get('date')));
-    },
-    markerHTML: function() {
-      var html;
-
-      html = "";
-      switch (this.get('type')) {
-        case "photo":
-          html = "<div class=\"photo\" style=\"background-image: url('" + (this.get('photos')[0].src) + "');\"></div>";
-          break;
-        case "photoset":
-          html = "<div class=\"photo\" style=\"background-image: url('" + (this.get('photos')[0].src) + "');\"></div><span class=\"count\">" + (this.get('photos').length) + "</span>";
-          break;
-        case "text":
-          html = "<div class=\"icon-shell\"><i class=\"icon-flight icon\"></i></div>";
-      }
-      return html;
     }
   });
 
@@ -86,6 +70,7 @@
       $(document).bind('scroll', this.checkPosition);
       return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
     },
+    markerTemplate: _.template("<div class=\"pin <%= type %>\">\n	<div class=\"ball\"><div class=\"glare\"></div></div>\n	<div class=\"stem\"></div>\n	<div class=\"shadow\"></div>\n</div>"),
     addPost: function(postModel) {
       var icon, marker, options,
         _this = this;
@@ -98,7 +83,7 @@
       icon = new L.divIcon({
         className: 'marker',
         iconSize: L.Point(60, 60),
-        html: postModel.markerHTML()
+        html: this.markerTemplate(postModel.toJSON())
       });
       options = {
         icon: icon

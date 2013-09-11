@@ -21,6 +21,14 @@ Transit.Views.MapView = Backbone.View.extend
 		$(document).bind 'scroll', @checkPosition
 		@updateHeightsInt = setInterval @updatePostHeights, 2000
 
+	markerTemplate: _.template """
+	<div class="pin <%= type %>">
+		<div class="ball"><div class="glare"></div></div>
+		<div class="stem"></div>
+		<div class="shadow"></div>
+	</div>
+	"""
+
 	addPost: (postModel) ->
 		@posts.add postModel
 		postModel.on 'rendered', @updatePostHeights()
@@ -30,7 +38,7 @@ Transit.Views.MapView = Backbone.View.extend
 		icon = new L.divIcon
 			className: 'marker'
 			iconSize: L.Point(60, 60)
-			html: postModel.markerHTML()
+			html: @markerTemplate postModel.toJSON()
 		options =
 			icon: icon
 		marker = L.marker([postModel.get('position').latitude, postModel.get('position').longitude], options)

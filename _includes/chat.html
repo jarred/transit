@@ -1,0 +1,23 @@
+<div class="grid_row_8">
+  <div class="grid_col_1">
+    <div class="post-type"></div>
+    {% include date.html %}
+    {% include tags.html %}
+  </div>
+  <div class="grid_col_6">
+    {block:Title}
+    <h1>{Title}</h1>
+    {/block:Title}
+    <div class="lines">
+      {block:Lines}
+        {block:Label}
+          <span class="label">{Label}</span>
+        {/block:Label}
+        <span class="name">{Name}</span>
+        <span class="Comment">{Line}</span>
+        <br />
+      {/block:Lines}
+    </div>
+  </div>
+</div>
+

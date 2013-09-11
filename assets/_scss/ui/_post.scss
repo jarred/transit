@@ -8,6 +8,41 @@
 		height: 80px;
 		background-color: #F5F5F5;
 	}
+	&.text{
+		.post-type{
+			background: $colour-text url('../images/post-text.png') no-repeat center center;	
+		}
+	}
+	&.photo{
+		.post-type{
+			background: $colour-photo url('../images/post-photo.png') no-repeat center center;
+		}
+	}
+	&.quote{
+		.post-type{
+			background: $colour-quote url('../images/post-quote.png') no-repeat center center;
+		}
+	}
+	&.link{
+		.post-type{
+			background: $colour-link url('../images/post-link.png') no-repeat center center;
+		}
+	}
+	&.chat{
+		.post-type{
+			background: $colour-chat url('../images/post-chat.png') no-repeat center center;
+		}
+	}
+	&.audio{
+		.post-type{
+			background: $colour-audio url('../images/post-audio.png') no-repeat center center;
+		}
+	}
+	&.video{
+		.post-type{
+			background: $colour-video url('../images/post-video.png') no-repeat center center;
+		}
+	}
 	.date{
 		font: 400 13px/20px $sans;
 		a{
