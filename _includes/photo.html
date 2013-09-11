@@ -12,58 +12,52 @@
 }
 </pre>
 
-{% include date.html %}
-
-<div class="image_hold">
-  <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
-  {block:HighRes}
-  <img src="{PhotoURL-HighRes}" />
-  {/block:HighRes}
-</div>   
-
-{block:Caption}
-  <div class="caption">{Caption}</div>
-{/block:Caption}
-     
-
-
 <div class="grid_row_8">
-  <div class="grid_col_2">
+  <div class="grid_col_1">
+    <div class="post-type"></div>
+    {% include date.html %}
   </div>
-</div>
-
-<div class="grid_row_8">
-  <div class="grid_col_2">&nbsp;</div>
-  <div class="grid_col_3">
-    {% include tags.html %}
+  <div class="grid_col_7 image">
+    <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
+    {block:HighRes}
+    <img src="{PhotoURL-HighRes}" />
+    {/block:HighRes}
   </div>
-  <div class="grid_col_3">
-    {block:Exif}
+  <div class="grid_col_1 spacer">&nbsp;</div>
+  {block:Caption}
+  <div class="grid_col_4 description">
+      <div class="caption">{Caption}</div>
+  </div>
+  {/block:Caption}
+  {block:Exif}
+  <div class="grid_col_3 exif">
     <pre class="json">
       {
         "exif": true
       }
     </pre>
-    <div class="exif">
-      <dl>
-      {block:Camera}
-        <dt>Camera</dt>
-        <dd>{Camera}</dd>
-      {/block:Camera}
-      {block:Aperture}
-        <dt>Aperture</dt>
-        <dd>{Aperture}</dd>
-      {/block:Aperture}
-      {block:Exposure}
-        <dt>Exposure</dt>
-        <dd>{Exposure}</dd>
-      {/block:Exposure}
-      {block:FocalLength}
-        <dt>Focal Length</dt>
-        <dd>{FocalLength}</dd>
-      {/block:FocalLength}
-      </dl>
-    </div>  
-    {/block:Exif}
+    <dl>
+    {block:Camera}
+      <dt>Camera</dt>
+      <dd>{Camera}</dd>
+    {/block:Camera}
+    {block:Aperture}
+      <dt>Aperture</dt>
+      <dd>{Aperture}</dd>
+    {/block:Aperture}
+    {block:Exposure}
+      <dt>Exposure</dt>
+      <dd>{Exposure}</dd>
+    {/block:Exposure}
+    {block:FocalLength}
+      <dt>Focal Length</dt>
+      <dd>{FocalLength}</dd>
+    {/block:FocalLength}
+    </dl>
+  </div>
+  {/block:Exif}
+
+  <div class="grid_col_3">
+    {% include tags.html %}
   </div>
 </div>

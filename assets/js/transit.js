@@ -210,8 +210,9 @@
     initialize: function() {
       _.bindAll(this);
       if (this.model.get('photos')[0].width < this.model.get('photos')[0].height) {
-        this.$el.addClass('landscape');
-        return this.$('.image_hold').attr('class', 'image_hold grid_col_4');
+        this.$el.addClass('portrait');
+        this.$('.image').attr('class', 'image grid_col_4');
+        return this.$('.description').attr('class', 'description grid_col_3');
       }
     }
   });
@@ -221,7 +222,7 @@
       _.bindAll(this);
       return this.render();
     },
-    photoTemplate: _.template("<div class=\"block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>\">\n	<% if(caption){ %>\n		<span class=\"caption-index\">0<%= index %></span>\n	<% } %>\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
+    photoTemplate: _.template("<div class=\"block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
     render: function() {
       var photoset, row, rowCount,
         _this = this;
@@ -238,17 +239,12 @@
           row++;
           rowCount = 0;
           if (index < all.length - 1) {
-            return photoset += "</div><div class=\"row row_size_" + (_this.model.get('layout')[row]) + "\">";
+            return photoset += "<div class=\"clearfix\"></div></div><div class=\"row row_size_" + (_this.model.get('layout')[row]) + "\">";
           }
         }
       });
-      photoset += "</div>";
+      photoset += "<div class=\"clearfix\"></div></div>";
       this.$el.append(photoset);
-      _.each(this.model.get('photos'), function(photo, index) {
-        if (photo.caption !== "") {
-          return _this.$el.append("<div class=\"block image-caption\"><p><span class=\"number\">" + (index + 1) + " &mdash; </span>" + photo.caption + "</p></div>");
-        }
-      });
       _.each(this.$('.row_size_2'), function(el, index) {
         return $(el).addClass("numero_" + index);
       });

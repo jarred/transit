@@ -1,29 +1,33 @@
 @import "compass/css3/transform";
 
 .post{
-	.row{
-		display: inline;
+	.post-type{
+		@include border-radius(50%);
+		margin-bottom: 20px;
+		width: 80px;
+		height: 80px;
+		background-color: #F5F5F5;
 	}
 	.date{
-		margin: 20px;
 		font: 400 13px/20px $sans;
-		text-align: left;
 		a{
 			text-decoration: none;
 			&.day{
-				color: #CCC;
-				margin-right: 10px;
+				color: #AAA;
 			}
 			&.time{
-				color: #DDD;
+				color: #CCC;
 			}
 		}
 	}
+
 	.tags{
 		color: #DDD;
+		margin-top: 20px;
+		font: 400 13px/20px $sans;
 		a{
 			text-decoration: none;
-			color: #CCC;
+			color: #DDD;
 			&:hover{
 				color: $black;
 			}
@@ -35,16 +39,17 @@
 			}
 		}
 	}
+
 	.caption{
 		margin-right: 20px;
-		font: 400 20px/24px $sans;
 		h1{
-			font: 600 40px/42px $sans;
-			letter-spacing: -1px;
+			font: 600 32px/32px $sans;
 			margin-bottom: 20px;
+			margin-top: 20px;
 		}
 		p{
 			margin-bottom: 20px;
+			font: 400 16px/20px $sans;
 		}
 		a{
 			color: #777;

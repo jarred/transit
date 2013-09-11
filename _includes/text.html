@@ -1,14 +1,14 @@
 <div class="grid_row_8">
-  <div class="grid_col_2">
-    {% include date.html %}
-    {block:Caption}
-      <div class="caption">{Caption}</div>
-    {/block:Caption}
+	<div class="grid_col_1">
+		<div class="post-type"></div>
+		{% include date.html %}
+	</div>
+  <div class="grid_col_6">
+  	{block:Title}
+  	<h1>{Title}</h1>    
+  	{/block:Title}
   </div>
 	<div class="grid_col_6">
-	  {block:Title}
-	  <h1>{Title}</h1>
-	  {/block:Title}
 	  <div class="body">
 	    {Body}
 	  </div>

@@ -1,9 +1,19 @@
 .photo{
-	.image_hold{
+	.image{
 		margin-bottom: 20px;
 	}
 	img{
 		display: block;
 		width: 100%;
+	}
+	&.portrait{
+		.spacer{
+			display: none;
+		}
+		.image{
+			img{
+				margin-right: 20px;
+			}
+		}
 	}
 }

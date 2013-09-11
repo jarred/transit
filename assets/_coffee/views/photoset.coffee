@@ -6,9 +6,6 @@ Transit.Views.PhotosetView = Backbone.View.extend
 
 	photoTemplate: _.template """
 	<div class="block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>">
-		<% if(caption){ %>
-			<span class="caption-index">0<%= index %></span>
-		<% } %>
 		<% if(highRes){ %>
 			<div class="image"><img src="<%= highRes %>" /></div>
 		<% }else{ %>
@@ -30,14 +27,14 @@ Transit.Views.PhotosetView = Backbone.View.extend
 				row++
 				rowCount = 0
 				if index < all.length - 1
-					photoset += "</div><div class=\"row row_size_#{@model.get('layout')[row]}\">"
-		photoset += "</div>"
+					photoset += "<div class=\"clearfix\"></div></div><div class=\"row row_size_#{@model.get('layout')[row]}\">"
+		photoset += "<div class=\"clearfix\"></div></div>"
 
 		@$el.append photoset
 
-		_.each @model.get('photos'), (photo, index) =>
-			if photo.caption != ""
-				@$el.append "<div class=\"block image-caption\"><p><span class=\"number\">#{index + 1} &mdash; </span>#{photo.caption}</p></div>"
+		# _.each @model.get('photos'), (photo, index) =>
+		# 	if photo.caption != ""
+		# 		@$el.append "<div class=\"block image-caption\"><p><span class=\"number\">#{index + 1} &mdash; </span>#{photo.caption}</p></div>"
 
 		_.each @$('.row_size_2'), (el, index) =>
 			$(el).addClass "numero_#{index}"

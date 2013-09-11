@@ -1,5 +1,6 @@
 #header{
 	width: 70%;
+	margin-bottom: 20px;
 	.header-image{
 		height: 340px;
 		background-size: cover;
@@ -47,5 +48,11 @@
 		font: 400 13px/16px $sans;
 		color: $black;
 		@include opacity(.3);
+	}
+	@include breakpoint(tablet){
+		width: 100%;
+	}
+	@include breakpoint(mobile){
+		width: 100%;
 	}
 }

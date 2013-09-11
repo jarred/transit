@@ -1,72 +1,50 @@
 .photoset{
-// 	width: 500px;
 	padding: 0px;
-	$border: 2px;
-	h1{
-		font: 600 40px/42px $sans;
-		letter-spacing: -1px;
-		margin-bottom: 20px;
-	}
-	p{
-		font: 400 20px/24px $sans;
-	}
-	a{
-		font-weight: bold;
-		text-decoration: none;
-		border-bottom: 1px solid #CCC;
-		color: $black;
-	}
-	h1,
-	p{
-		float: left;
-		width: 27%;
-		margin: 20px;
-	}
 	.row{
-		display: inline;
+		clear: both;
+		display: block;
 	}
-	.block{
-		float: left;
+	img{
+		display: block;
+		width: 100%;
 		position: relative;
-		.image{
-			margin: 20px;
-			@include breakpoint(mobile){
-				margin: 10px;
+		z-index: 1;
+	}
+	.row_size_2{
+		.block{
+			width: 50%;
+			float: left;
+			&:nth-child(1){
+				.image{
+					margin-right: 10px;
+				}
+			}
+			&:nth-child(2){
+				.image{
+					margin-left: 10px;
+				}
 			}
 		}
 	}
-	.photo{
-		position: relative;
-		.caption-index{
-			position: absolute;
-			left: 20px;
-			bottom: 20px;
-			z-index: 10;
-			width: 24px;
-			height: 24px;
-			text-align: center;
-			font: 400 11px/24px $sans;
-			background-color: $black;
-			color: #FFF;
+	.row_size_3{
+		.block{
+			width: 33.3333333%;
+			float: left;
+			&:nth-child(1){
+				.image{
+					margin-right: 13px;
+				}
+			}
+			&:nth-child(2){
+				.image{
+					margin: 0px 7px;
+				}
+			}
+			&:nth-child(3){
+				.image{
+					margin-left: 13px;
+				}
+			}
 		}
-	}
-	.image-caption{
-		width: 20%;
-		font: 400 12px/17px $sans;
-		.number{
-			display: block;
-			color: #AAA;
-		}
-		p{
-			margin: 20px;
-			font: 400 12px/17px $sans;
-			width: auto;
-		}
-	}
-	.landscape{
-		width: 50%;
-	}
-	.portrait{
-		width: 50%;
 	}
 }
