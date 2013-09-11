@@ -1,18 +1,51 @@
 #header{
-	display: none;
-	background-color: #EEE;
-	margin-bottom: 20px;
-	margin-left: 0px !important;
-	overflow: visible;
-	position: relative;
-	padding-left: 20px;
-	z-index: 100;
+	width: 70%;
+	.header-image{
+		height: 340px;
+		background-size: cover;
+		background-position: center center;
+		background-repeat: no-repeat;
+		background-color: $black;
+	}
+	.grid_container{
+		margin-right: 20px;
+	}
+	.description{
+		background-color: #F1F1F1;
+		padding: 20px 0px;
+		h1{
+			font: 600 32px/32px $sans;
+			margin-bottom: 10px;
+			a{
+				text-decoration: none;
+				color: $black;
+			}
+		}
+	}
 	.avatar{
 		position: relative;
-		right: -20px;
-		img{
-			width: 100%;
+		min-height: 50px;
+		a{
 			display: block;
+			width: 114px;
+			height: 114px;
+			background-size: cover;
+			background-position: center center;
+			background-repeat: no-repeat;
+			background-color: $black;
+			@include border-radius(50%);
+			position: absolute;
+			left: -20px;
+			top: -60px;
+			html.rgba &{
+				border: 3px solid rgba($black, .24);
+				left: -26px;
+			}
 		}
+	}
+	.tip{
+		font: 400 13px/16px $sans;
+		color: $black;
+		@include opacity(.3);
 	}
 }
