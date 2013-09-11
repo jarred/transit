@@ -18,6 +18,11 @@
 			background: $colour-photo url('../images/post-photo.png') no-repeat center center;
 		}
 	}
+	&.photoset{
+		.post-type{
+			background: $colour-photoset url('../images/post-photo.png') no-repeat center center;
+		}
+	}
 	&.quote{
 		.post-type{
 			background: $colour-quote url('../images/post-quote.png') no-repeat center center;

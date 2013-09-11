@@ -70,7 +70,7 @@
       $(document).bind('scroll', this.checkPosition);
       return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
     },
-    markerTemplate: _.template("<div class=\"pin <%= type %>\">\n	<div class=\"ball\"><div class=\"glare\"></div></div>\n	<div class=\"stem\"></div>\n	<div class=\"shadow\"></div>\n</div>"),
+    markerTemplate: _.template("<div class=\"pin <%= type %>\">\n	<div class=\"ball\"></div>\n</div>"),
     addPost: function(postModel) {
       var icon, marker, options,
         _this = this;

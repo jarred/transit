@@ -23,9 +23,7 @@ Transit.Views.MapView = Backbone.View.extend
 
 	markerTemplate: _.template """
 	<div class="pin <%= type %>">
-		<div class="ball"><div class="glare"></div></div>
-		<div class="stem"></div>
-		<div class="shadow"></div>
+		<div class="ball"></div>
 	</div>
 	"""
 

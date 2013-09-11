@@ -35,45 +35,20 @@
 }
 
 .marker{
-	width: 15px;
-	height: 20px;
-	margin-left: -7px;
-	margin-top: -18px;
+	width: 16px;
+	height: 16px;
+	margin-left: -8px;
+	margin-top: -8px;
 	z-index: 401;
 	.pin{
 		position: relative;
-		width: 15px;
+		width: 16px;
 		.ball{
 			@include border-radius(50%);
-			width: 15px;
-			height: 15px;
-			background-color: $black;
-			.glare{
-				@include border-radius(50%);
-				width: 6px;
-				height: 6px;
-				position: relative;
-				left: 3px;
-				top: 3px;
-				html.rgba &{
-					background-color: rgba(#FFF, .4);
-				}
-			}
-		}
-		.stem{
-			@include center-block;
-			width: 3px;
-			height: 5px;
-			background-color: #AAA;
-		}
-		.shadow{
-			@include center-block;
-			width: 5px;
-			height: 1px;
-			background-color: $black;
-			html.rgba &{
-				background-color: rgba($black, .3);
-			}
+			width: 10px;
+			height: 10px;
+			background-color: #FFF;
+			border: 3px solid #FFF;
 		}
 		&.photoset{
 			.ball{
