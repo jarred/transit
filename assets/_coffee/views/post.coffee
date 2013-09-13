@@ -17,8 +17,8 @@ Transit.Views.PostView = Backbone.View.extend
 		# initiate the different post types
 		switch @model.get('type')
 			when 'photoset'
-				# @$el.removeClass 'photo'
-				# @$el.addClass 'photoset'
+				@$el.removeClass 'photo'
+				@$el.addClass 'photoset'
 				@photosetView = new Transit.Views.PhotosetView
 					el: @$('.photoset')
 					model: @model

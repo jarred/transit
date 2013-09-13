@@ -50,6 +50,8 @@
 	}
 	.date{
 		font: 400 13px/20px $sans;
+		width: 80px;
+		text-align: center;
 		a{
 			text-decoration: none;
 			&.day{
@@ -80,16 +82,22 @@
 		}
 	}
 
-	.caption{
-		margin-right: 20px;
+	.content{
 		h1{
 			font: 600 32px/32px $sans;
-			margin-bottom: 20px;
-			margin-top: 20px;
 		}
 		p{
 			margin-bottom: 20px;
-			font: 400 16px/20px $sans;
+			font: 400 16px/22px $sans;
+		}
+		blockquote{
+			font-style: italic;
+			border-left: 4px solid #EEE;
+			padding-left: 20px;
+			margin-left: -20px;
+			p{
+				font-style: italic;
+			}
 		}
 		a{
 			color: #777;

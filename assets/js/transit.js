@@ -207,7 +207,8 @@
       _.bindAll(this);
       return this.render();
     },
-    photoTemplate: _.template("<div class=\"block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n</div>"),
+    photoTemplate: _.template("<div class=\"block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>\" data-index=\"<%= index %>\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n	<% if(caption != \"\"){ %>\n	<div class=\"number\"><%= index %>.</div>\n	<% } %>\n</div>"),
+    captionTemplate: _.template("<div class=\"caption\"><span class=\"number\"><%= index %>.</span><%= markdown.toHTML(caption) %></div>"),
     render: function() {
       var photoset, row, rowCount,
         _this = this;
@@ -224,12 +225,20 @@
           row++;
           rowCount = 0;
           if (index < all.length - 1) {
-            return photoset += "<div class=\"clearfix\"></div></div><div class=\"row row_size_" + (_this.model.get('layout')[row]) + "\">";
+            return photoset += "<div class=\"captions\"></div><div class=\"clearfix\"></div></div><div class=\"row row_size_" + (_this.model.get('layout')[row]) + "\">";
           }
         }
       });
-      photoset += "<div class=\"clearfix\"></div></div>";
+      photoset += "<div class=\"captions\"></div><div class=\"clearfix\"></div></div>";
       this.$el.append(photoset);
+      _.each(this.model.get('photos'), function(photo, index) {
+        var $captionField;
+
+        if (photo.caption !== "") {
+          $captionField = _this.$(".photo[data-index=" + (index + 1) + "]").parents(".row").find(".captions");
+          return $captionField.append(_this.captionTemplate(photo));
+        }
+      });
       _.each(this.$('.row_size_2'), function(el, index) {
         return $(el).addClass("numero_" + index);
       });
@@ -263,6 +272,8 @@
       this.options.mapView.addPost(this.model);
       switch (this.model.get('type')) {
         case 'photoset':
+          this.$el.removeClass('photo');
+          this.$el.addClass('photoset');
           this.photosetView = new Transit.Views.PhotosetView({
             el: this.$('.photoset'),
             model: this.model

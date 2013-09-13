@@ -3,12 +3,46 @@
 	.row{
 		clear: both;
 		display: block;
+		position: relative;
+		.captions{
+			position: absolute;
+			top: 0px;
+			right: -120px;
+			width: 100px;
+			.caption{
+				margin-bottom: 20px;
+				.number{
+					display: block;
+					color: #AAA;
+				}
+				em{
+					font-style: italic;
+				}
+				strong, b{
+					font-weight: 600;
+				}
+			}
+		}
 	}
 	img{
 		display: block;
 		width: 100%;
 		position: relative;
 		z-index: 1;
+	}
+	.block{
+		position: relative;
+		.number{
+			position: absolute;
+			width: 24px;
+			height: 24px;
+			background-color: #FFF;
+			left: 0px;
+			bottom: 0px;
+			z-index: 3;
+			text-align: center;
+			font: 400 11px/24px $sans;
+		}
 	}
 	.row_size_2{
 		.block{
@@ -47,4 +81,19 @@
 			}
 		}
 	}
+}
+.photoset-caption{
+	padding-left: 50%;
+	margin-bottom: 40px;
+	margin-left: 10px;
+	position: relative;
+	margin-top: 24px;
+	min-height: 40px;
+	h1{
+		position: absolute;
+		top: 0px;
+		left: -10px;
+		width: 40%;
+	}
+
 }

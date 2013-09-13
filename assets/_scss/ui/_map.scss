@@ -17,6 +17,17 @@
 		left: 20px;
 		z-index: 2;
 	}
+	.edge{
+		position: absolute;
+		left: 18px;
+		top: 0px;
+		bottom: 0px;
+		width: 4px;
+		z-index: 4;
+		html.rgba &{
+			background-color: rgba(#000, .2);
+		}
+	}
 	.bg{
 		position: absolute;
 		z-index: 1;

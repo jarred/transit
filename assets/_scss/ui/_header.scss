@@ -12,14 +12,15 @@
 		margin-right: 20px;
 	}
 	.description{
-		background-color: #F1F1F1;
+		background-color: #000A16;
 		padding: 20px 0px;
+		color: #FFF;
 		h1{
 			font: 600 32px/32px $sans;
 			margin-bottom: 10px;
 			a{
 				text-decoration: none;
-				color: $black;
+				color: #FFF;
 			}
 		}
 	}
@@ -46,7 +47,7 @@
 	}
 	.tip{
 		font: 400 13px/16px $sans;
-		color: $black;
+		color: #FFF;
 		@include opacity(.3);
 	}
 	@include breakpoint(tablet){
