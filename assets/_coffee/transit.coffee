@@ -2,7 +2,8 @@ Transit = window.TransitTheme ||= {}
 Transit.Views = {}
 Transit.Models = {}
 Transit.Main =
-	init: ->
+	init: (options) ->
+		Transit.Config = options
 		@mapView = new Transit.Views.MapView
 			el: $('#map')
 		@extendViews()

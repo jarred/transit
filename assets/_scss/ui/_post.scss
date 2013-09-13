@@ -82,6 +82,24 @@
 		}
 	}
 
+	.social{
+		width: 80px;
+		margin-top: 20px;
+		.like_button{
+			@include inline-block;
+			@include center-block;
+			width: 20px;
+			height: 20px;
+			margin-bottom: 4px;
+		}
+		.reblog_button{
+			@include inline-block;
+			@include center-block;
+			width: 20px;
+			height: 20px;
+		}
+	}
+
 	.content{
 		h1{
 			font: 600 32px/32px $sans;

@@ -11,20 +11,32 @@ Transit.Views.MapView = Backbone.View.extend
 			center: new L.LatLng(0,0)
 			zoom: 16
 			scrollWheelZoom: false
-		@map.addLayer new L.StamenTileLayer("toner")
-		# @map.addLayer new L.Google("ROADMAP")
-		# L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-		    # attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-		# }).addTo(@map);
+
+		switch Transit.Config.map
+			when "toner"
+				@map.addLayer new L.StamenTileLayer("toner")
+			when "roadmap"
+				@map.addLayer new L.Google("ROADMAP")
+			when "satellite"
+				@map.addLayer new L.Google("SATELLITE")
+			when "OpenStreetMap"
+				L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+				    attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+				}).addTo(@map);
+				
 		$(window).bind 'resize', @resize
 		@resize()
 		$(document).bind 'scroll', @checkPosition
 		@updateHeightsInt = setInterval @updatePostHeights, 2000
 
 	markerTemplate: _.template """
+	<div class="ref" data-id="<%= id %>"></div>
 	<div class="pin <%= type %>">
 		<div class="ball"></div>
 	</div>
+	<% if(type == "photo" || type == "photoset"){ %>
+		<div class="open" style="background-image: url('<%= photos[0].thumb %>');"></div>
+	<% } %>
 	"""
 
 	addPost: (postModel) ->
@@ -39,6 +51,7 @@ Transit.Views.MapView = Backbone.View.extend
 			html: @markerTemplate postModel.toJSON()
 		options =
 			icon: icon
+
 		marker = L.marker([postModel.get('position').latitude, postModel.get('position').longitude], options)
 		marker.addTo @map
 		
@@ -47,8 +60,11 @@ Transit.Views.MapView = Backbone.View.extend
 				@updatePostHeights()
 				post = @posts.at 0
 				position = new L.LatLng post.get('position').latitude, post.get('position').longitude
-				@map.panTo position
-				@map.setZoom post.get('position').zoom
+				@map.panTo position, 
+					animate: false
+				@map.setZoom post.get('position').zoom, 
+					animate: false
+				@showPost(0)
 
 	showPost: (index) ->
 		@currentPost = index
@@ -56,15 +72,22 @@ Transit.Views.MapView = Backbone.View.extend
 		return if post is null or undefined
 		return if !post.get('position') is null
 		position = new L.LatLng post.get('position').latitude, post.get('position').longitude
+		@$('.marker').removeClass 'active'
+		$marker = $(".marker .ref[data-id=#{post.get('id')}]").parents('.marker')
 		@map.setZoom 12
 		clearTimeout @zoomTimeout if @zoomTimeout?
-		clearTimeout @panTimeout if @panTimeout
+		clearTimeout @panTimeout if @panTimeout?
+		clearTimeout @markerTimeout if @markerTimeout?
 		@zoomTimeout = setTimeout () =>
-			@map.panTo position
-		, 500
+			@map.panTo position, 
+				easeLinearity: .02
+		, 350
 		@panTimeout = setTimeout () =>
 			@map.setZoom post.get('position').zoom
-		, 1000		
+		, 700
+		@markerTimeout = setTimeout () =>
+			$marker.addClass 'active'
+		, 1000
 
 	updatePostHeights: ->
 		@resize()

@@ -9,7 +9,8 @@
   Transit.Models = {};
 
   Transit.Main = {
-    init: function() {
+    init: function(options) {
+      Transit.Config = options;
       this.mapView = new Transit.Views.MapView({
         el: $('#map')
       });
@@ -64,13 +65,27 @@
         zoom: 16,
         scrollWheelZoom: false
       });
-      this.map.addLayer(new L.StamenTileLayer("toner"));
+      switch (Transit.Config.map) {
+        case "toner":
+          this.map.addLayer(new L.StamenTileLayer("toner"));
+          break;
+        case "roadmap":
+          this.map.addLayer(new L.Google("ROADMAP"));
+          break;
+        case "satellite":
+          this.map.addLayer(new L.Google("SATELLITE"));
+          break;
+        case "OpenStreetMap":
+          L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(this.map);
+      }
       $(window).bind('resize', this.resize);
       this.resize();
       $(document).bind('scroll', this.checkPosition);
       return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
     },
-    markerTemplate: _.template("<div class=\"pin <%= type %>\">\n	<div class=\"ball\"></div>\n</div>"),
+    markerTemplate: _.template("<div class=\"ref\" data-id=\"<%= id %>\"></div>\n<div class=\"pin <%= type %>\">\n	<div class=\"ball\"></div>\n</div>\n<% if(type == \"photo\" || type == \"photoset\"){ %>\n	<div class=\"open\" style=\"background-image: url('<%= photos[0].thumb %>');\"></div>\n<% } %>"),
     addPost: function(postModel) {
       var icon, marker, options,
         _this = this;
@@ -97,13 +112,18 @@
           _this.updatePostHeights();
           post = _this.posts.at(0);
           position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
-          _this.map.panTo(position);
-          return _this.map.setZoom(post.get('position').zoom);
+          _this.map.panTo(position, {
+            animate: false
+          });
+          _this.map.setZoom(post.get('position').zoom, {
+            animate: false
+          });
+          return _this.showPost(0);
         });
       }
     },
     showPost: function(index) {
-      var position, post,
+      var $marker, position, post,
         _this = this;
 
       this.currentPost = index;
@@ -115,18 +135,28 @@
         return;
       }
       position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
+      this.$('.marker').removeClass('active');
+      $marker = $(".marker .ref[data-id=" + (post.get('id')) + "]").parents('.marker');
       this.map.setZoom(12);
       if (this.zoomTimeout != null) {
         clearTimeout(this.zoomTimeout);
       }
-      if (this.panTimeout) {
+      if (this.panTimeout != null) {
         clearTimeout(this.panTimeout);
       }
+      if (this.markerTimeout != null) {
+        clearTimeout(this.markerTimeout);
+      }
       this.zoomTimeout = setTimeout(function() {
-        return _this.map.panTo(position);
-      }, 500);
-      return this.panTimeout = setTimeout(function() {
+        return _this.map.panTo(position, {
+          easeLinearity: .02
+        });
+      }, 350);
+      this.panTimeout = setTimeout(function() {
         return _this.map.setZoom(post.get('position').zoom);
+      }, 700);
+      return this.markerTimeout = setTimeout(function() {
+        return $marker.addClass('active');
       }, 1000);
     },
     updatePostHeights: function() {
@@ -210,7 +240,7 @@
     photoTemplate: _.template("<div class=\"block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>\" data-index=\"<%= index %>\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n	<% if(caption != \"\"){ %>\n	<div class=\"number\"><%= index %>.</div>\n	<% } %>\n</div>"),
     captionTemplate: _.template("<div class=\"caption\"><span class=\"number\"><%= index %>.</span><%= markdown.toHTML(caption) %></div>"),
     render: function() {
-      var photoset, row, rowCount,
+      var photoset, row, rowCount, thumb,
         _this = this;
 
       photoset = "";
@@ -248,7 +278,9 @@
       _.defer(function() {
         return _this.model.trigger('rendered');
       });
-      return this.$el.append("<div class=\"clearfix\"></div>");
+      this.$el.append("<div class=\"clearfix\"></div>");
+      thumb = new Image();
+      return thumb.src = this.model.get('photos')[0].thumb;
     }
   });
 

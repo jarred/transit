@@ -2,6 +2,7 @@
 {
   "photos": [{ 
     "src": "{PhotoURL-500}",
+    "thumb": "{PhotoURL-250}",
     "width": {PhotoWidth-500},
     "height": {PhotoHeight-500},
     {block:HighRes}
@@ -16,6 +17,7 @@
   <div class="grid_col_1">
     <div class="post-type"></div>
     {% include date.html %}
+    {% include social.html %}
   </div>
   <div class="grid_col_7 image">
     <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />

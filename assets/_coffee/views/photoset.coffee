@@ -52,3 +52,7 @@ Transit.Views.PhotosetView = Backbone.View.extend
 			@model.trigger 'rendered'
 
 		@$el.append "<div class=\"clearfix\"></div>"
+
+		# preload thumbnail
+		thumb = new Image()
+		thumb.src = @model.get('photos')[0].thumb

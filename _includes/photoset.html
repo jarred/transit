@@ -3,6 +3,7 @@
   "type": "photoset",
   "photos": [{block:Photos}{ 
     "src": "{PhotoURL-500}",
+    "thumb": "{PhotoURL-250}",
     "width": {PhotoWidth-500},
     "height": {PhotoHeight-500},
     "caption": "{block:Caption}{PlaintextCaption}{/block:Caption}",
@@ -19,7 +20,7 @@
   <div class="grid_col_1">
     <div class="post-type"></div>
     {% include date.html %}
-    {% include tags.html %}
+    {% include social.html %}
   </div>
   <div class="grid_col_6">
     <div class="photoset-caption content">
