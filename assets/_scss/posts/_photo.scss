@@ -6,13 +6,23 @@
 		display: block;
 		width: 100%;
 	}
+	.caption{
+		margin-right: 20px;
+		font: 400 18px/22px $sans;
+	}
+	.exif{
+		color: #DDD;
+	}
 	&.portrait{
 		.spacer{
 			display: none;
 		}
+		.internal{
+			margin-right: 20px;
+		}
 		.image{
 			img{
-				margin-right: 20px;
+				display: block;
 			}
 		}
 	}

@@ -20,10 +20,12 @@
     {% include social.html %}
   </div>
   <div class="grid_col_7 image">
-    <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
-    {block:HighRes}
-    <img src="{PhotoURL-HighRes}" />
-    {/block:HighRes}
+    <div class="internal">
+      <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
+      {block:HighRes}
+      <img src="{PhotoURL-HighRes}" />
+      {/block:HighRes}
+    </div>
   </div>
   <div class="grid_col_1 spacer">&nbsp;</div>
   {block:Caption}
