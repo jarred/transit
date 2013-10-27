@@ -20,12 +20,12 @@
     {% include social.html %}
   </div>
   <div class="grid_col_7 image">
-    <div class="internal">
+    <a class="internal js-zoom open-zoom">
       <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes}  alt="{PhotoAlt}" />
       {block:HighRes}
       <img src="{PhotoURL-HighRes}" />
       {/block:HighRes}
-    </div>
+    </a>
   </div>
   <div class="grid_col_1 spacer">&nbsp;</div>
   {block:Caption}

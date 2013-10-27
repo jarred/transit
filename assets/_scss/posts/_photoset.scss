@@ -95,5 +95,12 @@
 		left: -10px;
 		width: 40%;
 	}
+}
 
+.open-zoom{
+	cursor: pointer;
+	cursor: -webkit-zoom-in;
+	&:active{
+		@include opacity(.8);
+	}
 }

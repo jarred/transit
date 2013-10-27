@@ -41,7 +41,8 @@ Transit.Views.MapView = Backbone.View.extend
 
 	addPost: (postModel) ->
 		@posts.add postModel
-		postModel.on 'rendered', @updatePostHeights()
+		postModel.on 'rendered', @updatePostHeights
+		postModel.on 'open-zoom', @openZoom
 
 		return if postModel.get('position') is null
 
@@ -129,3 +130,11 @@ Transit.Views.MapView = Backbone.View.extend
 			@updatePostHeights()
 			@resize()
 			$(document).bind 'scroll', @checkPosition
+
+	openZoom: (model) ->
+		# at some point we would check for index...
+		model.set 'current-image', 0
+		zoomView = new Transit.Views.ZoomView
+			model: model
+		zoomView.render()
+		$('body').append zoomView.el

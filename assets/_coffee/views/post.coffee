@@ -1,5 +1,8 @@
 Transit.Views.PostView = Backbone.View.extend
 
+	events:
+		'click .js-zoom': 'openZoom'
+
 	initialize: ->
 		# populate the model...
 		@model = new Transit.Models.PostModel @$el.data()
@@ -42,3 +45,6 @@ Transit.Views.PostView = Backbone.View.extend
 			longitude: tag[1]
 			zoom: tag[2]
 		@model.set 'position', position
+
+	openZoom: (e) ->
+		@model.trigger 'open-zoom', @model

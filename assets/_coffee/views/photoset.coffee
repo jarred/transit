@@ -5,7 +5,7 @@ Transit.Views.PhotosetView = Backbone.View.extend
 		@render()
 
 	photoTemplate: _.template """
-	<div class="block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>" data-index="<%= index %>">
+	<a class="js-zoom  open-zoom block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>" data-index="<%= index %>">
 		<% if(highRes){ %>
 			<div class="image"><img src="<%= highRes %>" /></div>
 		<% }else{ %>
@@ -14,7 +14,7 @@ Transit.Views.PhotosetView = Backbone.View.extend
 		<% if(caption != ""){ %>
 		<div class="number"><%= index %>.</div>
 		<% } %>
-	</div>
+	</a>
 	"""
 
 	captionTemplate: _.template """

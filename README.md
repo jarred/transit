@@ -19,7 +19,7 @@ for tagger:
 
 for the theme:
 
-`uglifyjs -o assets/js/libs.js assets/js/_libs/jquery.js assets/js/_libs/underscore.js assets/js/_libs/backbone.js assets/js/_libs/leaflet-src.js assets/js/_libs/markdown.js assets/js/_libs/leaflet-google.js`
+`uglifyjs -o assets/js/libs.js assets/js/_libs/jquery.js assets/js/_libs/underscore.js assets/js/_libs/backbone.js assets/js/_libs/leaflet-src.js assets/js/_libs/markdown.js assets/js/_libs/leaflet-google.js assets/js/_libs/greensock/TweenMax.js`
 
 # Coffeescript
 
@@ -30,3 +30,7 @@ for the tagger
 for the theme
 
 `coffee --watch --join assets/js/transit.js --compile assets/_coffee/transit.coffee assets/_coffee/models/*.coffee assets/_coffee/views/*.coffee`
+
+production:
+
+`uglifyjs -o assets/js/transit.js assets/js/transit.js`
