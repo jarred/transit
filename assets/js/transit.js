@@ -1,1 +1,513 @@
-!function(){var Transit;Transit=window.TransitTheme||(window.TransitTheme={});Transit.Views={};Transit.Models={};Transit.Main={init:function(options){Transit.Config=options;this.mapView=new Transit.Views.MapView({el:$("#map")});return this.extendViews()},extendViews:function(){var _this=this;return _.each($(".js-extend-view"),function(el){var $el,v,view,viewName;$el=$(el);viewName=$el.data("view");if(viewName===null||viewName===void 0){return}view=Transit.Views[viewName];v=new view({el:el,mapView:_this.mapView});return $el.removeClass("js-extend-view")})}};Transit.Models.PostModel=Backbone.Model.extend({initialize:function(){return _.bindAll(this)},cleanUp:function(){var photos;this.set("tags",_.compact(this.get("tags")));if(this.get("type")==="photoset"){photos=_.compact(this.get("photos"));this.set("photos",photos)}return this.set("date",new Date(this.get("date")))}});Transit.Views.MapView=Backbone.View.extend({className:"map",currentPost:0,initialize:function(){_.bindAll(this);this.paginationModel=new Backbone.Model($(".page").data());this.posts=new Backbone.Collection;this.map=new L.Map("leaflet",{center:new L.LatLng(0,0),zoom:16,scrollWheelZoom:false});switch(Transit.Config.map){case"toner":this.map.addLayer(new L.StamenTileLayer("toner"));break;case"roadmap":this.map.addLayer(new L.Google("ROADMAP"));break;case"satellite":this.map.addLayer(new L.Google("SATELLITE"));break;case"OpenStreetMap":L.tileLayer("http://{s}.tile.osm.org/{z}/{x}/{y}.png",{attribution:'&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'}).addTo(this.map)}$(window).bind("resize",this.resize);this.resize();$(document).bind("scroll",this.checkPosition);return this.updateHeightsInt=setInterval(this.updatePostHeights,2e3)},markerTemplate:_.template('<div class="ref" data-id="<%= id %>"></div>\n<div class="pin <%= type %>">\n	<div class="ball"></div>\n</div>\n<% if(type == "photo" || type == "photoset"){ %>\n	<div class="open" style="background-image: url(\'<%= photos[0].thumb %>\');"></div>\n<% } %>'),addPost:function(postModel){var icon,marker,options,_this=this;this.posts.add(postModel);postModel.on("rendered",this.updatePostHeights);postModel.on("open-zoom",this.openZoom);if(postModel.get("position")===null){return}icon=new L.divIcon({className:"marker",iconSize:L.Point(60,60),html:this.markerTemplate(postModel.toJSON())});options={icon:icon};marker=L.marker([postModel.get("position").latitude,postModel.get("position").longitude],options);marker.addTo(this.map);if(this.posts.length===1){return _.defer(function(){var position,post;_this.updatePostHeights();post=_this.posts.at(0);position=new L.LatLng(post.get("position").latitude,post.get("position").longitude);_this.map.panTo(position,{animate:false});_this.map.setZoom(post.get("position").zoom,{animate:false});return _this.showPost(0)})}},showPost:function(index){var $marker,position,post,_this=this;this.currentPost=index;post=this.posts.at(index);if(post===null||void 0){return}if(!post.get("position")===null){return}position=new L.LatLng(post.get("position").latitude,post.get("position").longitude);this.$(".marker").removeClass("active");$marker=$(".marker .ref[data-id="+post.get("id")+"]").parents(".marker");this.map.setZoom(12);if(this.zoomTimeout!=null){clearTimeout(this.zoomTimeout)}if(this.panTimeout!=null){clearTimeout(this.panTimeout)}if(this.markerTimeout!=null){clearTimeout(this.markerTimeout)}this.zoomTimeout=setTimeout(function(){return _this.map.panTo(position,{easeLinearity:.02})},350);this.panTimeout=setTimeout(function(){return _this.map.setZoom(post.get("position").zoom)},700);return this.markerTimeout=setTimeout(function(){return $marker.addClass("active")},1e3)},updatePostHeights:function(){var y,_this=this;this.resize();this.postHeights=[];y=0;return _.each($(".post"),function(el){var $el;$el=$(el);_this.postHeights.push($el.height()+y+41);return y+=$el.height()+41})},checkPosition:function(e){var index,y,_this=this;y=$(document).scrollTop()+0;index=_.find(this.postHeights,function(value){return y<=value});index=this.postHeights.indexOf(index);if(this.currentPost!==index){this.showPost(index)}if(y/this.pagesHeight>.7&&this.paginationModel.get("page")<this.paginationModel.get("total")){$(document).unbind("scroll",this.checkPosition);return this.loadNextPage()}},resize:function(){this.windowHeight=$(window).height();return this.pagesHeight=$(".js-posts .pages").height()},loadNextPage:function(){if(this.paginationModel.get("page")>=this.paginationModel.get("total")){return}if(this.paginationModel.get("next")===""){return}this.$newPage=$('<div class="js-new-pages"></div>');return this.$newPage.load(""+this.paginationModel.get("next")+" .pages .page",this.newPageAdded)},newPageAdded:function(){var $newPage,_this=this;$(".js-posts .pages").append(this.$newPage.html());$newPage=$(".page[data-page="+(this.paginationModel.get("page")+1)+"]");this.paginationModel.set($newPage.data());Transit.Main.extendViews();return _.defer(function(){_this.updatePostHeights();_this.resize();return $(document).bind("scroll",_this.checkPosition)})},openZoom:function(model){var zoomView;model.set("current-image",0);zoomView=new Transit.Views.ZoomView({model:model});zoomView.render();return $("body").append(zoomView.el)}});Transit.Views.PhotoView=Backbone.View.extend({initialize:function(){_.bindAll(this);if(this.model.get("photos")[0].width<this.model.get("photos")[0].height){this.$el.addClass("portrait");this.$(".image").attr("class","image grid_col_4");return this.$(".description").attr("class","description grid_col_3")}}});Transit.Views.PhotosetView=Backbone.View.extend({initialize:function(){_.bindAll(this);return this.render()},photoTemplate:_.template('<a class="js-zoom  open-zoom block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>" data-index="<%= index %>">\n	<% if(highRes){ %>\n		<div class="image"><img src="<%= highRes %>" /></div>\n	<% }else{ %>\n		<div class="image"><img src="<%= src %>" /></div>\n	<% } %>\n	<% if(caption != ""){ %>\n	<div class="number"><%= index %>.</div>\n	<% } %>\n</a>'),captionTemplate:_.template('<div class="caption"><span class="number"><%= index %>.</span><%= markdown.toHTML(caption) %></div>'),render:function(){var photoset,row,rowCount,thumb,_this=this;photoset="";rowCount=0;row=0;photoset+='<div class="row row_size_'+this.model.get("layout")[0]+'">';_.each(this.model.get("photos"),function(photo,index,all){photo.index=index+1;photoset+=_this.photoTemplate(photo);rowCount++;if(rowCount>=Number(_this.model.get("layout")[row])){row++;rowCount=0;if(index<all.length-1){return photoset+='<div class="captions"></div><div class="clearfix"></div></div><div class="row row_size_'+_this.model.get("layout")[row]+'">'}}});photoset+='<div class="captions"></div><div class="clearfix"></div></div>';this.$el.append(photoset);_.each(this.model.get("photos"),function(photo,index){var $captionField;if(photo.caption!==""){$captionField=_this.$(".photo[data-index="+(index+1)+"]").parents(".row").find(".captions");return $captionField.append(_this.captionTemplate(photo))}});_.each(this.$(".row_size_2"),function(el,index){return $(el).addClass("numero_"+index)});_.each(this.$(".row_size_3"),function(el,index){return $(el).addClass("numero_"+index)});_.defer(function(){return _this.model.trigger("rendered")});this.$el.append('<div class="clearfix"></div>');thumb=new Image;return thumb.src=this.model.get("photos")[0].thumb}});Transit.Views.PostView=Backbone.View.extend({events:{"click .js-zoom":"openZoom"},initialize:function(){var mapTag,_this=this;this.model=new Transit.Models.PostModel(this.$el.data());_.each(this.$("pre.json"),function(dataEl){return _this.model.set(JSON.parse($(dataEl).html()))});this.model.cleanUp();mapTag=_.find(this.model.get("tags"),function(tag){return tag.name.indexOf("lat/long/zoom")===0});if(mapTag!=null){this.addMarker(mapTag)}this.$("[data-tag='"+mapTag.name+"']").remove();this.options.mapView.addPost(this.model);switch(this.model.get("type")){case"photoset":this.$el.removeClass("photo");this.$el.addClass("photoset");this.photosetView=new Transit.Views.PhotosetView({el:this.$(".photoset"),model:this.model});break;case"text":this.textView=new Transit.Views.TextView({el:this.$el,model:this.model});break;case"photo":this.photoView=new Transit.Views.PhotoView({el:this.$el,model:this.model})}return _.defer(function(){return _this.model.trigger("rendered")})},addMarker:function(tag){var position;tag=tag.name.split(":");tag=tag[1].split("/");position={latitude:tag[0],longitude:tag[1],zoom:tag[2]};return this.model.set("position",position)},openZoom:function(e){return this.model.trigger("open-zoom",this.model)}});Transit.Views.TextView=Backbone.View.extend({initialize:function(){var flight;_.bindAll(this);flight=_.find(this.model.get("tags"),function(tag){return tag.name.toLowerCase()==="flight"});if(flight!=null){return this.setupFlight()}},setupFlight:function(){var airportCode,text,_this=this;text=this.$("h1").text();airportCode=/[A-Z]{3}/g;text=text.replace("-",'<i class="icon icon-flight"></i>');text=text.replace(airportCode,function(code){var el;el='<span class="airport-code">';_.each(code.split(""),function(letter){return el+='<span class="letter">'+letter+'<span class="shadow"></span></span>'});el+="</span>";return el});this.$("h1").html(text)}});Transit.Views.ZoomView=Backbone.View.extend({className:"zoom",events:{"click .js-close":"close","click .js-to-image":"toImage"},initialize:function(){var _this=this;_.bindAll(this);$(window).bind("resize",this.onResize());$("html").addClass("zoom-open");TweenMax.to(this.$el,.4,{opacity:1,ease:Quint.easeOut});return _.delay(function(){return _this.showImage(Number(_this.model.get("current-image")))},1e3)},onResize:function(){return this.windowWidth=$(window).width()},template:_.template('<a class="close js-close">&times;</a>\n	<div class="photos">\n		<table cellpadding="0" cellspacing="0">\n			<tr>\n			<td><div class="spacer" style="height: <%= height %>px;"></div></td>\n			<% if(type == "photo"){ %>\n				<td class="js-to-image" data-index="0">\n					<div class="image"><img src="<%= photos[0]["high-res"] %>" height="<%= height %>"></div>\n				</td>\n			<% } %>\n			<% if(type == "photoset"){ %>\n				<% _.each(photos, function(photo, index){ %>\n					<td class="js-to-image" data-index="<%= index %>">\n						<div class="image"><img src="<%= photo["highRes"] %>"  height="<%= height %>"></div>\n					</td>\n				<% }) %>\n			<% } %>\n			<td><div class="spacer" style="height: <%= height %>px;"></div></td>\n			</tr>\n		</table>\n	</div>'),render:function(){this.model.set("height",$(window).height()-100);return this.$el.html(this.template(this.model.toJSON()))},close:function(e){var _this=this;if(e!=null){e.preventDefault()}TweenMax.to(this.$(".photos table .recent"),.4,{opacity:.1,ease:Quint.easeOut});TweenMax.to(this.$(".photos table"),.4,{left:"-60000px",ease:Expo.easeInOut,delay:.4});return TweenMax.to(this.$el,.4,{opacity:0,ease:Quint.easeIn,delay:.8,onComplete:function(){$("html").removeClass("zoom-open");return _this.remove()}})},toImage:function(e){var $el,index;if(e!=null){e.preventDefault()}$el=$(e.target);if(!$el.hasClass("js-to-image")){$el=$el.parents(".js-to-image")}index=Number($el.data("index"));return this.showImage(index)},showImage:function(x){var $el,xPos,_this=this;$el=this.$(".image[data-index="+x+"]");xPos=2e3;xPos-=this.windowWidth/2;_.each(this.$(".image"),function(el,index){if(index<x){$el=$(el);xPos+=$el.width()+10}if(index===x){$el=$(el);return xPos+=$el.width()/2}});TweenMax.to(this.$(".photos table .recent"),.4,{opacity:.1,ease:Quint.easeOut,onComplete:function(){return _this.$(".photos table .recent").removeClass("recent")}});TweenMax.to(this.$(".photos table"),.4,{left:""+(0-xPos)+"px",ease:Expo.easeInOut,delay:.4});return TweenMax.to(this.$(".js-to-image[data-index="+x+"] .image"),.4,{ease:Quint.easeOut,opacity:1,delay:.8,onComplete:function(){return _this.$(".js-to-image[data-index="+x+"] .image").addClass("recent")}})}})}.call(this);
+// Generated by CoffeeScript 1.6.2
+(function() {
+  var Transit;
+
+  Transit = window.TransitTheme || (window.TransitTheme = {});
+
+  Transit.Views = {};
+
+  Transit.Models = {};
+
+  Transit.Main = {
+    init: function(options) {
+      Transit.Config = options;
+      this.mapView = new Transit.Views.MapView({
+        el: $('#map')
+      });
+      return this.extendViews();
+    },
+    extendViews: function() {
+      var _this = this;
+
+      return _.each($('.js-extend-view'), function(el) {
+        var $el, v, view, viewName;
+
+        $el = $(el);
+        viewName = $el.data('view');
+        if (viewName === null || viewName === void 0) {
+          return;
+        }
+        view = Transit.Views[viewName];
+        v = new view({
+          el: el,
+          mapView: _this.mapView
+        });
+        return $el.removeClass('js-extend-view');
+      });
+    }
+  };
+
+  Transit.Models.PostModel = Backbone.Model.extend({
+    initialize: function() {
+      return _.bindAll(this);
+    },
+    cleanUp: function() {
+      var photos;
+
+      this.set('tags', _.compact(this.get('tags')));
+      if (this.get('type') === 'photoset') {
+        photos = _.compact(this.get('photos'));
+        this.set('photos', photos);
+      }
+      return this.set('date', new Date(this.get('date')));
+    }
+  });
+
+  Transit.Views.MapView = Backbone.View.extend({
+    className: 'map',
+    currentPost: 0,
+    initialize: function() {
+      _.bindAll(this);
+      this.paginationModel = new Backbone.Model($('.page').data());
+      this.posts = new Backbone.Collection();
+      this.map = new L.Map("leaflet", {
+        center: new L.LatLng(0, 0),
+        zoom: 16,
+        scrollWheelZoom: false
+      });
+      switch (Transit.Config.map) {
+        case "toner":
+          this.map.addLayer(new L.StamenTileLayer("toner"));
+          break;
+        case "roadmap":
+          this.map.addLayer(new L.Google("ROADMAP"));
+          break;
+        case "satellite":
+          this.map.addLayer(new L.Google("SATELLITE"));
+          break;
+        case "OpenStreetMap":
+          L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          }).addTo(this.map);
+      }
+      $(window).bind('resize', this.resize);
+      this.resize();
+      $(document).bind('scroll', this.checkPosition);
+      return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
+    },
+    markerTemplate: _.template("<div class=\"ref\" data-id=\"<%= id %>\"></div>\n<div class=\"pin <%= type %>\">\n	<div class=\"ball\"></div>\n</div>\n<% if(type == \"photo\" || type == \"photoset\"){ %>\n	<div class=\"open\" style=\"background-image: url('<%= photos[0].thumb %>');\"></div>\n<% } %>"),
+    addPost: function(postModel) {
+      var icon, marker, options,
+        _this = this;
+
+      this.posts.add(postModel);
+      postModel.on('rendered', this.updatePostHeights);
+      postModel.on('open-zoom', this.openZoom);
+      if (postModel.get('position') === null) {
+        return;
+      }
+      icon = new L.divIcon({
+        className: 'marker',
+        iconSize: L.Point(60, 60),
+        html: this.markerTemplate(postModel.toJSON())
+      });
+      options = {
+        icon: icon
+      };
+      marker = L.marker([postModel.get('position').latitude, postModel.get('position').longitude], options);
+      marker.addTo(this.map);
+      if (this.posts.length === 1) {
+        return _.defer(function() {
+          var position, post;
+
+          _this.updatePostHeights();
+          post = _this.posts.at(0);
+          position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
+          _this.map.panTo(position, {
+            animate: false
+          });
+          _this.map.setZoom(post.get('position').zoom, {
+            animate: false
+          });
+          return _this.showPost(0);
+        });
+      }
+    },
+    showPost: function(index) {
+      var $marker, position, post,
+        _this = this;
+
+      this.currentPost = index;
+      post = this.posts.at(index);
+      if (post === null || void 0) {
+        return;
+      }
+      if (!post.get('position') === null) {
+        return;
+      }
+      position = new L.LatLng(post.get('position').latitude, post.get('position').longitude);
+      this.$('.marker').removeClass('active');
+      $marker = $(".marker .ref[data-id=" + (post.get('id')) + "]").parents('.marker');
+      this.map.setZoom(12);
+      if (this.zoomTimeout != null) {
+        clearTimeout(this.zoomTimeout);
+      }
+      if (this.panTimeout != null) {
+        clearTimeout(this.panTimeout);
+      }
+      if (this.markerTimeout != null) {
+        clearTimeout(this.markerTimeout);
+      }
+      this.zoomTimeout = setTimeout(function() {
+        return _this.map.panTo(position, {
+          easeLinearity: .02
+        });
+      }, 350);
+      this.panTimeout = setTimeout(function() {
+        return _this.map.setZoom(post.get('position').zoom);
+      }, 700);
+      return this.markerTimeout = setTimeout(function() {
+        return $marker.addClass('active');
+      }, 1000);
+    },
+    updatePostHeights: function() {
+      var y,
+        _this = this;
+
+      this.resize();
+      this.postHeights = [];
+      y = 0;
+      return _.each($('.post'), function(el) {
+        var $el;
+
+        $el = $(el);
+        _this.postHeights.push($el.height() + y + 41);
+        return y += $el.height() + 41;
+      });
+    },
+    checkPosition: function(e) {
+      var index, y,
+        _this = this;
+
+      y = $(document).scrollTop() + 0;
+      index = _.find(this.postHeights, function(value) {
+        return y <= value;
+      });
+      index = this.postHeights.indexOf(index);
+      if (this.currentPost !== index) {
+        this.showPost(index);
+      }
+      if (((y / this.pagesHeight) > .7) && (this.paginationModel.get('page') < this.paginationModel.get('total'))) {
+        $(document).unbind('scroll', this.checkPosition);
+        return this.loadNextPage();
+      }
+    },
+    resize: function() {
+      this.windowHeight = $(window).height();
+      return this.pagesHeight = $('.js-posts .pages').height();
+    },
+    loadNextPage: function() {
+      if (this.paginationModel.get('page') >= this.paginationModel.get('total')) {
+        return;
+      }
+      if (this.paginationModel.get("next") === "") {
+        return;
+      }
+      this.$newPage = $("<div class=\"js-new-pages\"></div>");
+      return this.$newPage.load("" + (this.paginationModel.get('next')) + " .pages .page", this.newPageAdded);
+    },
+    newPageAdded: function() {
+      var $newPage,
+        _this = this;
+
+      $('.js-posts .pages').append(this.$newPage.html());
+      $newPage = $(".page[data-page=" + (this.paginationModel.get('page') + 1) + "]");
+      this.paginationModel.set($newPage.data());
+      Transit.Main.extendViews();
+      return _.defer(function() {
+        _this.updatePostHeights();
+        _this.resize();
+        return $(document).bind('scroll', _this.checkPosition);
+      });
+    },
+    openZoom: function(model) {
+      var zoomView;
+
+      zoomView = new Transit.Views.ZoomView({
+        model: model
+      });
+      zoomView.render();
+      return $('body').append(zoomView.el);
+    }
+  });
+
+  Transit.Views.PhotoView = Backbone.View.extend({
+    initialize: function() {
+      _.bindAll(this);
+      if (this.model.get('photos')[0].width < this.model.get('photos')[0].height) {
+        this.$el.addClass('portrait');
+        this.$('.image').attr('class', 'image grid_col_4');
+        return this.$('.description').attr('class', 'description grid_col_3');
+      }
+    }
+  });
+
+  Transit.Views.PhotosetView = Backbone.View.extend({
+    initialize: function() {
+      _.bindAll(this);
+      return this.render();
+    },
+    photoTemplate: _.template("<a class=\"js-zoom open-zoom block photo <% if(width > height){ %>landscape<% }else{ %>portrait<% } %>\" data-index=\"<%= index %>\">\n	<% if(highRes){ %>\n		<div class=\"image\"><img src=\"<%= highRes %>\" /></div>\n	<% }else{ %>\n		<div class=\"image\"><img src=\"<%= src %>\" /></div>\n	<% } %>\n	<% if(caption != \"\"){ %>\n	<div class=\"number\"><%= index %>.</div>\n	<% } %>\n</a>"),
+    captionTemplate: _.template("<div class=\"caption\"><span class=\"number\"><%= index %>.</span><%= markdown.toHTML(caption) %></div>"),
+    render: function() {
+      var photoset, row, rowCount, thumb,
+        _this = this;
+
+      photoset = "";
+      rowCount = 0;
+      row = 0;
+      photoset += "<div class=\"row row_size_" + (this.model.get('layout')[0]) + "\">";
+      _.each(this.model.get('photos'), function(photo, index, all) {
+        photo.index = index + 1;
+        photoset += _this.photoTemplate(photo);
+        rowCount++;
+        if (rowCount >= Number(_this.model.get('layout')[row])) {
+          row++;
+          rowCount = 0;
+          if (index < all.length - 1) {
+            return photoset += "<div class=\"captions\"></div><div class=\"clearfix\"></div></div><div class=\"row row_size_" + (_this.model.get('layout')[row]) + "\">";
+          }
+        }
+      });
+      photoset += "<div class=\"captions\"></div><div class=\"clearfix\"></div></div>";
+      this.$el.append(photoset);
+      _.each(this.model.get('photos'), function(photo, index) {
+        var $captionField;
+
+        if (photo.caption !== "") {
+          $captionField = _this.$(".photo[data-index=" + (index + 1) + "]").parents(".row").find(".captions");
+          return $captionField.append(_this.captionTemplate(photo));
+        }
+      });
+      _.each(this.$('.row_size_2'), function(el, index) {
+        return $(el).addClass("numero_" + index);
+      });
+      _.each(this.$('.row_size_3'), function(el, index) {
+        return $(el).addClass("numero_" + index);
+      });
+      _.defer(function() {
+        return _this.model.trigger('rendered');
+      });
+      this.$el.append("<div class=\"clearfix\"></div>");
+      thumb = new Image();
+      return thumb.src = this.model.get('photos')[0].thumb;
+    }
+  });
+
+  Transit.Views.PostView = Backbone.View.extend({
+    events: {
+      'click .js-zoom': 'openZoom'
+    },
+    initialize: function() {
+      var mapTag,
+        _this = this;
+
+      this.model = new Transit.Models.PostModel(this.$el.data());
+      _.each(this.$('pre.json'), function(dataEl) {
+        return _this.model.set(JSON.parse($(dataEl).html()));
+      });
+      this.model.cleanUp();
+      mapTag = _.find(this.model.get('tags'), function(tag) {
+        return tag.name.indexOf("lat/long/zoom") === 0;
+      });
+      if (mapTag != null) {
+        this.addMarker(mapTag);
+      }
+      this.$("[data-tag='" + mapTag.name + "']").remove();
+      this.options.mapView.addPost(this.model);
+      switch (this.model.get('type')) {
+        case 'photoset':
+          this.$el.removeClass('photo');
+          this.$el.addClass('photoset');
+          this.photosetView = new Transit.Views.PhotosetView({
+            el: this.$('.photoset'),
+            model: this.model
+          });
+          break;
+        case 'text':
+          this.textView = new Transit.Views.TextView({
+            el: this.$el,
+            model: this.model
+          });
+          break;
+        case 'photo':
+          this.photoView = new Transit.Views.PhotoView({
+            el: this.$el,
+            model: this.model
+          });
+      }
+      return _.defer(function() {
+        return _this.model.trigger('rendered');
+      });
+    },
+    addMarker: function(tag) {
+      var position;
+
+      tag = tag.name.split(":");
+      tag = tag[1].split("/");
+      position = {
+        latitude: tag[0],
+        longitude: tag[1],
+        zoom: tag[2]
+      };
+      return this.model.set('position', position);
+    },
+    openZoom: function(e) {
+      var $el;
+
+      $el = $(e.target);
+      if (!$el.hasClass('js-zoom')) {
+        $el = $el.parents('.js-zoom');
+      }
+      this.model.set('current-image', Number($el.data('index')) - 1);
+      return this.model.trigger('open-zoom', this.model);
+    }
+  });
+
+  Transit.Views.TextView = Backbone.View.extend({
+    initialize: function() {
+      var flight;
+
+      _.bindAll(this);
+      flight = _.find(this.model.get('tags'), function(tag) {
+        return tag.name.toLowerCase() === 'flight';
+      });
+      if (flight != null) {
+        return this.setupFlight();
+      }
+    },
+    setupFlight: function() {
+      var airportCode, text,
+        _this = this;
+
+      text = this.$('h1').text();
+      airportCode = /[A-Z]{3}/g;
+      text = text.replace("-", "<i class=\"icon icon-flight\"></i>");
+      text = text.replace(airportCode, function(code) {
+        var el;
+
+        el = "<span class=\"airport-code\">";
+        _.each(code.split(""), function(letter) {
+          return el += "<span class=\"letter\">" + letter + "<span class=\"shadow\"></span></span>";
+        });
+        el += "</span>";
+        return el;
+      });
+      this.$('h1').html(text);
+    }
+  });
+
+  Transit.Views.ZoomView = Backbone.View.extend({
+    className: 'zoom',
+    events: {
+      'click .js-close': 'close',
+      'click .js-to-image': 'toImage'
+    },
+    initialize: function() {
+      var _this = this;
+
+      _.bindAll(this);
+      $(document).bind('resize', this.onResize());
+      $('html').addClass('zoom-open');
+      $('#tumblr_controls').addClass('hide');
+      $(window).bind('keypress', this.handleKeys);
+      TweenMax.to(this.$el, .4, {
+        opacity: 1,
+        ease: Quint.easeOut
+      });
+      return _.delay(function() {
+        return _this.showImage(Number(_this.model.get('current-image')));
+      }, 1000);
+    },
+    onResize: function() {
+      return this.windowWidth = $(window).width();
+    },
+    template: _.template("<a class=\"close js-close\">&times;</a>\n	<div class=\"photos\">\n		<table cellpadding=\"0\" cellspacing=\"0\">\n			<tr>\n			<td><div class=\"spacer\" style=\"height: <%= height %>px;\"></div></td>\n			<% if(type == \"photo\"){ %>\n				<td class=\"js-to-image\" data-index=\"0\">\n					<div class=\"image\"><img src=\"<%= photos[0][\"high-res\"] %>\" height=\"<%= height %>\"></div>\n				</td>\n			<% } %>\n			<% if(type == \"photoset\"){ %>\n				<% _.each(photos, function(photo, index){ %>\n					<td class=\"js-to-image\" data-index=\"<%= index %>\">\n						<div class=\"image\"><img src=\"<%= photo[\"highRes\"] %>\"  height=\"<%= height %>\"></div>\n					</td>\n				<% }) %>\n			<% } %>\n			<td><div class=\"spacer\" style=\"height: <%= height %>px;\"></div></td>\n			</tr>\n		</table>\n	</div>"),
+    render: function() {
+      this.model.set('height', $(window).height() - 100);
+      return this.$el.html(this.template(this.model.toJSON()));
+    },
+    close: function(e) {
+      var _this = this;
+
+      if (e != null) {
+        e.preventDefault();
+      }
+      $(document).unbind('keypress', this.handleKeys);
+      TweenMax.to(this.$('.photos table .recent'), .4, {
+        opacity: .1,
+        ease: Quint.easeOut
+      });
+      TweenMax.to(this.$('.photos table'), .4, {
+        left: "-60000px",
+        ease: Expo.easeInOut,
+        delay: .4
+      });
+      return TweenMax.to(this.$el, .4, {
+        opacity: 0,
+        ease: Quint.easeIn,
+        delay: .8,
+        onComplete: function() {
+          $('html').removeClass('zoom-open');
+          $('#tumblr_controls').removeClass('hide');
+          return _this.remove();
+        }
+      });
+    },
+    toImage: function(e) {
+      var $el, index;
+
+      if (e != null) {
+        e.preventDefault();
+      }
+      $el = $(e.target);
+      if (!$el.hasClass('js-to-image')) {
+        $el = $el.parents('.js-to-image');
+      }
+      index = Number($el.data('index'));
+      return this.showImage(index);
+    },
+    showImage: function(x) {
+      var $el, xPos,
+        _this = this;
+
+      $el = this.$(".image[data-index=" + x + "]");
+      xPos = 2000;
+      xPos -= this.windowWidth / 2;
+      _.each(this.$('.image'), function(el, index) {
+        if (index < x) {
+          $el = $(el);
+          xPos += $el.width() + 10;
+        }
+        if (index === x) {
+          $el = $(el);
+          return xPos += $el.width() / 2;
+        }
+      });
+      TweenMax.to(this.$('.photos table .recent'), .4, {
+        opacity: .1,
+        ease: Quint.easeOut,
+        onComplete: function() {
+          return _this.$('.photos table .recent').removeClass('recent');
+        }
+      });
+      TweenMax.to(this.$('.photos table'), .4, {
+        left: "" + (0 - xPos) + "px",
+        ease: Expo.easeInOut,
+        delay: .4
+      });
+      return TweenMax.to(this.$(".js-to-image[data-index=" + x + "] .image"), .4, {
+        ease: Quint.easeOut,
+        opacity: 1,
+        delay: .8,
+        onComplete: function() {
+          return _this.$(".js-to-image[data-index=" + x + "] .image").addClass('recent');
+        }
+      });
+    },
+    handleKeys: function(e) {
+      return console.log('handleKeys', e);
+    }
+  });
+
+}).call(this);

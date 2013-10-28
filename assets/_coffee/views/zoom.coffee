@@ -8,8 +8,10 @@ Transit.Views.ZoomView = Backbone.View.extend
 
 	initialize: ->
 		_.bindAll @
-		$(window).bind 'resize', @onResize()
+		$(document).bind 'resize', @onResize()
 		$('html').addClass 'zoom-open'
+		$('#tumblr_controls').addClass 'hide'
+		$(window).bind 'keypress', @handleKeys
 		TweenMax.to @$el, .4, 
 			opacity: 1
 			ease: Quint.easeOut
@@ -50,6 +52,7 @@ Transit.Views.ZoomView = Backbone.View.extend
 
 	close: (e) ->
 		e?.preventDefault()
+		$(document).unbind 'keypress', @handleKeys
 		TweenMax.to @$('.photos table .recent'), .4, 
 			opacity: .1
 			ease: Quint.easeOut
@@ -63,6 +66,7 @@ Transit.Views.ZoomView = Backbone.View.extend
 			delay: .8
 			onComplete: () =>
 				$('html').removeClass 'zoom-open'
+				$('#tumblr_controls').removeClass 'hide'
 				@remove()
 
 	toImage: (e) ->
@@ -98,3 +102,6 @@ Transit.Views.ZoomView = Backbone.View.extend
 			delay: .8
 			onComplete: () =>
 				@$(".js-to-image[data-index=#{x}] .image").addClass 'recent'
+
+	handleKeys: (e) ->
+		console.log 'handleKeys', e

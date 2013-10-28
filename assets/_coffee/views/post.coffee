@@ -47,4 +47,7 @@ Transit.Views.PostView = Backbone.View.extend
 		@model.set 'position', position
 
 	openZoom: (e) ->
+		$el = $(e.target)
+		$el = $el.parents('.js-zoom') if !$el.hasClass 'js-zoom'
+		@model.set 'current-image', Number($el.data('index')) - 1
 		@model.trigger 'open-zoom', @model

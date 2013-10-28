@@ -133,7 +133,6 @@ Transit.Views.MapView = Backbone.View.extend
 
 	openZoom: (model) ->
 		# at some point we would check for index...
-		model.set 'current-image', 0
 		zoomView = new Transit.Views.ZoomView
 			model: model
 		zoomView.render()
