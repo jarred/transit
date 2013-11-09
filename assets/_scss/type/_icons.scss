@@ -1,0 +1,90 @@
+
+@charset "UTF-8";
+
+@font-face {
+  font-family: "transit-theme";
+  src:url("/assets/icons/transit-theme.eot");
+  src:url("/assets/icons/transit-theme.eot?#iefix") format("embedded-opentype"),
+    url("/assets/icons/transit-theme.ttf") format("truetype"),
+    url("/assets/icons/transit-theme.svg#transit-theme") format("svg"),
+    url("/assets/icons/transit-theme.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "transit-theme" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before {
+  font-family: "transit-theme" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.icon-camera:before {
+  content: "a";
+}
+
+.icon-tag-edge:before {
+  content: "b";
+}
+
+.icon-hamburger-nav:before {
+  content: "c";
+}
+
+.icon-marker:before {
+  content: "d";
+}
+
+.icon-fontawesome-webfont:before {
+  content: "e";
+}
+
+.icon-fontawesome-webfont-1:before {
+  content: "f";
+}
+
+.icon-fontawesome-webfont-2:before {
+  content: "g";
+}
+
+.icon-fontawesome-webfont-3:before {
+  content: "h";
+}
+
+.icon-fontawesome-webfont-5:before {
+  content: "j";
+}
+
+.icon-fontawesome-webfont-6:before {
+  content: "k";
+}
+
+.icon-facebook:before {
+  content: "l";
+}
+
+.icon-map:before {
+  content: "m";
+}
+

@@ -14,12 +14,7 @@
 </pre>
 
 <div class="grid_row_8">
-  <div class="grid_col_1">
-    <div class="post-type"></div>
-    {% include date.html %}
-    {% include social.html %}
-  </div>
-  <div class="grid_col_7 image">
+  <div class="grid_col_8 image">
     <a class="internal js-zoom open-zoom" data-index="1">
       <img src="{PhotoURL-500}" class="{block:HighRes}hide{/block:HighRes}" {block:HighRes}data-highres="{PhotoURL-HighRes}"{/block:HighRes} alt="{PhotoAlt}" />
       {block:HighRes}
@@ -27,14 +22,15 @@
       {/block:HighRes}
     </a>
   </div>
-  <div class="grid_col_1 spacer">&nbsp;</div>
-  {block:Caption}
-  <div class="grid_col_4 description content">
+  <div class="grid_col_4">
+    {% include time.html %}
+    {block:Caption}
       <div class="caption">{Caption}</div>
+    {/block:Caption}
   </div>
-  {/block:Caption}
   {block:Exif}
   <div class="grid_col_3 exif">
+    <i class="icon icon-camera"></i>?
     <pre class="json">
       {
         "exif": true
@@ -62,6 +58,13 @@
   {/block:Exif}
 
   <div class="grid_col_3">
+    {% include social.html %}
+  </div>
+
+
+  <div class="grid_col_3">
     {% include tags.html %}
   </div>
+
+
 </div>

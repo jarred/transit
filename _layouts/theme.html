@@ -53,6 +53,14 @@
 
               {block:Posts}
 
+              {block:NewDayDate}
+              <div class="date grid_row_8">
+                <div class="grid_col_8">
+                  <span>{Month} {DayOfMonth}{DayOfMonthSuffix} {Year}</span>
+                </div>
+              </div>
+              {/block:NewDayDate}
+
                 <div class="post js-extend-view {PostType} {TagsAsClasses} {block:Odd}odd{/block:Odd} {block:Even}even{/block:Even}" id="post-{PostID}" data-view="PostView" data-type="{PostType}" data-permalink="{Permalink}">
 
                   <pre type="application/json" class="json">
