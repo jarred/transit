@@ -17,13 +17,20 @@
 </pre>
 
 <div class="grid_row_8">
-  <div class="grid_col_8">
+  <div class="grid_col_4">
+    {% include time.html %}
+  </div>
+  <div class="grid_col_4">
     <div class="photoset-caption content">
-      {% include time.html %}
       {block:Caption}
         {Caption}
       {/block:Caption}
     </div>
+  </div>
+</div>
+
+<div class="grid_row_8">
+  <div class="grid_col_8">
     <div class="photoset"></div>
   </div>
 </div>

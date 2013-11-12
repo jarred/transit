@@ -24,10 +24,15 @@
   </div>
   <div class="grid_col_4">
     {% include time.html %}
+  </div>
+  <div class="grid_col_4">
     {block:Caption}
       <div class="caption">{Caption}</div>
     {/block:Caption}
   </div>
+</div>
+
+<div class="grid_row_8">
   {block:Exif}
   <div class="grid_col_3 exif">
     <i class="icon icon-camera"></i>?
@@ -61,10 +66,8 @@
     {% include social.html %}
   </div>
 
-
   <div class="grid_col_3">
     {% include tags.html %}
   </div>
-
 
 </div>

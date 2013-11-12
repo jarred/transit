@@ -66,18 +66,30 @@
 	.tags{
 		color: #DDD;
 		margin-top: 20px;
-		font: 400 13px/20px $sans;
+		font: 400 13px/24px $sans;
 		a{
 			text-decoration: none;
-			color: #DDD;
+
+			.icon{
+				@include inline-block;
+				color: $black;
+				font: 400 23px/26px $sans;
+				margin-right: -12px;
+			}
+			.hash{
+				@include inline-block;
+				margin-right: 1px;
+				color: #777;
+			}
+			.text{
+				@include inline-block;
+				@include border-radius(2px);
+				padding: 0px 6px;
+				background-color: $black;
+				color: #FFF;
+			}
 			&:hover{
 				color: $black;
-			}
-		}
-		.separator{
-			color: #DDD;
-			&:last-of-type{
-				display: none;
 			}
 		}
 	}
