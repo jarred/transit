@@ -27,7 +27,7 @@
 		width: 4px;
 		z-index: 4;
 		html.rgba &{
-			background-color: rgba(#000, .2);
+			background-color: rgba(#000, .1);
 		}
 	}
 	.bg{
@@ -54,29 +54,51 @@
 	margin-top: -8px;
 	z-index: 401;
 	position: relative;
-	.open{
-		@include border-radius(50%);
-		@include opacity(0);
-		@include transition(opacity 0.3s ease-out);
-		width: 60px;
-		height: 60px;
-		background-color: #FFF;
+	.x{
+		display: none;
+		width: 40px;
+		height: 40px;
 		position: absolute;
-		left: 50%;
-		top: 50%;
-		margin-left: -30px;
-		margin-top: -30px;
-		background-size: cover;
+		left: -12px;
+		top: -12px;
+		color: #FF3300;
+		text-align: center;
+		font: 600 36px/40px $sans;
 	}
 	.pin{
 		position: relative;
-		width: 16px;
+		width: 15px;
 		.ball{
+			position: relative;
 			@include border-radius(50%);
-			width: 10px;
-			height: 10px;
+			width: 15px;
+			height: 15px;
 			background-color: #FFF;
-			border: 3px solid #FFF;
+			.glare{
+				width: 6px;
+				height: 6px;
+				@include border-radius(50%);
+				position: relative;
+				top: 3px;
+				left: 3px;
+				background-color: #FFF;
+				@include opacity(.3);
+			}
+		}
+		.stem{
+			width: 3px;
+			height: 5px;
+			background-color: #AAA;
+			margin-left: 6px;
+			margin-top: -1px;
+		}
+		.shadow{
+			width: 5px;
+			height: 1px;
+			margin-left: 5px;
+			margin-top: -1px;
+			background-color: #000;
+			@include opacity(.3);
 		}
 		&.photoset{
 			.ball{
@@ -106,10 +128,11 @@
 	}
 	&:hover,
 	&.active{
-		.open{
-// 			display: block;
-			@include opacity(1);
-			@include transition(opacity 0.3s ease-out);
+		.pin{
+			display: none;
+		}
+		.x{
+			display: block;
 		}
 	}
 }

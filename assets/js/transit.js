@@ -85,7 +85,7 @@
       $(document).bind('scroll', this.checkPosition);
       return this.updateHeightsInt = setInterval(this.updatePostHeights, 2000);
     },
-    markerTemplate: _.template("<div class=\"ref\" data-id=\"<%= id %>\"></div>\n<div class=\"pin <%= type %>\">\n	<div class=\"ball\"></div>\n</div>\n<% if(type == \"photo\" || type == \"photoset\"){ %>\n	<div class=\"open\" style=\"background-image: url('<%= photos[0].thumb %>');\"></div>\n<% } %>"),
+    markerTemplate: _.template("<div class=\"ref\" data-id=\"<%= id %>\"></div>\n<div class=\"pin <%= type %>\">\n	<div class=\"ball\">\n		<div class=\"glare\"></div>\n	</div>\n	<div class=\"stem\"></div>\n	<div class=\"shadow\"></div>\n</div>\n<div class=\"x\">&times;</div>"),
     addPost: function(postModel) {
       var icon, marker, options,
         _this = this;

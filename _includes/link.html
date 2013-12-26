@@ -1,8 +1,6 @@
 <div class="grid_row_8">
-  <div class="grid_col_1">
-    <div class="post-type"></div>
-    {% include date.html %}
-    {% include tags.html %}
+  <div class="grid_col_2">
+    {% include time.html %}
   </div>
   <div class="grid_col_6">
     <h1><a href="{URL}" target="{Target}">{Name}</a></h1>
@@ -11,4 +9,8 @@
     {/block:Description}
   </div>
 </div>
-
+<div class="grid_row_8">
+  <div class="grid_col_4">
+    {% include tags.html %}
+  </div>
+</div>
